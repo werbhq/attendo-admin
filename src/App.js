@@ -3,7 +3,7 @@ import { Admin, Resource } from "react-admin";
 
 import Classroom from "./pages/classroom/Index";
 import DashBoard from "./pages/dashboard/Dashboard";
-import Subject from "./pages/subjects";
+import Subject from "./pages/subjects/Index";
 import { dataProvider } from "./provider/firebase";
 
 const App = () => (

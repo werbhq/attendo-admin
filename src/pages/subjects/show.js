@@ -8,8 +8,8 @@ import {
   ChipField,
 } from "react-admin";
 
-import SubjectTable from "./components/showSubjectTable";
-import SemesterTable from "./components/showSemesterTable";
+import SubjectTable from "./components/ShowSubjectTable";
+import SemesterTable from "./components/ShowSemesterTable";
 
 export const SubjectShow = () => {
   return (

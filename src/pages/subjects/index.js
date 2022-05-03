@@ -1,5 +1,5 @@
-import SubjectList from "./list";
-import SubjectShow from "./show";
+import SubjectList from "./List";
+import SubjectShow from "./Show";
 import icon from "@mui/icons-material/Class";
 import { EditGuesser } from "react-admin";
 import { MAPPING } from "../../provider/mapping";
