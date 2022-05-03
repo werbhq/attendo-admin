@@ -1,0 +1,10 @@
+{
+    "apiKey": "AIzaSyAjJs7-_azfjBRNPMiSOH4O9l0FwvLyJAE",
+    "authDomain": "attendo-gcp.firebaseapp.com",
+    "databaseURL": "https://attendo-gcp-default-rtdb.firebaseio.com",
+    "projectId": "attendo-gcp",
+    "storageBucket": "attendo-gcp.appspot.com",
+    "messagingSenderId": "691816496645",
+    "appId": "1:691816496645:web:26537b8c7e3f38f502666c",
+    "measurementId": "G-L3QV7MWPJ2"
+}

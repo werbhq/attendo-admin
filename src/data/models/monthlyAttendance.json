@@ -1,0 +1,29 @@
+{
+    "id": "KTU-BTECH-2019-ce-1-01-01-2021",
+    "date": "01-01-2021",
+    "semester": 4,
+    "classroom": {
+        "id": "KTU-BTECH-2019-ce-1",
+        "branch": "ce",
+        "name": "1",
+        "year": 2019,
+        "course": "BTECH",
+        "schemeId": "KTU-2019"
+    },
+    "totalAttendance": 200,
+    "students": [
+        {
+            "id": "agauthamkrishna.b20ce1101@mbcet.ac.in",
+            "attendances": [
+                {
+                    "subjectId": "MAT203",
+                    "present": 180
+                },
+                {
+                    "subjectId": "EST203",
+                    "present": 180
+                }
+            ]
+        }
+    ]
+}

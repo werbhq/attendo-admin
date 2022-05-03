@@ -1,0 +1,1234 @@
+{
+    "schemes": {
+        "BTECH-MBCET-2020": {
+            "id": "BTECH-MBCET-2020",
+            "course": "BTECH",
+            "organization": "MBCET",
+            "year": 2020,
+            "semesters": [
+                {
+                    "semester": 1,
+                    "branchSubs": [
+                        {
+                            "branch": "cs",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht110",
+                                    "name": "Engineering Physics B",
+                                    "code": "PHT110"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                },
+                                {
+                                    "id": "hun101",
+                                    "name": "Life skills ",
+                                    "code": "HUN101"
+                                },
+                                {
+                                    "id": "hun102",
+                                    "name": "Professional Communication",
+                                    "code": "HUN102"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ce",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht110",
+                                    "name": "Engineering Physics B",
+                                    "code": "PHT110"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                },
+                                {
+                                    "id": "hun101",
+                                    "name": "Life skills ",
+                                    "code": "HUN101"
+                                },
+                                {
+                                    "id": "hun102",
+                                    "name": "Professional Communication",
+                                    "code": "HUN102"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ee",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht100",
+                                    "name": "Engineering Physics A",
+                                    "code": "PHT100"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                },
+                                {
+                                    "id": "hun101",
+                                    "name": "Life skills ",
+                                    "code": "HUN101"
+                                },
+                                {
+                                    "id": "hun102",
+                                    "name": "Professional Communication",
+                                    "code": "HUN102"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "me",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht110",
+                                    "name": "Engineering Physics B",
+                                    "code": "PHT110"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                },
+                                {
+                                    "id": "hun101",
+                                    "name": "Life skills ",
+                                    "code": "HUN101"
+                                },
+                                {
+                                    "id": "hun102",
+                                    "name": "Professional Communication",
+                                    "code": "HUN102"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ec",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht100",
+                                    "name": "Engineering Physics A",
+                                    "code": "PHT100"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                },
+                                {
+                                    "id": "hun101",
+                                    "name": "Life skills ",
+                                    "code": "HUN101"
+                                },
+                                {
+                                    "id": "hun102",
+                                    "name": "Professional Communication",
+                                    "code": "HUN102"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "semester": 2,
+                    "branchSubs": [
+                        {
+                            "branch": "cs",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht110",
+                                    "name": "Engineering Physics B",
+                                    "code": "PHT110"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ce",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht110",
+                                    "name": "Engineering Physics B",
+                                    "code": "PHT110"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ee",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht110",
+                                    "name": "Engineering Physics B",
+                                    "code": "PHT110"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "me",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht110",
+                                    "name": "Engineering Physics B",
+                                    "code": "PHT110"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ec",
+                            "subjects": [
+                                {
+                                    "id": "est120",
+                                    "name": "Basics Of Civil And Mechanical Engineering",
+                                    "code": "EST120"
+                                },
+                                {
+                                    "id": "est130",
+                                    "name": "Basics Of Electrical And Electronics Engineering",
+                                    "code": "EST130"
+                                },
+                                {
+                                    "id": "est102",
+                                    "name": "Programming In C (Common To All Programs)",
+                                    "code": "EST102"
+                                },
+                                {
+                                    "id": "mat102",
+                                    "name": "Vector Calculus, Differential Equations And Transforms",
+                                    "code": "MAT102"
+                                },
+                                {
+                                    "id": "est110",
+                                    "name": "Engineering Graphics",
+                                    "code": "EST110"
+                                },
+                                {
+                                    "id": "est100",
+                                    "name": "Engineering Mechanics",
+                                    "code": "EST100"
+                                },
+                                {
+                                    "id": "pht110",
+                                    "name": "Engineering Physics B",
+                                    "code": "PHT110"
+                                },
+                                {
+                                    "id": "mat101",
+                                    "name": "Linear Algebra And Calculus",
+                                    "code": "MAT101"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "semester": 3,
+                    "branchSubs": [
+                        {
+                            "branch": "cs",
+                            "subjects": [
+                                {
+                                    "id": "mat203",
+                                    "name": "Discrete Mathematical Structures",
+                                    "code": "MAT203"
+                                },
+                                {
+                                    "id": "cst201",
+                                    "name": "Data Structures",
+                                    "code": "CST201"
+                                },
+                                {
+                                    "id": "cst203",
+                                    "name": "Logic System Design",
+                                    "code": "CST203"
+                                },
+                                {
+                                    "id": "cst205",
+                                    "name": "Object Oriented Programming Using Java",
+                                    "code": "CST205"
+                                },
+                                {
+                                    "id": "hut200",
+                                    "name": "Professional Ethics",
+                                    "code": "HUT200"
+                                },
+                                {
+                                    "id": "mcn201",
+                                    "name": "Sustainable Engineering",
+                                    "code": "MCN201"
+                                },
+                                {
+                                    "id": "csl203",
+                                    "name": "Object Oriented Programming Lab (Using Java)",
+                                    "code": "CSL203"
+                                },
+                                {
+                                    "id": "csl201",
+                                    "name": "Data Structures Lab",
+                                    "code": "CSL201"
+                                },
+                                {
+                                    "id": "cst281",
+                                    "name": "Object Oriented Programming Using Java (Minors)",
+                                    "code": "CST281"
+                                },
+                                {
+                                    "id": "cst283",
+                                    "name": "Python For Machine Learning (Minors)",
+                                    "code": "CST283"
+                                },
+                                {
+                                    "id": "cst285",
+                                    "name": "Data Communication (Minors)",
+                                    "code": "CST285"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ce",
+                            "subjects": [
+                                {
+                                    "id": "mat201",
+                                    "name": "Partial Differential Equations And Complex Analysis",
+                                    "code": "MAT201"
+                                },
+                                {
+                                    "id": "cet201",
+                                    "name": "Mechanics Of Solids",
+                                    "code": "CET201"
+                                },
+                                {
+                                    "id": "cet203",
+                                    "name": "Fluid Mechanics And Hydraulics",
+                                    "code": "CET203"
+                                },
+                                {
+                                    "id": "cet205",
+                                    "name": "Surveying & Geomatics ",
+                                    "code": "CET205"
+                                },
+                                {
+                                    "id": "est200",
+                                    "name": "Design And Engineering",
+                                    "code": "EST200"
+                                },
+                                {
+                                    "id": "hut200",
+                                    "name": "Professional Ethics",
+                                    "code": "HUT200"
+                                },
+                                {
+                                    "id": "mcn201",
+                                    "name": "Sustainable Engineering",
+                                    "code": "MCN201"
+                                },
+                                {
+                                    "id": "cel201",
+                                    "name": "Civil Engineering Planning And Drafting Lab",
+                                    "code": "CEL201"
+                                },
+                                {
+                                    "id": "cel203",
+                                    "name": "Survey Lab",
+                                    "code": "CEL203"
+                                },
+                                {
+                                    "id": "cet251",
+                                    "name": "Building Construction & Structural Systems (Minors)",
+                                    "code": "CET251"
+                                },
+                                {
+                                    "id": "cet253",
+                                    "name": "Introduction to Geotechnical Engineering (Minors)",
+                                    "code": "CET253"
+                                },
+                                {
+                                    "id": "cet255",
+                                    "name": "Informatics For Infrastructure Management (Minors)",
+                                    "code": "CET255"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ee",
+                            "subjects": [
+                                {
+                                    "id": "mat201",
+                                    "name": "Partial Differential Equations And Complex Analysis",
+                                    "code": "MAT201"
+                                },
+                                {
+                                    "id": "eet201",
+                                    "name": "Circuits And Networks",
+                                    "code": "EET201"
+                                },
+                                {
+                                    "id": "eet203",
+                                    "name": "Measurements And Instrumentation",
+                                    "code": "EET203"
+                                },
+                                {
+                                    "id": "eet205",
+                                    "name": "Analog Electronics",
+                                    "code": "EET205"
+                                },
+                                {
+                                    "id": "est200",
+                                    "name": "Design And Engineering",
+                                    "code": "EST200"
+                                },
+                                {
+                                    "id": "hut200",
+                                    "name": "Professional Ethics",
+                                    "code": "HUT200"
+                                },
+                                {
+                                    "id": "mcn201",
+                                    "name": "Sustainable Engineering",
+                                    "code": "MCN201"
+                                },
+                                {
+                                    "id": "eel201",
+                                    "name": "Circuits And Measurements Lab",
+                                    "code": "EEL201"
+                                },
+                                {
+                                    "id": "eel203",
+                                    "name": "Analog Electronics Lab",
+                                    "code": "EEL203"
+                                },
+                                {
+                                    "id": "eet281",
+                                    "name": "Electric Circuits (Minors)",
+                                    "code": "EET281"
+                                },
+                                {
+                                    "id": "eet283",
+                                    "name": "Introduction To Power Engineering (Minors)",
+                                    "code": "EET283"
+                                },
+                                {
+                                    "id": "eet285",
+                                    "name": "Dynamic Circuits And Systems (Minors)",
+                                    "code": "EET285"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "me",
+                            "subjects": [
+                                {
+                                    "id": "mat201",
+                                    "name": "Partial Differential Equation And Complex Analysis",
+                                    "code": "MAT201"
+                                },
+                                {
+                                    "id": "met201",
+                                    "name": "Mechanics Of Solids",
+                                    "code": "MET201"
+                                },
+                                {
+                                    "id": "met203",
+                                    "name": "Mechanics Of Fluids",
+                                    "code": "MET203"
+                                },
+                                {
+                                    "id": "met205",
+                                    "name": "Metallurgy & Material Science",
+                                    "code": "MET205"
+                                },
+                                {
+                                    "id": "est200",
+                                    "name": "Design And Engineering",
+                                    "code": "EST200"
+                                },
+                                {
+                                    "id": "mcn201",
+                                    "name": "Sustainable Engineering",
+                                    "code": "MCN201"
+                                },
+                                {
+                                    "id": "mel201",
+                                    "name": "Computer Aided Machine Drawing",
+                                    "code": "MEL201"
+                                },
+                                {
+                                    "id": "mel203",
+                                    "name": "Materials Testing Lab",
+                                    "code": "MEL203"
+                                },
+                                {
+                                    "id": "met281",
+                                    "name": "Mechanics Of Materials (Minors)",
+                                    "code": "MET281"
+                                },
+                                {
+                                    "id": "met283",
+                                    "name": "Fluid Mechanics & Machinery (Minors)",
+                                    "code": "MET283"
+                                },
+                                {
+                                    "id": "met285",
+                                    "name": "Materialscience & Technology (Minors)",
+                                    "code": "MET285"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ec",
+                            "subjects": [
+                                {
+                                    "id": "mat201",
+                                    "name": "Partial Differential Equations And Complex Analysis",
+                                    "code": "MAT201"
+                                },
+                                {
+                                    "id": "ect201",
+                                    "name": "Solid State Devices",
+                                    "code": "ECT201"
+                                },
+                                {
+                                    "id": "ect203",
+                                    "name": "Logic Circuit Design",
+                                    "code": "ECT203"
+                                },
+                                {
+                                    "id": "ect205",
+                                    "name": "Network Theory",
+                                    "code": "ECT205"
+                                },
+                                {
+                                    "id": "est200",
+                                    "name": "Design And Engineering",
+                                    "code": "EST200"
+                                },
+                                {
+                                    "id": "hut200",
+                                    "name": "Professional Ethics",
+                                    "code": "HUT200"
+                                },
+                                {
+                                    "id": "mcn201",
+                                    "name": "Sustainable Engineering",
+                                    "code": "MCN201"
+                                },
+                                {
+                                    "id": "ecl201",
+                                    "name": "Scientific Computing Lab",
+                                    "code": "ECL201"
+                                },
+                                {
+                                    "id": "ecl203",
+                                    "name": "Logic Design Lab",
+                                    "code": "ECL203"
+                                },
+                                {
+                                    "id": "ect281",
+                                    "name": "Electronic Circuits (Minors)",
+                                    "code": "ECT281"
+                                },
+                                {
+                                    "id": "ect283",
+                                    "name": "Analog Communication (Minors)",
+                                    "code": "ECT283"
+                                },
+                                {
+                                    "id": "ect285",
+                                    "name": "Introuction To Signals And Systems (Minors)",
+                                    "code": "ECT285"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "semester": 4,
+                    "branchSubs": [
+                        {
+                            "branch": "cs",
+                            "subjects": [
+                                {
+                                    "id": "mat206",
+                                    "name": "Graph Theory",
+                                    "code": "MAT206"
+                                },
+                                {
+                                    "id": "cst202",
+                                    "name": "Computer Organization And Architecture",
+                                    "code": "CST202"
+                                },
+                                {
+                                    "id": "cst204",
+                                    "name": "Database Management Systems",
+                                    "code": "CST204"
+                                },
+                                {
+                                    "id": "cst206",
+                                    "name": "Operating Systems",
+                                    "code": "CST206"
+                                },
+                                {
+                                    "id": "csl202",
+                                    "name": "Digital Lab",
+                                    "code": "CSL202"
+                                },
+                                {
+                                    "id": "csl204",
+                                    "name": "Operating Systems Lab",
+                                    "code": "CSL204"
+                                },
+                                {
+                                    "id": "est200",
+                                    "name": "Design And Engineering",
+                                    "code": "EST200"
+                                },
+                                {
+                                    "id": "mcn202",
+                                    "name": "Constitution Of India",
+                                    "code": "MCN202"
+                                },
+                                {
+                                    "id": "cst282",
+                                    "name": "Programming Methodologies (Minors)",
+                                    "code": "CST282"
+                                },
+                                {
+                                    "id": "cst284",
+                                    "name": "Mathematics For Machine Learning (Minors)",
+                                    "code": "CST284"
+                                },
+                                {
+                                    "id": "cst286",
+                                    "name": "Introduction To Computer Networks (Minors)",
+                                    "code": "CST286"
+                                },
+                                {
+                                    "id": "cst292",
+                                    "name": "Number Theory (Honors)",
+                                    "code": "CST292"
+                                },
+                                {
+                                    "id": "cst294",
+                                    "name": "Computational Fundamentals For Machine Learning (Honors)",
+                                    "code": "CST294"
+                                },
+                                {
+                                    "id": "cst296",
+                                    "name": "Principles Of Program Analysis And Verification (Honors)",
+                                    "code": "CST296"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ce",
+                            "subjects": [
+                                {
+                                    "id": "mat202",
+                                    "name": "Probability, Statistics And Numerical Methods",
+                                    "code": "MAT202"
+                                },
+                                {
+                                    "id": "cet202",
+                                    "name": "Engineering Geology",
+                                    "code": "CET202"
+                                },
+                                {
+                                    "id": "cet204",
+                                    "name": "Geotechnical Engineering - I",
+                                    "code": "CET204"
+                                },
+                                {
+                                    "id": "cet206",
+                                    "name": "Transportation Engineering",
+                                    "code": "CET206"
+                                },
+                                {
+                                    "id": "est200",
+                                    "name": "Design And Engineering",
+                                    "code": "EST200"
+                                },
+                                {
+                                    "id": "hut200",
+                                    "name": "Professional Ethics",
+                                    "code": "HUT200"
+                                },
+                                {
+                                    "id": "mcn202",
+                                    "name": "Constitution Of India",
+                                    "code": "MCN202"
+                                },
+                                {
+                                    "id": "cel202",
+                                    "name": "Material Testing Lab-I",
+                                    "code": "CEL202"
+                                },
+                                {
+                                    "id": "cel204",
+                                    "name": "Fluid Mechanics Lab",
+                                    "code": "CEL204"
+                                },
+                                {
+                                    "id": "cet282",
+                                    "name": "Building Drawing (Minors)",
+                                    "code": "CET282"
+                                },
+                                {
+                                    "id": "cet284",
+                                    "name": "Introduction To Transportation Engineering (Minors)",
+                                    "code": "CET284"
+                                },
+                                {
+                                    "id": "cet286",
+                                    "name": "Climate Change And Hazard Mitigation (Minors)",
+                                    "code": "CET286"
+                                },
+                                {
+                                    "id": "cet292",
+                                    "name": "Advanced Mechanics Of Solids (Honors)",
+                                    "code": "CET292"
+                                },
+                                {
+                                    "id": "cet294",
+                                    "name": "Pavement Construction And Management (Honors)",
+                                    "code": "CET294"
+                                },
+                                {
+                                    "id": "cet296",
+                                    "name": "Geographical Information Systems (Honors)",
+                                    "code": "CET296"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ee",
+                            "subjects": [
+                                {
+                                    "id": "mat204",
+                                    "name": "Probability, Statistics And Numerical Methods",
+                                    "code": "MAT204"
+                                },
+                                {
+                                    "id": "eet202",
+                                    "name": "Dc Machines And Transformers",
+                                    "code": "EET202"
+                                },
+                                {
+                                    "id": "eet204",
+                                    "name": "Electromagnetic Theory",
+                                    "code": "EET204"
+                                },
+                                {
+                                    "id": "eet206",
+                                    "name": "Digital Electronics",
+                                    "code": "EET206"
+                                },
+                                {
+                                    "id": "est200",
+                                    "name": "Design And Engineering",
+                                    "code": "EST200"
+                                },
+                                {
+                                    "id": "hut200",
+                                    "name": "Professional Ethics",
+                                    "code": "HUT200"
+                                },
+                                {
+                                    "id": "mcn202",
+                                    "name": "Constitution Of India",
+                                    "code": "MCN202"
+                                },
+                                {
+                                    "id": "eel202",
+                                    "name": "Electrical Machines Lab1",
+                                    "code": "EEL202"
+                                },
+                                {
+                                    "id": "eel204",
+                                    "name": "Digital Electronics Lab",
+                                    "code": "EEL204"
+                                },
+                                {
+                                    "id": "eet282",
+                                    "name": "Electrical Machines (Minors)",
+                                    "code": "EET282"
+                                },
+                                {
+                                    "id": "eet284",
+                                    "name": "Energy Systems (Minors)",
+                                    "code": "EET284"
+                                },
+                                {
+                                    "id": "eet286",
+                                    "name": "Principles Of Instrumentation (Minors)",
+                                    "code": "EET286"
+                                },
+                                {
+                                    "id": "eet292",
+                                    "name": "Network Analysis And Synthesis (Honors)",
+                                    "code": "EET292"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "me",
+                            "subjects": [
+                                {
+                                    "id": "mat202",
+                                    "name": "Probability",
+                                    "code": "MAT202"
+                                },
+                                {
+                                    "id": "met202",
+                                    "name": "Engineering Thermodynamics",
+                                    "code": "MET202"
+                                },
+                                {
+                                    "id": "met204",
+                                    "name": "Manufacturing Process",
+                                    "code": "MET204"
+                                },
+                                {
+                                    "id": "met206",
+                                    "name": "Fluid Machinery",
+                                    "code": "MET206"
+                                },
+                                {
+                                    "id": "hut200",
+                                    "name": "Professional Ethics",
+                                    "code": "HUT200"
+                                },
+                                {
+                                    "id": "mcn202",
+                                    "name": "Constitution Of India",
+                                    "code": "MCN202"
+                                },
+                                {
+                                    "id": "mel202",
+                                    "name": "FM & HM Lab",
+                                    "code": "MEL202"
+                                },
+                                {
+                                    "id": "mel204",
+                                    "name": "Machine Tools Lab-I",
+                                    "code": "MEL204"
+                                },
+                                {
+                                    "id": "met282",
+                                    "name": "Theory Of Machines (Minors)",
+                                    "code": "MET282"
+                                },
+                                {
+                                    "id": "met284",
+                                    "name": "Thermodynamics (Minors)",
+                                    "code": "MET284"
+                                },
+                                {
+                                    "id": "met286",
+                                    "name": "Manufacturing Technology (Minors)",
+                                    "code": "MET286"
+                                },
+                                {
+                                    "id": "met292",
+                                    "name": "Continuum Mechanics (Honors)",
+                                    "code": "MET292"
+                                },
+                                {
+                                    "id": "met294",
+                                    "name": "Advanced Mechanics Of Fluids (Honors)",
+                                    "code": "MET294"
+                                },
+                                {
+                                    "id": "met296",
+                                    "name": "Materials In Manufacturing (Honors)",
+                                    "code": "MET296"
+                                }
+                            ]
+                        },
+                        {
+                            "branch": "ec",
+                            "subjects": [
+                                {
+                                    "id": "mat204",
+                                    "name": "Probability, Random Processes And Numerical Methods",
+                                    "code": "MAT204"
+                                },
+                                {
+                                    "id": "ect202",
+                                    "name": "Analog Circuits",
+                                    "code": "ECT202"
+                                },
+                                {
+                                    "id": "ect204",
+                                    "name": "Signals And Systems",
+                                    "code": "ECT204"
+                                },
+                                {
+                                    "id": "ect206",
+                                    "name": "Computer Architecture And Microcontrollers",
+                                    "code": "ECT206"
+                                },
+                                {
+                                    "id": "est200",
+                                    "name": "Design And Engineering",
+                                    "code": "EST200"
+                                },
+                                {
+                                    "id": "hut200",
+                                    "name": "Professional Ethics",
+                                    "code": "HUT200"
+                                },
+                                {
+                                    "id": "mcn202",
+                                    "name": "Constitution Of India",
+                                    "code": "MCN202"
+                                },
+                                {
+                                    "id": "ecl202",
+                                    "name": "Analog Circuits And Simulation Lab",
+                                    "code": "ECL202"
+                                },
+                                {
+                                    "id": "ecl204",
+                                    "name": "Microcontroller Lab",
+                                    "code": "ECL204"
+                                },
+                                {
+                                    "id": "ect282",
+                                    "name": "Microcontrollers (Minors)",
+                                    "code": "ECT282"
+                                },
+                                {
+                                    "id": "ect284",
+                                    "name": "Digital Communication (Minors)",
+                                    "code": "ECT284"
+                                },
+                                {
+                                    "id": "ect286",
+                                    "name": "Introuction To Digital Signal Processing (Minors)",
+                                    "code": "ECT286"
+                                },
+                                {
+                                    "id": "ect292",
+                                    "name": "Nano-Electronics (Honors)",
+                                    "code": "ECT292"
+                                },
+                                {
+                                    "id": "ect294",
+                                    "name": "Stochastic Processes For Communication (Honors)",
+                                    "code": "ECT294"
+                                },
+                                {
+                                    "id": "ect296",
+                                    "name": "Stochastic Signal Processing (Honors)",
+                                    "code": "ECT296"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "BTECH-KTU-2019": {
+            "id": "BTECH-KTU-2019",
+            "course": "BTECH",
+            "organization": "KTU",
+            "year": 2019,
+            "semesters": []
+        }
+    }
+}

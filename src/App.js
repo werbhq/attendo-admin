@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import { Admin, Resource } from "react-admin";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import Classroom from "./pages/classroom/Index";
+import DashBoard from "./pages/dashboard/Dashboard";
+import Subject from "./pages/subjects";
+import { dataProvider } from "./provider/firebase";
+
+const App = () => (
+  <Admin
+    title="Attendo Admin"
+    dataProvider={dataProvider}
+    dashboard={DashBoard}
+  >
+    <Resource {...Classroom} />
+    <Resource {...Subject} />
+  </Admin>
+);
 
 export default App;
+

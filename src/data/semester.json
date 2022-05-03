@@ -1,0 +1,29 @@
+{
+    "courses": {
+        "BTECH": {
+            "id": "BTECH",
+            "batches": [
+                {
+                    "id": 2018,
+                    "sem": 8
+                },
+                {
+                    "id": 2019,
+                    "sem": 6
+                },
+                {
+                    "id": 2020,
+                    "sem": 4
+                },
+                {
+                    "id": 2021,
+                    "sem": 2
+                }
+            ]
+        },
+        "MTECH": {
+            "id": "MTECH",
+            "batches": []
+        }
+    }
+}

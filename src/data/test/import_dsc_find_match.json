@@ -1,0 +1,27 @@
+{
+    "teacher": {
+        "id": "106320810147619590217",
+        "email": "dscmbcet@mbcet.ac.in"
+    },
+    "googleClassrooms": [
+        {
+            "id": "352994715625",
+            "title": "Operating Systems",
+            "subTitle": "S4 CS2",
+            "link": "https://classroom.google.com/c/MzUyOTk0NzE1NjI1",
+            "code": "aefhyo4",
+            "recoginised": false,
+            "periods": [],
+            "students": [
+                {
+                    "id": "agauthamkrishna.b20ce1101@mbcet.ac.in",
+                    "regNo": "BE20CE1101",
+                    "userName": "A GAUTHAM KRISHNA B20CE1101",
+                    "name": "A Gautham Krishna",
+                    "rollNo": 1,
+                    "email": "agauthamkrishna.b20ce1101@mbcet.ac.in"
+                }
+            ]
+        }
+    ]
+}
