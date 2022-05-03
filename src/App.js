@@ -3,7 +3,6 @@ import { Admin, Resource } from "react-admin";
 
 import Classroom from "./pages/classroom/Index";
 import DashBoard from "./pages/dashboard/Dashboard";
-import Subject from "./pages/subjects";
 import { dataProvider } from "./provider/firebase";
 
 const App = () => (
@@ -13,9 +12,7 @@ const App = () => (
     dashboard={DashBoard}
   >
     <Resource {...Classroom} />
-    <Resource {...Subject} />
   </Admin>
 );
 
 export default App;
-
