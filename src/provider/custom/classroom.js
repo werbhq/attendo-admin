@@ -2,7 +2,7 @@ import { dataProvider, dataProviderLegacy, db } from "../firebase";
 import { MAPPING } from "../mapping";
 
 /**
- * Not to be used directly from here
+ * Don't call this directly
  * Use dataProvider
  */
 export const ClassroomProvider = {
@@ -43,7 +43,7 @@ export const ClassroomProvider = {
     return { data: record };
   },
 
-  update: async (params) => {
+  update: async (resource, params) => {
     const { id, data } = params;
     await db
       .collection(MAPPING.CLASSROOMS)
@@ -53,7 +53,7 @@ export const ClassroomProvider = {
     return { data: data, status: 200 };
   },
 
-  create: async (params) => {
+  create: async (resource, params) => {
     const { data } = params;
     await db.collection(MAPPING.CLASSROOMS).doc(data.id).set(data);
     return { data, status: 200 };
