@@ -46,6 +46,12 @@ const DataProviderCustom = {
   getOne: async (resource, params) =>
     getCustomConvertor(resource, params, "getOne"),
 
+  getMany: async (resource, params) =>
+    getCustomConvertor(resource, params, "getMany"),
+
+  getManyReference: async (resource, params) =>
+    getCustomConvertor(resource, params, "getManyReference"),
+
   update: async (resource, params) =>
     getCustomConvertor(resource, params, "update"),
 
