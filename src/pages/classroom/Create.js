@@ -125,7 +125,7 @@ const ClassroomsCreate = () => {
   }
 
   const transformSubmit = (data) => {
-    if (!Schemes.derivedClasses.includes(data.name)) {
+    if (!new Schemes(null).isDerived(data.name)) {
       delete data.subjectId;
       delete data.parentClasses;
       delete data.semester;

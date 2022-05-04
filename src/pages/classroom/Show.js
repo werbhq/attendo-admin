@@ -153,6 +153,7 @@ export const ClassroomShow = () => {
           </ReferenceField>
           <TextField source="course" />
           <TextField source="year" />
+          <TextField source="semester" emptyText="-" />
           <FunctionField
             label="Branch"
             render={(record) => record.branch.toUpperCase()}
