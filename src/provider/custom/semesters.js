@@ -2,13 +2,13 @@ import { dataProviderLegacy } from "../firebase";
 import { MAPPING } from "../mapping";
 
 /**
- * Not to be used directly from here
+ * Don't call this directly
  * Use dataProvider
  */
 export const SemestersProvider = {
   resource: MAPPING.SEMESTERS,
 
-  getList: async (params) => {
+  getList: async (resource, params) => {
     const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
       id: MAPPING.SEMESTERS,
     });
@@ -16,7 +16,7 @@ export const SemestersProvider = {
     return { data: values, total: values.length };
   },
 
-  getOne: async (params) => {
+  getOne: async (resource, params) => {
     const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
       id: MAPPING.SEMESTERS,
     });
