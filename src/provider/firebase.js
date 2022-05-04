@@ -3,10 +3,7 @@ import {
   FirebaseDataProvider,
 } from "react-admin-firebase";
 import config from "./config.json";
-import { ClassroomProvider } from "./custom/classroom";
-import { StudentsProvider } from "./custom/students";
-import { SubjectsProvider } from "./custom/subjects";
-import { SemestersProvider } from "./custom/semesters";
+import CustomProviders from "./customProviders";
 
 const options = {};
 
@@ -14,16 +11,8 @@ export const dataProviderLegacy = FirebaseDataProvider(config, options);
 export const authProvider = FirebaseAuthProvider(config, options);
 export const db = dataProviderLegacy.app.firestore();
 
-// ADD YOUR PROVIDERS HERE
-const customProviders = [
-  ClassroomProvider,
-  SemestersProvider,
-  StudentsProvider,
-  SubjectsProvider,
-];
-
 const getCustomConvertor = async (resource, params, method) => {
-  const provider = customProviders.find(
+  const provider = CustomProviders.find(
     (e) => e.resource === resource && e[method]
   );
   if (provider) return provider[method](resource, params);
