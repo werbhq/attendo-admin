@@ -27,6 +27,7 @@ const ClassroomsList = () => {
         <TextField source="id" />
         <TextField source="course" />
         <TextField source="year" />
+        <TextField source="semester" emptyText="-" sortable={false} />
         <FunctionField
           label="Branch"
           render={(record) => record.branch.toUpperCase()}

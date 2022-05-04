@@ -47,8 +47,16 @@ export default function EditClassroom({ state }) {
   });
 
   const handleSave = async (newRecord) => {
+    if (!isDerived(newRecord.name)) {
+      delete newRecord.subjectId;
+      delete newRecord.parentClasses;
+      delete newRecord.semester;
+      newRecord.isDerived = false;
+    } else {
+      newRecord.isDerived = true;
+    }
     delete newRecord.students;
-    console.log(newRecord);
+
     await dataProvider.update(resource, {
       id: newRecord.id,
       data: newRecord,
@@ -159,7 +167,7 @@ export default function EditClassroom({ state }) {
           <DeleteWithConfirmButton
             variant="outlined"
             size="medium"
-            color="error"
+            color="inherit"
             confirmTitle=""
             confirmContent="You will not be able to recover this classroom. Are you sure?"
             mutationOptions={{

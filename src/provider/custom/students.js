@@ -1,27 +1,12 @@
-import { dataProviderLegacy, db } from "../firebase";
+import { db } from "../firebase";
 import { MAPPING } from "../mapping";
 
 /**
  * Not to be used directly from here
  * Use dataProvider
  */
-export const studentsProvider = {
+export const StudentsProvider = {
   resource: MAPPING.STUDENTS,
-
-  getList: async (params) => {
-    const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
-      id: MAPPING.SUBJECT,
-    });
-    const values = Object.values(data.schemes);
-    return { data: values, total: values.length };
-  },
-
-  getOne: async (params) => {
-    const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
-      id: MAPPING.SUBJECT,
-    });
-    return { data: data.schemes[params.id] };
-  },
 
   update: async (params) => {
     const { id, data, record } = params;
