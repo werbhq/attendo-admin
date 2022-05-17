@@ -13,20 +13,19 @@ export const SubjectsProvider = {
       id: MAPPING.SUBJECT,
     });
     const values = Object.values(data.schemes);
-    return { data: values, total: values.length };
+    return { data: values, total: values.length, status: 200 };
   },
 
   getOne: async (resource, params) => {
     const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
       id: MAPPING.SUBJECT,
     });
-    return { data: data.schemes[params.id] };
+    return { data: data.schemes[params.id], status: 200 };
   },
 
   update: async (resource, params) => {
     const { id, data } = params;
-    const updateValue = {};
-    updateValue["schemes.".concat(id)] = data;
+    console.log(data);
 
     // await db.collection(MAPPING.DATA).doc(resource).update({
     //   "schemes.id" : data
@@ -50,15 +49,11 @@ export const SubjectsProvider = {
 
     await db
       .collection(MAPPING.DATA)
-      .doc("TEST")
-      .update(updateValue);
+      .doc("TEST") // TODO: MAPPING.SUBJECT
+      .update({
+        [`schemes.${id}`]: data,
+      });
 
-      // await db
-      // .collection(MAPPING.DATA)
-      // .doc("TEST")
-      // .delete();
-
-
-
+    return { data, status: 200 };
   },
 };

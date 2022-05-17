@@ -8,7 +8,6 @@ import {
   EditButton,
 } from "react-admin";
 
-
 const SubjectList = () => (
   <List>
     <Datagrid rowClick="show">
@@ -21,7 +20,7 @@ const SubjectList = () => (
           <ChipField source="semester" />
         </SingleFieldList>
       </ArrayField>
-     <EditButton/>
+      <EditButton />
     </Datagrid>
   </List>
 );

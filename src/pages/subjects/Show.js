@@ -6,6 +6,7 @@ import {
   TabbedShowLayout,
   SingleFieldList,
   ChipField,
+  FunctionField,
 } from "react-admin";
 
 import SubjectTable from "./components/ShowSubjectTable";
@@ -14,7 +15,7 @@ import SemesterTable from "./components/ShowSemesterTable";
 export const SubjectShow = () => {
   return (
     <Show>
-      <TabbedShowLayout>
+      <TabbedShowLayout sx={{ mb: 5 }}>
         <Tab label="summary">
           <TextField source="id" />
           <TextField source="organization" />
