@@ -13,9 +13,9 @@ export const SemestersProvider = {
       id: MAPPING.SEMESTERS,
     });
     const values = Object.values(data.courses);
+    console.log(values);
     return { data: values, total: values.length };
   },
-
   getOne: async (resource, params) => {
     const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
       id: MAPPING.SEMESTERS,
