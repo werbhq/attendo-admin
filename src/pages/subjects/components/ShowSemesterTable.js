@@ -20,7 +20,7 @@ import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { Button, Dialog } from "@mui/material";
-import { CustomAdd, CustomDelete } from "./customButton";
+import { CustomAdd, CustomDelete } from "./CustomButton";
 import { dataProvider } from "../../../provider/firebase";
 import { MAPPING } from "../../../provider/mapping";
 
@@ -33,12 +33,13 @@ const SemesterTable = () => {
   });
   const refresh = useRefresh();
   const notify = useNotify();
-  const [open, setOpen] = useState(false);
+  const [flag, setFlag] = useState(false);
 
-  const handleClickOpen = (record) => {
+  const editButtonHandle = (record) => {
     setSemData(record);
-    setOpen(true);
+    setFlag(true);
   };
+  const handleClose = () => setFlag(false);
 
   const updateBranch = async (newData) => {
     newData.branchSubs = newData.branchSubs.map(({ branch, subjects }) => ({
@@ -58,12 +59,13 @@ const SemesterTable = () => {
       oldData: data,
     });
 
-    refresh();
-    notify("Classroom Inputed");
     handleClose();
+    notify(`Semester ${newData.semester} Modified Succesfully`);
+    refresh();
+   
   };
 
-  const handleClose = () => setOpen(false);
+
 
   return (
     <>
@@ -80,7 +82,7 @@ const SemesterTable = () => {
               <Button
                 label="Edit"
                 startIcon={<EditIcon />}
-                onClick={() => handleClickOpen(record)}
+                onClick={() => editButtonHandle(record)}
               >
                 Edit
               </Button>
@@ -88,7 +90,7 @@ const SemesterTable = () => {
           />
         </Datagrid>
       </ListContextProvider>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={flag} onClose={handleClose}>
         <SimpleForm onSubmit={updateBranch} record={semData}>
           <ArrayInput source="branchSubs" label="Branches" fullWidth="flase">
             <SimpleFormIterator

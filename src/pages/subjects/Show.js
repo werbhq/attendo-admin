@@ -6,7 +6,6 @@ import {
   TabbedShowLayout,
   SingleFieldList,
   ChipField,
-  FunctionField,
 } from "react-admin";
 
 import SubjectTable from "./components/ShowSubjectTable";

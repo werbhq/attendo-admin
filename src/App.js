@@ -10,7 +10,7 @@ const App = () => (
   <Admin
     title="Attendo Admin"
     dataProvider={dataProvider}
-    authProvider={authProvider}
+    authProvider={authProvider} 
     dashboard={DashBoard}
   >
     <Resource {...Classroom} />
