@@ -13,7 +13,7 @@ export const SemestersProvider = {
       id: MAPPING.SEMESTERS,
     });
     const values = Object.values(data.courses);
-    console.log(values);
+    // console.log(values);
     return { data: values, total: values.length };
   },
   getOne: async (resource, params) => {
