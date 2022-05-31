@@ -161,7 +161,6 @@ export const DeleteButtonDialouge = ({ record, handleDelete }) => {
 
 export const CustomAdd = ({ name }) => <B variant="contained">{name}</B>;
 
-// TODO : color error fix
 export const CustomDelete = () => (
   <IconButton aria-label="delete" size="large" color="error">
     <DeleteIcon fontSize="inherit" />
