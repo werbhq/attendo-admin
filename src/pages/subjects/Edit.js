@@ -18,18 +18,18 @@ import {
   CustomAdd,
   CustomDelete,
   DeleteButtonDialouge,
-} from "./components/CustomButton";
+} from "./components/CustomButtons";
 import { useParams } from "react-router-dom";
 
+const url = MAPPING.SUBJECT;
+
 export const SubjectEdit = () => {
-  const url = MAPPING.SUBJECT;
   const { id } = useParams();
   const refresh = useRefresh();
   const notify = useNotify();
   const redirect = useRedirect();
 
   const deleteAll = async () => {
-    console.log(deleteAll);
     await dataProvider.delete(url, {
       id: id,
     });
@@ -51,7 +51,7 @@ export const SubjectEdit = () => {
       type: "success",
     });
     refresh();
-    redirect("show", MAPPING.SUBJECT, data.id);
+    redirect("show", url, data.id);
   };
 
   return (

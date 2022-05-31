@@ -14,25 +14,28 @@ import {
   FunctionField,
   useRefresh,
   useNotify,
+  useRedirect,
 } from "react-admin";
 
 import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { Button, Dialog } from "@mui/material";
-import { CustomAdd, CustomDelete } from "./CustomButton";
+import { CustomAdd, CustomDelete } from "./CustomButtons";
 import { dataProvider } from "../../../provider/firebase";
 import { MAPPING } from "../../../provider/mapping";
 
+const url = MAPPING.SUBJECT;
+
 const SemesterTable = () => {
   const data = useRecordContext();
-  const url = MAPPING.SUBJECT;
   const [semData, setSemData] = useState(data.semesters[0]);
   const tableData = useList({
     data: data.semesters,
   });
   const refresh = useRefresh();
   const notify = useNotify();
+  const redirect = useRedirect();
   const [flag, setFlag] = useState(false);
 
   const editButtonHandle = (record) => {
@@ -65,7 +68,17 @@ const SemesterTable = () => {
   };
 
   return (
-    <>
+    <div>
+      {tableData.data.length === 0 && (
+        <Button
+          variant="contained"
+          onClick={() => {
+            redirect("edit", url, data.id);
+          }}
+        >
+          {"Add Semester"}
+        </Button>
+      )}
       <ListContextProvider value={tableData} emptyWhileLoading>
         <Datagrid bulkActionButtons={false}>
           <TextField source="semester" />
@@ -104,7 +117,7 @@ const SemesterTable = () => {
           </ArrayInput>
         </SimpleForm>
       </Dialog>
-    </>
+    </div>
   );
 };
 
