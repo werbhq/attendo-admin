@@ -1,5 +1,4 @@
 import {
-  Button as B,
   IconButton,
   Dialog,
   DialogActions,
@@ -159,7 +158,11 @@ export const DeleteButtonDialouge = ({ record, handleDelete }) => {
   );
 };
 
-export const CustomAdd = ({ name }) => <B variant="contained">{name}</B>;
+export const CustomAdd = ({ name }) => (
+  <Button variant="contained" size="medium">
+    {name}
+  </Button>
+);
 
 export const CustomDelete = () => (
   <IconButton aria-label="delete" size="large" color="error">

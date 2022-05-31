@@ -45,6 +45,6 @@ export const SubjectsProvider = {
         [`schemes.${id}`]: FieldValue.delete(),
       });
 
-    return { data: { id: id } };
+    return { data: { id }, status: 200 };
   },
 };

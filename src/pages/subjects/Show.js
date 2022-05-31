@@ -7,7 +7,6 @@ import {
   SingleFieldList,
   ChipField,
 } from "react-admin";
-
 import SubjectTable from "./components/ShowSubjectTable";
 import SemesterTable from "./components/ShowSemesterTable";
 

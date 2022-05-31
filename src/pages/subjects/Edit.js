@@ -1,4 +1,3 @@
-// in src/posts.js
 import { Stack } from "@mui/material";
 import * as React from "react";
 import {
@@ -7,9 +6,9 @@ import {
   TextInput,
   SimpleFormIterator,
   ArrayInput,
+  SaveButton,
   useRefresh,
   useNotify,
-  SaveButton,
   useRedirect,
 } from "react-admin";
 import { dataProvider } from "../../provider/firebase";
@@ -23,7 +22,7 @@ import { useParams } from "react-router-dom";
 
 const url = MAPPING.SUBJECT;
 
-export const SubjectEdit = () => {
+const SubjectEdit = () => {
   const { id } = useParams();
   const refresh = useRefresh();
   const notify = useNotify();
@@ -61,12 +60,12 @@ export const SubjectEdit = () => {
         <TextInput source="organization" required />
         <TextInput source="course" required />
         <TextInput source="year" required />
-        <ArrayInput source="semesters" fullWidth="true" label="Semesters">
+        <ArrayInput source="semesters" fullWidth={false} label="Semesters">
           <SimpleFormIterator
             disableReordering
             addButton={CustomAdd({ name: "Add Semester" })}
             removeButton={CustomDelete()}
-            getItemLabel={() => ""}
+            getItemLabel={() => ""} // To remove index numbers
           >
             <TextInput source="semester" label="Semester Number" />
           </SimpleFormIterator>
@@ -79,3 +78,5 @@ export const SubjectEdit = () => {
     </Edit>
   );
 };
+
+export default SubjectEdit;

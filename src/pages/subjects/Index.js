@@ -1,8 +1,8 @@
+import icon from "@mui/icons-material/Class";
 import SubjectList from "./List";
 import SubjectShow from "./Show";
-import icon from "@mui/icons-material/Class";
+import SubjectEdit from "./Edit";
 import { MAPPING } from "../../provider/mapping";
-import { SubjectEdit } from "./Edit";
 
 const Subject = {
   name: MAPPING.SUBJECT,

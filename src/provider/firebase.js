@@ -5,13 +5,13 @@ import {
 import config from "./config.json";
 import CustomProviders from "./customProviders";
 import firebase from 'firebase/compat/app';
+export const FieldValue = firebase.firestore.FieldValue;
 
 const options = {};
 
 export const dataProviderLegacy = FirebaseDataProvider(config, options);
 export const authProvider = FirebaseAuthProvider(config, options);
 export const db = dataProviderLegacy.app.firestore();
-export const FieldValue = firebase.firestore.FieldValue;
 
 const getCustomConvertor = async (resource, params, method) => {
   const provider = CustomProviders.find(

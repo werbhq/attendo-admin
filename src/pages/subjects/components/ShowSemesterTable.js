@@ -1,9 +1,7 @@
 import {
   TextField,
   Datagrid,
-  useRecordContext,
   ListContextProvider,
-  useList,
   ArrayField,
   SingleFieldList,
   ChipField,
@@ -12,14 +10,14 @@ import {
   ArrayInput,
   SimpleFormIterator,
   FunctionField,
+  useRecordContext,
+  useList,
   useRefresh,
   useNotify,
   useRedirect,
 } from "react-admin";
-
 import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
-
 import { Button, Dialog } from "@mui/material";
 import { CustomAdd, CustomDelete } from "./CustomButtons";
 import { dataProvider } from "../../../provider/firebase";
@@ -36,13 +34,13 @@ const SemesterTable = () => {
   const refresh = useRefresh();
   const notify = useNotify();
   const redirect = useRedirect();
-  const [flag, setFlag] = useState(false);
+  const [showDialouge, setShowDialouge] = useState(false);
 
   const editButtonHandle = (record) => {
     setSemData(record);
-    setFlag(true);
+    setShowDialouge(true);
   };
-  const handleClose = () => setFlag(false);
+  const handleClose = () => setShowDialouge(false);
 
   const updateBranch = async (newData) => {
     newData.branchSubs = newData.branchSubs.map(({ branch, subjects }) => ({
@@ -76,7 +74,7 @@ const SemesterTable = () => {
             redirect("edit", url, data.id);
           }}
         >
-          {"Add Semester"}
+          Add Semester
         </Button>
       )}
       <ListContextProvider value={tableData} emptyWhileLoading>
@@ -100,12 +98,13 @@ const SemesterTable = () => {
           />
         </Datagrid>
       </ListContextProvider>
-      <Dialog open={flag} onClose={handleClose}>
+      <Dialog open={showDialouge} onClose={handleClose}>
         <SimpleForm onSubmit={updateBranch} record={semData}>
-          <ArrayInput source="branchSubs" label="Branches" fullWidth="flase">
+          <ArrayInput source="branchSubs" label="Branches" fullWidth={false}>
             <SimpleFormIterator
-              addButton={CustomAdd({ name: "Add Branch" })}
-              removeButton={CustomDelete()}
+              addButton={<CustomAdd name={"Add Branch"} />}
+              removeButton={<CustomDelete />}
+              getItemLabel={() => ""} // To remove index numbers
               disableReordering
             >
               <TextInput
