@@ -1,7 +1,6 @@
 import { dataProviderLegacy, db, FieldValue } from "../firebase";
 import { MAPPING } from "../mapping";
 
-
 /**
  * Don't call this directly
  * Use dataProvider
@@ -40,15 +39,12 @@ export const SubjectsProvider = {
     const { id } = params;
 
     await db
-    .collection(MAPPING.DATA)
-    .doc(MAPPING.SUBJECT)
-    .update({
-      [`schemes.${id}`] : FieldValue.delete()
-    });
+      .collection(MAPPING.DATA)
+      .doc(MAPPING.SUBJECT)
+      .update({
+        [`schemes.${id}`]: FieldValue.delete(),
+      });
 
-
-  return { data: {id:id} }
-
-
+    return { data: { id: id } };
   },
 };

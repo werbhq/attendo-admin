@@ -14,7 +14,11 @@ import {
 } from "react-admin";
 import { dataProvider } from "../../provider/firebase";
 import { MAPPING } from "../../provider/mapping";
-import { CustomAdd, CustomDelete, DeleteButtonDialouge } from "./components/CustomButton";
+import {
+  CustomAdd,
+  CustomDelete,
+  DeleteButtonDialouge,
+} from "./components/CustomButton";
 import { useParams } from "react-router-dom";
 
 export const SubjectEdit = () => {
@@ -24,11 +28,12 @@ export const SubjectEdit = () => {
   const notify = useNotify();
   const redirect = useRedirect();
 
-  const deleteAll = async () => { console.log(deleteAll);
+  const deleteAll = async () => {
+    console.log(deleteAll);
     await dataProvider.delete(url, {
       id: id,
     });
-   }
+  };
 
   const handleSubmit = async (data) => {
     data.semesters = data.semesters.map(({ semester, branchSubs }) => ({
@@ -68,7 +73,7 @@ export const SubjectEdit = () => {
         </ArrayInput>
         <Stack spacing={3} direction={"row"} sx={{ mt: "20px" }}>
           <SaveButton />
-         <DeleteButtonDialouge handleDelete={deleteAll}/>
+          <DeleteButtonDialouge handleDelete={deleteAll} />
         </Stack>
       </SimpleForm>
     </Edit>

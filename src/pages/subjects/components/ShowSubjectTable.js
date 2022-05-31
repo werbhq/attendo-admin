@@ -13,18 +13,14 @@ import {
   useNotify,
   SaveButton,
 } from "react-admin";
-
 import InputLabel from "@mui/material/InputLabel";
 import EditIcon from "@mui/icons-material/Edit";
 import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-
 import { useState } from "react";
 import { Dialog } from "@mui/material";
-
 import { MAPPING } from "../../../provider/mapping";
-
 import {
   CustomSubjectBulkDeleteButton,
   DeleteButtonDialouge,
@@ -56,7 +52,7 @@ const SubjectTable = () => {
     setAddSubject({ ...addSubject, open: false });
   };
 
-  const handleDelete = async ( record ) => {
+  const handleDelete = async (record) => {
     const removeIndex = semesterData.branchSubs
       .find((e) => e.branch === branchData)
       .subjects.findIndex((e) => e.id === record.id);

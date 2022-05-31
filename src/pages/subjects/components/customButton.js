@@ -7,9 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-
 import DeleteIcon from "@mui/icons-material/Delete";
-
 import {
   useRecordContext,
   Button,
@@ -20,16 +18,10 @@ import {
   useUnselectAll,
   useRedirect,
 } from "react-admin";
-
-import { useState } from "react"; 
-
+import { useState } from "react";
 import { MAPPING } from "../../../provider/mapping";
 
 const resource = MAPPING.SUBJECT;
-
-
-
-
 
 export const CustomSubjectBulkDeleteButton = ({ semester, branch }) => {
   const dataProvider = useDataProvider();
@@ -109,11 +101,8 @@ export const CustomSubjectBulkDeleteButton = ({ semester, branch }) => {
   );
 };
 
-export const DeleteButtonDialouge = ({
-  record,
-  handleDelete,
-}) => {
-  const [flag,setFlag] = useState(false);
+export const DeleteButtonDialouge = ({ record, handleDelete }) => {
+  const [flag, setFlag] = useState(false);
   const handleClose = () => setFlag(false);
   const refresh = useRefresh();
   const notify = useNotify();
@@ -129,7 +118,7 @@ export const DeleteButtonDialouge = ({
         sx={{ verticalAlign: "text-top" }}
       >
         <DeleteIcon sx={{ verticalAlign: "text-top" }} />
-         Delete
+        Delete
       </Button>
 
       <Dialog
@@ -139,7 +128,9 @@ export const DeleteButtonDialouge = ({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          { record ? `Delete Subject ${record.code?.toUpperCase()}` : `Delete The Whole Table`}
+          {record
+            ? `Delete Subject ${record.code?.toUpperCase()}`
+            : `Delete The Whole Table`}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
@@ -152,12 +143,11 @@ export const DeleteButtonDialouge = ({
           <Button onClick={handleClose}>Disagree</Button>
           <Button
             onClick={() => {
-              record ? handleDelete(record) : handleDelete() ;
+              record ? handleDelete(record) : handleDelete();
               handleClose();
-              notify(`Deleted`, { type: 'warning' });
+              notify(`Deleted`, { type: "warning" });
               refresh();
-              !record && redirect('list', MAPPING.SUBJECT);
-              
+              !record && redirect("list", MAPPING.SUBJECT);
             }}
             autoFocus
           >
@@ -171,7 +161,7 @@ export const DeleteButtonDialouge = ({
 
 export const CustomAdd = ({ name }) => <B variant="contained">{name}</B>;
 
-// todo : color error fix
+// TODO : color error fix
 export const CustomDelete = () => (
   <IconButton aria-label="delete" size="large" color="error">
     <DeleteIcon fontSize="inherit" />

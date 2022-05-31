@@ -62,10 +62,7 @@ const SemesterTable = () => {
     handleClose();
     notify(`Semester ${newData.semester} Modified Succesfully`);
     refresh();
-   
   };
-
-
 
   return (
     <>
