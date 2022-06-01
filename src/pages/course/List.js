@@ -12,19 +12,15 @@ import {
   useRecordContext,
   ArrayField,
 } from "react-admin";
+import { Chip } from "@mui/material";
 import QuickFilter from "../../components/ui/QuickFilter";
 import { MAPPING } from "../../provider/mapping";
 import { Schemes } from "../../Utils/Schemes";
-
-// import SemestersProvider from "../../provider/custom/semesters";
-import CustomProviders from "../../provider/customProviders";
-import { SemestersProvider } from "../../provider/custom/semesters";
 
 const filters = [
   <SearchInput source="id" alwaysOn resettable />,
   <TextInput source="branch" resettable />,
   <TextInput source="sem" resettable />,
-  <TextInput source="year" resettable />,
 ];
 
 // course - id;
@@ -38,18 +34,21 @@ const filters = [
 // );
 
 const CoursesList = () => {
-  const data = useRecordContext();
-  console.log(data);
-
   return (
     <List exporter={false} filters={filters}>
       <Datagrid rowClick="show">
         <TextField source="id" />
         <TextField source="totalSemesters" />
         {/* <FunctionField label="year" render={(record) => record.batches[0]?.id}> */}
-        <ArrayField  source="batches" >
-          <SingleFieldList >
-            <ChipField source= "sem" displayName="sera"/>
+        <ArrayField source="batches">
+          <SingleFieldList>
+            {/* <ChipField source="sem"   /> */}
+            <FunctionField
+              render={(record) => (
+                <ChipField record={{ sem: "S"+ record.sem }} 
+                source="sem" />
+              )}
+            />
           </SingleFieldList>
         </ArrayField>
         {/* console.log(record); */}
