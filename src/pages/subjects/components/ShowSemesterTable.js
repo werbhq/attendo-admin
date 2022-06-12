@@ -105,7 +105,7 @@ const SemesterTable = () => {
         <SimpleForm onSubmit={updateBranch} record={semData}>
           <ArrayInput source="branchSubs" label="Branches" fullWidth={false}>
             <SimpleFormIterator
-              addButton={<CustomAdd name={"Add Branch"} />}
+              addButton={CustomAdd({ name: "ADD BRANCH" })}
               removeButton={<CustomDelete />}
               getItemLabel={() => ""} // To remove index numbers
               disableReordering
