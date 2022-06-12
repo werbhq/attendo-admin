@@ -32,6 +32,13 @@ const SubjectEdit = () => {
     await dataProvider.delete(url, {
       id: id,
     });
+
+
+    notify(`Deleted ${id}`, {
+      type: "error",
+    });
+    refresh();
+    redirect("list",url);
   };
 
   const handleSubmit = async (data) => {
