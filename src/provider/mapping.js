@@ -5,3 +5,4 @@ export const MAPPING = {
   SEMESTERS: "semesters",
   DATA: "data",
 };
+//subjectsV2

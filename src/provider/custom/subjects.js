@@ -47,4 +47,14 @@ export const SubjectsProvider = {
 
     return { data: { id }, status: 200 };
   },
+  create: async (resource, params) => {
+    const { data,id } = params;
+
+    await db
+      .collection(MAPPING.DATA)
+      .doc('TEST')
+      .update({ [`schemes.${id}`] : data});
+
+    return { data: { id }, status: 200 };
+  },
 };
