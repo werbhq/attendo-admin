@@ -168,14 +168,13 @@ const SubjectTable = () => {
       <Stack direction="row">
         <Button
           disabled={branchData === undefined || semesterData === undefined}
+          label="ADD SUBJECT"
           variant="contained"
           size="medium"
           onClick={() => {
             setAddSubject({ ...addSubject, open: true, add: true, record: {} });
           }}
-        >
-          ADD SUBJECT
-        </Button>
+        />
       </Stack>
 
       <ListContextProvider value={tableData} emptyWhileLoading>

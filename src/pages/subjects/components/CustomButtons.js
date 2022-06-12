@@ -71,12 +71,10 @@ export const CustomSubjectBulkDeleteButton = ({ semester, branch }) => {
     <div>
       <Button
         variant="text"
-        color="error"
+        label="Delete"
         startIcon={<DeleteIcon />}
         onClick={handleClose}
-      >
-        Delete
-      </Button>
+      />
       <Dialog open={showDeleteDialouge} keepMounted onClose={handleClose}>
         <DialogTitle>{"Are you sure you want to delete?"}</DialogTitle>
         <DialogContent>
@@ -85,15 +83,14 @@ export const CustomSubjectBulkDeleteButton = ({ semester, branch }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>No</Button>
+          <Button label="No" onClick={handleClose} />
           <Button
+            label="Yes"
             onClick={async () => {
               handleDelete();
               handleClose();
             }}
-          >
-            Yes
-          </Button>
+          />
         </DialogActions>
       </Dialog>
     </div>
@@ -110,15 +107,13 @@ export const DeleteButtonDialouge = ({ record, handleDelete }) => {
   return (
     <>
       <Button
+        label="Delete"
+        startIcon={<DeleteIcon sx={{ verticalAlign: "text-top" }} />}
         variant="outlined"
-        color="error"
         size="medium"
         onClick={() => setFlag(true)}
-        sx={{ verticalAlign: "text-top" }}
-      >
-        <DeleteIcon sx={{ verticalAlign: "text-top" }} />
-        Delete
-      </Button>
+        sx={{ verticalAlign: "text-top", color: "red" }}
+      />
 
       <Dialog
         open={flag}
@@ -139,8 +134,9 @@ export const DeleteButtonDialouge = ({ record, handleDelete }) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
+          <Button label="Disagree" onClick={handleClose} />
           <Button
+            label="Agree"
             onClick={() => {
               record ? handleDelete(record) : handleDelete();
               handleClose();
@@ -149,9 +145,7 @@ export const DeleteButtonDialouge = ({ record, handleDelete }) => {
               !record && redirect("list", MAPPING.SUBJECT);
             }}
             autoFocus
-          >
-            Agree
-          </Button>
+          />
         </DialogActions>
       </Dialog>
     </>
@@ -159,9 +153,7 @@ export const DeleteButtonDialouge = ({ record, handleDelete }) => {
 };
 
 export const CustomAdd = ({ name }) => (
-  <Button variant="contained" size="medium">
-    {name}
-  </Button>
+  <Button label={name} variant="contained" size="medium" />
 );
 
 export const CustomDelete = () => (

@@ -1,12 +1,11 @@
 import {
   Datagrid,
-  ArrayField,
   TextField,
   List,
-  SingleFieldList,
-  ChipField,
   EditButton,
+  FunctionField,
 } from "react-admin";
+import CustomSemesterField from "./components/CustomSemesterField";
 
 const SubjectList = () => (
   <List>
@@ -15,11 +14,12 @@ const SubjectList = () => (
       <TextField source="organization" />
       <TextField source="course" />
       <TextField source="year" />
-      <ArrayField source="semesters">
-        <SingleFieldList linkType={false}>
-          <ChipField source="semester" />
-        </SingleFieldList>
-      </ArrayField>
+      <FunctionField
+        label="Semester"
+        render={(record) => (
+          <CustomSemesterField {...record} array="semesters" chip="semester" />
+        )}
+      />
       <EditButton />
     </Datagrid>
   </List>

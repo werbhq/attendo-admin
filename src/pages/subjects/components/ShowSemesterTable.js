@@ -2,9 +2,6 @@ import {
   TextField,
   Datagrid,
   ListContextProvider,
-  ArrayField,
-  SingleFieldList,
-  ChipField,
   TextInput,
   SimpleForm,
   ArrayInput,
@@ -22,6 +19,7 @@ import { Button, Dialog } from "@mui/material";
 import { CustomAdd, CustomDelete } from "./CustomButtons";
 import { dataProvider } from "../../../provider/firebase";
 import { MAPPING } from "../../../provider/mapping";
+import CustomSemesterField from "./CustomSemesterField";
 
 const url = MAPPING.SUBJECT;
 
@@ -80,11 +78,16 @@ const SemesterTable = () => {
       <ListContextProvider value={tableData} emptyWhileLoading>
         <Datagrid bulkActionButtons={false}>
           <TextField source="semester" />
-          <ArrayField source="branchSubs" label="Branches">
-            <SingleFieldList linkType={false}>
-              <ChipField source="branch" />
-            </SingleFieldList>
-          </ArrayField>
+          <FunctionField
+            label="Branches"
+            render={(record) => (
+              <CustomSemesterField
+                {...record}
+                array="branchSubs"
+                chip="branch"
+              />
+            )}
+          />
           <FunctionField
             render={(record) => (
               <Button

@@ -1,15 +1,13 @@
 import {
   TextField,
   Show,
-  ArrayField,
   Tab,
   TabbedShowLayout,
-  SingleFieldList,
-  ChipField,
+  FunctionField,
 } from "react-admin";
 import SubjectTable from "./components/ShowSubjectTable";
 import SemesterTable from "./components/ShowSemesterTable";
-
+import CustomSemesterField from "./components/CustomSemesterField";
 export const SubjectShow = () => {
   return (
     <Show>
@@ -19,11 +17,16 @@ export const SubjectShow = () => {
           <TextField source="organization" />
           <TextField source="course" />
           <TextField source="year" />
-          <ArrayField source="semesters">
-            <SingleFieldList linkType={false}>
-              <ChipField source="semester" />
-            </SingleFieldList>
-          </ArrayField>
+          <FunctionField
+            label="Semester"
+            render={(record) => (
+              <CustomSemesterField
+                {...record}
+                array="semesters"
+                chip="semester"
+              />
+            )}
+          />
         </Tab>
         <Tab label="semesters" path="semesters">
           <SemesterTable />
