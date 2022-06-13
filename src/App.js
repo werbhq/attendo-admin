@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Admin, defaultTheme, Resource } from "react-admin";
 import red from "@mui/material/colors/red";
-import teal from "@mui/material/colors/teal";
 
 import Classroom from "./pages/classroom/Index";
 import DashBoard from "./pages/dashboard/Dashboard";
