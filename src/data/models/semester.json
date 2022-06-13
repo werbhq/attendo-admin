@@ -2,6 +2,7 @@
     "courses": {
         "BTECH": {
             "id": "BTECH",
+            "totalSemesters": 8,
             "batches": [
                 {
                     "id": 2018,
@@ -23,6 +24,7 @@
         },
         "MTECH": {
             "id": "MTECH",
+            "totalSemesters": 0,
             "batches": []
         }
     }
