@@ -4,11 +4,19 @@ import {
   List,
   EditButton,
   FunctionField,
+  TopToolbar,
+  CreateButton,
 } from "react-admin";
 import CustomSemesterField from "./components/CustomSemesterField";
 
+const CustomToolBar = () => (
+  <TopToolbar>
+    <CreateButton />
+  </TopToolbar>
+);
+
 const SubjectList = () => (
-  <List>
+  <List actions={<CustomToolBar />}>
     <Datagrid rowClick="show">
       <TextField source="id" />
       <TextField source="organization" />
