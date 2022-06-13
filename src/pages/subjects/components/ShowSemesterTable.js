@@ -59,7 +59,7 @@ const SemesterTable = () => {
     });
 
     handleClose();
-    notify(`Semester ${newData.semester} Modified Succesfully`);
+    notify(`Semester ${newData.semester} Modified Succesfully`, { type: "success" });
     refresh();
   };
 
@@ -106,7 +106,7 @@ const SemesterTable = () => {
           <ArrayInput source="branchSubs" label="Branches" fullWidth={false}>
             <SimpleFormIterator
               addButton={CustomAdd({ name: "ADD BRANCH" })}
-              removeButton={<CustomDelete />}
+              removeButton={CustomDelete() }
               getItemLabel={() => ""} // To remove index numbers
               disableReordering
             >

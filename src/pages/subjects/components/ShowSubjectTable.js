@@ -75,7 +75,6 @@ const SubjectTable = () => {
 
     handleClose();
     refresh();
-    notify("Classroom Inputed");
   };
 
   const handleSubmit = async (newRecord) => {
@@ -100,10 +99,9 @@ const SubjectTable = () => {
       data: updatedData,
       previousData: data,
     });
-
-    refresh();
-    notify("Classroom Subject Updated");
     handleClose();
+    notify(`Subject Updated`,{ type: "success" });
+    refresh();
   };
 
   return (
