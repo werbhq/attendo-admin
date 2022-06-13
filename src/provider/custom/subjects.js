@@ -52,7 +52,7 @@ export const SubjectsProvider = {
 
     await db
       .collection(MAPPING.DATA)
-      .doc('TEST')
+      .doc(MAPPING.SUBJECT)
       .update({ [`schemes.${id}`] : data});
 
     return { data: { id }, status: 200 };
