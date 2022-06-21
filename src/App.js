@@ -6,7 +6,7 @@ import red from "@mui/material/colors/red";
 import Classroom from "./pages/classroom/Index";
 import DashBoard from "./pages/dashboard/Dashboard";
 import Subject from "./pages/subjects/Index";
-import Courses from "./pages/course";
+import Courses from "./pages/course/index";
 import { authProvider, dataProvider } from "./provider/firebase";
 
 const myTheme = {

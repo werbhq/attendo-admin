@@ -1,20 +1,18 @@
 import CoursesList from "./List";
-import CourseShow from "./Show";
 import icon from "@mui/icons-material/School";
 import { MAPPING } from "../../provider/mapping";
-// import CoursesCreate from "./Create";
-
+import { CourseShow } from "./Show";
+import { CourseEdit } from "./Edit";
+import CourseCreate from "./Create";
 
 const Courses = {
   name: MAPPING.SEMESTERS,
   icon,
   options: { label: "Courses" },
   list: CoursesList,
-   show: CourseShow,
-//   create: CoursesCreate,
+  show: CourseShow,
+  edit: CourseEdit,
+  create: CourseCreate,
 };
-
-
-
 
 export default Courses;
