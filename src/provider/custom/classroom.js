@@ -10,7 +10,7 @@ export const ClassroomProvider = {
 
   getList: async (resource, params) => {
     let { data, total } = await dataProviderLegacy.getList(resource, params);
-    const { data: semesters } = await dataProvider.getList(MAPPING.SEMESTERS);
+    const { data: semesters } = await dataProvider.getList(MAPPING.COURSES);
 
     data = data.map((e) => {
       const record = { ...e };
@@ -29,7 +29,7 @@ export const ClassroomProvider = {
 
   getOne: async (resource, params) => {
     let { data } = await dataProviderLegacy.getOne(resource, params);
-    const { data: semesters } = await dataProvider.getList(MAPPING.SEMESTERS);
+    const { data: semesters } = await dataProvider.getList(MAPPING.COURSES);
 
     const record = { ...data };
     if (!data.semester) {

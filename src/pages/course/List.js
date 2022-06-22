@@ -36,7 +36,7 @@ const filters = [
 const CoursesList = () => {
   return (
     <List exporter={false} filters={filters}>
-      <Datagrid rowClick="show">
+      <Datagrid rowClick="show" bulkActionButtons={false}>
         <TextField source="id" />
         <TextField source="totalSemesters" />
         {/* <FunctionField label="year" render={(record) => record.batches[0]?.id}> */}
@@ -45,8 +45,7 @@ const CoursesList = () => {
             {/* <ChipField source="sem"   /> */}
             <FunctionField
               render={(record) => (
-                <ChipField record={{ sem: "S"+ record.sem }} 
-                source="sem" />
+                <ChipField record={{ sem: "S" + record.sem }} source="sem" />
               )}
             />
           </SingleFieldList>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   required,
   number,
@@ -6,14 +5,25 @@ import {
   SimpleForm,
   NumberInput,
   TextInput,
+  useRedirect,
+  useRefresh,
+  useNotify,
 } from "react-admin";
 import { autoCapitalize } from "../../Utils/helpers";
+import { dataProvider } from "../../provider/firebase";
+import { MAPPING } from "../../provider/mapping";
+const url = MAPPING.COURSES;
 
-const CourseCreate = ({ schemes: schemeData }) => {
+const CourseCreate = () => {
+  const refresh = useRefresh();
+  const notify = useNotify();
+  const redirect = useRedirect();
+
   const onSubmit = async (data) => {
-    data = { ...data, id: data.id.toUpperCase(), batches: [] };
+    const id = data.id.toUpperCase();
+    data = { ...data, id, batches: [] };
 
-    for (let i = 0; i <= data.totalSemesters; i += 2) {
+    for (let i = 1; i <= data.totalSemesters; i += 2) {
       data.batches.push({
         id: null,
         sem: i,
@@ -22,14 +32,12 @@ const CourseCreate = ({ schemes: schemeData }) => {
 
     console.log(data);
 
-    // const id = `${data.course}-${data.organization}-${data.year}`;
-    // data = { id, ...data, semesters: [] };
-    // await dataProvider.create(url, { data, id: data.id });
-    // notify(`Added ${id}`, {
-    //   type: "success",
-    // });
-    // refresh();
-    // redirect("list", url);
+    await dataProvider.create(url, { data, id });
+    notify(`Added ${id}`, {
+      type: "success",
+    });
+    refresh();
+    redirect("list", url);
   };
 
   const evenOnlyValidation = (value) => {

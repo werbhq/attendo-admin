@@ -2,7 +2,7 @@ export const MAPPING = {
   SUBJECT: "subjectsV2",
   CLASSROOMS: "classroomsV2",
   STUDENTS: "classroomsV2/students",
-  SEMESTERS: "semesters",
+  COURSES: "semesters",
   DATA: "data",
 };
 //subjectsV2
