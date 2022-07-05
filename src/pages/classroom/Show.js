@@ -151,7 +151,13 @@ export const ClassroomShow = () => {
           >
             <TextField source="id" />
           </ReferenceField>
-          <TextField source="course" />
+          <ReferenceField
+            source="course"
+            reference={MAPPING.SEMESTERS}
+            link="show"
+          >
+            <TextField source="id" />
+          </ReferenceField>
           <TextField source="year" />
           <TextField source="semester" emptyText="-" />
           <FunctionField

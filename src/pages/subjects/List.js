@@ -4,7 +4,9 @@ import {
   List,
   EditButton,
   FunctionField,
+  ReferenceField,
 } from "react-admin";
+import { MAPPING } from "../../provider/mapping";
 import CustomSemesterField from "./components/CustomSemesterField";
 
 const SubjectList = () => (
@@ -12,7 +14,9 @@ const SubjectList = () => (
     <Datagrid rowClick="show">
       <TextField source="id" />
       <TextField source="organization" />
-      <TextField source="course" />
+      <ReferenceField source="course" reference={MAPPING.SEMESTERS} link="show">
+        <TextField source="id" />
+      </ReferenceField>
       <TextField source="year" />
       <FunctionField
         label="Semester"
