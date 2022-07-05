@@ -1,4 +1,4 @@
-import { ClassroomShort } from './classroom';
+import { ClassroomShort, ClassroomShortTeacher } from './classroom';
 
 export interface Teacher {
     id: string;
@@ -31,7 +31,7 @@ export interface TeacherClassroom {
         lastUpdate: string;
         weight: number;
     }[];
-    classroom: ClassroomShort;
+    classroom: ClassroomShortTeacher;
     subject: {
         id: string;
         name: string;

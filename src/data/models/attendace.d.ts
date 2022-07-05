@@ -1,4 +1,4 @@
-import { ClassroomShort } from './classroom';
+import { ClassroomShort, ClassroomShortTeacher } from './classroom';
 import { Subject } from './subject';
 import { TeacherShort } from './teacher';
 
@@ -7,7 +7,7 @@ export interface Attendance {
     date: string;
     dateTime: number;
     hour: number;
-    classroom: ClassroomShort;
+    classroom: ClassroomShortTeacher;
     teacher: TeacherShort;
     subject: Subject;
     absentees?: string[];

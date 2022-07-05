@@ -1,18 +1,25 @@
-import { ClassroomShort } from './classroom';
+import { ClassroomShortTeacher } from './classroom';
 
 export interface MonthlyAttendance {
     id: string;
     date: string;
-    semester: number;
-    classroom: ClassroomShort;
-    totalAttendance: number;
-    students: [
-        {
-            student_id: string;
+    classroom: ClassroomShortTeacher;
+    totalAttendance: {
+        [subjectId: string]: {
+            subjectId: string;
+            name: string;
+            total: number;
+        };
+    };
+    students: {
+        [studentId: string]: {
+            studentId: string;
             attendances: {
-                subject_id: string;
-                present: number;
-            }[];
-        }
-    ];
+                [subjectId: string]: {
+                    subjectId: string;
+                    present: number;
+                };
+            };
+        };
+    };
 }

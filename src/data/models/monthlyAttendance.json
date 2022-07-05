@@ -1,39 +1,52 @@
 {
-    "id": "KTU-BTECH-2019-ce-1-01-01-2021",
+    "id": "KTU-BTECH-2019-CE-1-01-01-2021",
     "date": "01-01-2021",
-    "semester": 4,
     "classroom": {
-        "id": "KTU-BTECH-2019-ce-1",
+        "id": "KTU-BTECH-2019-CE-1",
         "branch": "ce",
         "name": "1",
+        "year": 2019,
         "course": "BTECH",
         "schemeId": "BTECH-KTU-2019",
-        "semester": 4,
-        "isDerived": false
+        "isDerived": false,
+        "semester": 4
     },
-    "totalAttendance": [
-        {
+    "totalAttendance": {
+        "MAT203": {
             "subjectId": "MAT203",
             "total": 2
         },
-        {
+        "EST203": {
             "subjectId": "EST203",
             "total": 2
         }
-    ],
-    "students": [
-        {
-            "id": "agauthamkrishna.b20ce1101@mbcet.ac.in",
-            "attendances": [
-                {
+    },
+    "students": {
+        "agauthamkrishna.b20ce1101@mbcet.ac.in": {
+            "studentId": "agauthamkrishna.b20ce1101@mbcet.ac.in",
+            "attendances": {
+                "MAT203": {
                     "subjectId": "MAT203",
                     "present": 1
                 },
-                {
+                "EST203": {
                     "subjectId": "EST203",
                     "present": 2
                 }
-            ]
+            }
+        },
+        "aaronjohnson.b20ce1103@mbcet.ac.in": {
+            "studentId": "aaronjohnson.b20ce1103@mbcet.ac.in",
+            "attendances": {
+                "MAT203": {
+                    "subjectId": "MAT203",
+                    "present": 0
+                },
+                "EST203": {
+                    "subjectId": "EST203",
+                    "present": 2
+                }
+            }
         }
-    ]
+    }
 }
