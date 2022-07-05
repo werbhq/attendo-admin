@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
 import {
   BooleanField,
@@ -30,14 +31,15 @@ import {
   SingleFieldList,
   useShowController,
   ArrayField,
+  ListContextProvider,
+  useList,
+  useRecordSelection,
 } from "react-admin";
 import { useState } from "react";
 import EditStudent from "./components/EditStudent";
 import { MAPPING } from "../../provider/mapping";
 import { sortByRoll } from "../../Utils/helpers";
-import CustomArrayList from "../../components/ui/CustomArrayList";
 import EditClassroom from "./components/EditClassroom";
-import { dataProvider } from "../../provider/firebase";
 import { Schemes } from "../../Utils/Schemes";
 
 const resource = MAPPING.STUDENTS;
@@ -125,6 +127,39 @@ const CustomStudentBulkDeleteButton = () => {
   );
 };
 
+const CustomVirtualStudentSaveButton = ({ list, callback }) => {
+  const dataProvider = useDataProvider();
+  const record = useRecordContext();
+  const notify = useNotify();
+  const refresh = useRefresh();
+
+  const { selectedIds } = useListContext();
+
+  const students = list.filter((e) => selectedIds.includes(e.id));
+  const count = selectedIds.length;
+
+  const handleClose = async () => {
+    await dataProvider.updateMany(resource, {
+      id: record.id,
+      data: students.sort(sortByRoll),
+    });
+    refresh();
+    notify(`Added ${count} Student`, { type: "success" });
+    await callback(students.sort(sortByRoll));
+  };
+
+  return (
+    <Button
+      variant="text"
+      color="primary"
+      startIcon={<SaveIcon />}
+      onClick={handleClose}
+    >
+      Save
+    </Button>
+  );
+};
+
 export const ClassroomShow = () => {
   const [studentDialouge, setStudentDialouge] = useState({
     enable: false,
@@ -138,6 +173,53 @@ export const ClassroomShow = () => {
   });
 
   const { record } = useShowController();
+  const dataProvider = useDataProvider();
+
+  const [studentVirtualDialouge, setStudentVirtualDialouge] = useState({
+    enable: false,
+  });
+
+  const virtualClassEditSaveHandler = async (students = record?.students) => {
+    if (!studentVirtualDialouge.enable) {
+      const classes = await Promise.all(
+        record.parentClasses.map((e) =>
+          dataProvider.getOne(MAPPING.CLASSROOMS, { id: e })
+        )
+      );
+
+      const fullStudents = [];
+      classes?.forEach((e) => {
+        const students = e.data.students.map((_e) => ({
+          ..._e,
+          classId: e.data.id,
+        }));
+        fullStudents.push(...students);
+      });
+
+      setListData(fullStudents);
+      select(record?.students.map((e) => e.id));
+
+      setStudentVirtualDialouge({
+        ...studentVirtualDialouge,
+        enable: true,
+      });
+    } else {
+      unselectAll();
+      setStudentVirtualDialouge({
+        ...studentVirtualDialouge,
+        enable: false,
+      });
+
+      setListData(students);
+    }
+  };
+
+  const [listData, setListData] = useState(record?.students || []);
+  const listContext = useList({ data: listData, resource });
+  const [, { select }] = useRecordSelection(resource);
+  const unselectAll = useUnselectAll(resource);
+
+  listContext.onUnselectItems = virtualClassEditSaveHandler;
 
   return (
     <Show emptyWhileLoading>
@@ -229,9 +311,10 @@ export const ClassroomShow = () => {
             </Stack>
           </div>
         </Tab>
+
         <Tab label="students" path="students">
-          <CustomArrayList fieldName={"students"} resource={resource}>
-            <div style={{ margin: "20px 0px" }}>
+          <div style={{ margin: "20px 0px" }}>
+            {!record?.isDerived ? (
               <Button
                 size="medium"
                 variant="contained"
@@ -247,24 +330,58 @@ export const ClassroomShow = () => {
               >
                 Add Student
               </Button>
-            </div>
+            ) : (
+              !studentVirtualDialouge.enable && (
+                <Button
+                  size="medium"
+                  variant="contained"
+                  startIcon={<EditIcon />}
+                  onClick={virtualClassEditSaveHandler}
+                >
+                  Edit Students
+                </Button>
+              )
+            )}
+          </div>
+          <ListContextProvider value={listContext}>
             <Datagrid
-              bulkActionButtons={<CustomStudentBulkDeleteButton />}
-              resource={resource}
+              bulkActionButtons={
+                record?.isDerived ? (
+                  studentVirtualDialouge.enable && (
+                    <CustomVirtualStudentSaveButton
+                      list={listData}
+                      callback={virtualClassEditSaveHandler}
+                    />
+                  )
+                ) : (
+                  <CustomStudentBulkDeleteButton />
+                )
+              }
             >
               <NumberField source="rollNo" />
+              {record?.isDerived && (
+                <ReferenceField
+                  source="classId"
+                  reference={MAPPING.CLASSROOMS}
+                  link="show"
+                >
+                  <TextField source="id" />
+                </ReferenceField>
+              )}
               <TextField source="regNo" />
               <TextField source="name" />
               <EmailField source="email" />
               <TextField source="userName" />
-              <CustomStudentEditButton
-                state={{
-                  dialouge: studentDialouge,
-                  setdialouge: setStudentDialouge,
-                }}
-              />
+              {!record?.isDerived && (
+                <CustomStudentEditButton
+                  state={{
+                    dialouge: studentDialouge,
+                    setdialouge: setStudentDialouge,
+                  }}
+                />
+              )}
             </Datagrid>
-          </CustomArrayList>
+          </ListContextProvider>
         </Tab>
         {studentDialouge.enable && (
           <EditStudent
