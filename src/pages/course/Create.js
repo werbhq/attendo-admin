@@ -23,15 +23,6 @@ const CourseCreate = () => {
     const id = data.id.toUpperCase();
     data = { ...data, id, batches: [] };
 
-    for (let i = 1; i <= data.totalSemesters; i += 2) {
-      data.batches.push({
-        id: null,
-        sem: i,
-      });
-    }
-
-    console.log(data);
-
     await dataProvider.create(url, { data, id });
     notify(`Added ${id}`, {
       type: "success",
