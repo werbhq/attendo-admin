@@ -10,8 +10,10 @@ import {
   useRefresh,
   useNotify,
   useRedirect,
+  SelectInput,
+  useDataProvider,
+  required,
 } from "react-admin";
-import { dataProvider } from "../../provider/firebase";
 import { MAPPING } from "../../provider/mapping";
 import {
   CustomAdd,
@@ -19,6 +21,7 @@ import {
   DeleteButtonDialouge,
 } from "./components/CustomButtons";
 import { useParams } from "react-router-dom";
+import { convertSingleValueListToSelectList } from "../../Utils/helpers";
 
 const url = MAPPING.SUBJECT;
 
@@ -28,17 +31,24 @@ const SubjectEdit = () => {
   const notify = useNotify();
   const redirect = useRedirect();
 
+  const dataProvider = useDataProvider();
+  const [courses, setCourses] = React.useState([]);
+  if (courses.length === 0) {
+    dataProvider.getList(MAPPING.SEMESTERS).then((e) => {
+      setCourses(e.data.map(({ id }) => id));
+    });
+  }
+
   const deleteAll = async () => {
     await dataProvider.delete(url, {
       id: id,
     });
 
-
     notify(`Deleted ${id}`, {
       type: "error",
     });
     refresh();
-    redirect("list",url);
+    redirect("list", url);
   };
 
   const handleSubmit = async (data) => {
@@ -65,7 +75,12 @@ const SubjectEdit = () => {
       <SimpleForm onSubmit={handleSubmit} toolbar={false}>
         <TextInput disabled label="Id" source="id" />
         <TextInput source="organization" required />
-        <TextInput source="course" required />
+        <SelectInput
+          source="course"
+          choices={courses.map(convertSingleValueListToSelectList)}
+          validate={[required()]}
+          label="course"
+        />
         <TextInput source="year" required />
         <ArrayInput source="semesters" fullWidth={false} label="Semesters">
           <SimpleFormIterator

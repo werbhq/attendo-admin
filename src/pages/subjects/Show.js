@@ -8,7 +8,8 @@ import {
 import SubjectTable from "./components/ShowSubjectTable";
 import SemesterTable from "./components/ShowSemesterTable";
 import CustomSemesterField from "./components/CustomSemesterField";
-export const SubjectShow = () => {
+
+const SubjectShow = () => {
   return (
     <Show>
       <TabbedShowLayout sx={{ mb: 5 }}>

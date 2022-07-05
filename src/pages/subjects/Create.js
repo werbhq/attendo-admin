@@ -1,18 +1,29 @@
+import { useState } from "react";
 import {
   Create,
   SimpleForm,
+  SelectInput,
   TextInput,
   required,
   number,
   useRefresh,
   useNotify,
   useRedirect,
+  useDataProvider,
 } from "react-admin";
-import { dataProvider } from "../../provider/firebase";
 import { MAPPING } from "../../provider/mapping";
+import { convertSingleValueListToSelectList } from "../../Utils/helpers";
 const url = MAPPING.SUBJECT;
 
-const PostCreate = () => {
+const SubjectCreate = () => {
+  const dataProvider = useDataProvider();
+  const [courses, setCourses] = useState([]);
+  if (courses.length === 0) {
+    dataProvider.getList(MAPPING.SEMESTERS).then((e) => {
+      setCourses(e.data.map(({ id }) => id));
+    });
+  }
+
   const refresh = useRefresh();
   const notify = useNotify();
   const redirect = useRedirect();
@@ -39,23 +50,21 @@ const PostCreate = () => {
         <TextInput
           source="organization"
           validate={[required(), upperCaseValidation]}
-          fullWidth
         />
         <TextInput
           source="year"
           validate={[required(), number("not a number")]}
           label="year"
-          fullWidth
         />
-        <TextInput
+        <SelectInput
           source="course"
+          choices={courses.map(convertSingleValueListToSelectList)}
           validate={[required(), upperCaseValidation]}
           label="course"
-          fullWidth
         />
       </SimpleForm>
     </Create>
   );
 };
 
-export default PostCreate;
+export default SubjectCreate;
