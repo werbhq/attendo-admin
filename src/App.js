@@ -7,6 +7,7 @@ import Classroom from "./pages/classroom/Index";
 import DashBoard from "./pages/dashboard/Dashboard";
 import Subject from "./pages/subjects/Index";
 import Courses from "./pages/course/index";
+import AuthTeachers from "./pages/authTeachers/Index";
 import { authProvider, dataProvider } from "./provider/firebase";
 
 const myTheme = {
@@ -38,6 +39,7 @@ const App = () => (
     <Resource {...Classroom} />
     <Resource {...Courses} />
     <Resource {...Subject} />
+    <Resource {...AuthTeachers} />
   </Admin>
 );
 
