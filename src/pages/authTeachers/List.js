@@ -1,9 +1,20 @@
-import { Datagrid, EmailField, List, TextField } from "react-admin";
+import {
+  Datagrid,
+  TextField,
+  List,
+  SearchInput,
+  TextInput,
+  EmailField,
+} from "react-admin";
+
+const filters = [
+  <SearchInput source="id" alwaysOn resettable />,
+  <TextInput source="branch" resettable />,
+];
 
 const AuthorizedTeacherList = () => (
-  <List>
+  <List exporter={false} filters={filters}>
     <Datagrid rowClick="show">
-      <TextField source="id" />
       <EmailField source="email" />
       <TextField source="userName" />
       <TextField source="branch" />
@@ -11,4 +22,4 @@ const AuthorizedTeacherList = () => (
   </List>
 );
 
-export default AuthorizedTeacherList
+export default AuthorizedTeacherList;
