@@ -23,3 +23,9 @@ export interface ClassroomShort {
     schemeId: string;
     isDerived: boolean;
 }
+
+export interface MasterClassrooms {
+    courses: {
+        [id: string]: Classroom;
+    };
+}
