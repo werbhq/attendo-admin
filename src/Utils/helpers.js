@@ -19,6 +19,7 @@ export const getClassroomId = (data) => {
  */
 export const sorter = (params, data) => {
   const sort = params?.sort;
+  const filters = params?.filter;
 
   if (sort) {
     const field = sort.field;
@@ -32,6 +33,20 @@ export const sorter = (params, data) => {
         return a[field] - b[field];
       }
       return a - b;
+    });
+  }
+
+  if (filters && Object.entries(filters).length) {
+    Object.entries(filters).forEach(([e_field, value]) => {
+      data = data.filter((e) => {
+        if (typeof e[e_field] === "string" || typeof e[e_field] === "number") {
+          return `${e[e_field]}`.includes(value);
+        } else if (Array.isArray(e[e_field])) {
+          return e[e_field].includes(value);
+        } else {
+          return true;
+        }
+      });
     });
   }
 
