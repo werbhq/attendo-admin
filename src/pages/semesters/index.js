@@ -6,7 +6,7 @@ import { CourseEdit } from "./Edit";
 import CourseCreate from "./Create";
 
 const Courses = {
-  name: MAPPING.COURSES,
+  name: MAPPING.SEMESTERS,
   icon,
   options: { label: "Courses" },
   list: CoursesList,

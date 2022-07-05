@@ -12,7 +12,7 @@ import {
 import { autoCapitalize } from "../../Utils/helpers";
 import { dataProvider } from "../../provider/firebase";
 import { MAPPING } from "../../provider/mapping";
-const url = MAPPING.COURSES;
+const url = MAPPING.SEMESTERS;
 
 const CourseCreate = () => {
   const refresh = useRefresh();
