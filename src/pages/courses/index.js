@@ -1,9 +1,9 @@
+import icon from "@mui/icons-material/Article";
 import CoursesList from "./List";
-import icon from "@mui/icons-material/School";
-import { MAPPING } from "../../provider/mapping";
-import { CourseShow } from "./Show";
-import { CourseEdit } from "./Edit";
+import CourseShow from "./Show";
+import CourseEdit from "./Edit";
 import CourseCreate from "./Create";
+import { MAPPING } from "../../provider/mapping";
 
 const Courses = {
   name: MAPPING.SEMESTERS,

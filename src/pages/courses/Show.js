@@ -10,7 +10,7 @@ import {
   useShowController,
 } from "react-admin";
 
-export const CourseShow = () => {
+const CourseShow = () => {
   const { record } = useShowController();
 
   return (
@@ -41,3 +41,5 @@ export const CourseShow = () => {
     </Show>
   );
 };
+
+export default CourseShow;

@@ -36,9 +36,9 @@ const App = () => (
     authProvider={authProvider}
     dashboard={DashBoard}
   >
-    <Resource {...Classroom} />
     <Resource {...Courses} />
     <Resource {...Subject} />
+    <Resource {...Classroom} />
     <Resource {...AuthTeachers} />
   </Admin>
 );

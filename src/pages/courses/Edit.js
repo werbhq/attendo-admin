@@ -7,7 +7,7 @@ import {
   SimpleFormIterator,
 } from "react-admin";
 
-export const CourseEdit = () => {
+const CourseEdit = () => {
   return (
     <Edit>
       <SimpleForm>
@@ -23,3 +23,5 @@ export const CourseEdit = () => {
     </Edit>
   );
 };
+
+export default CourseEdit;
