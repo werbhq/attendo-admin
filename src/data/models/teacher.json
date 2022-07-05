@@ -11,12 +11,13 @@
             "gclassroomId": "352994715625",
             "meetLookup": "c44cjhwq7h",
             "classroom": {
-                "id": "BTECH-2019-cs-e-cs402",
+                "id": "KTU-BTECH-2019-cs-2",
                 "branch": "cs",
-                "name": "e",
-                "semester": 5,
+                "name": "2",
                 "course": "BTECH",
-                "schemeId": "BTECH-KTU-2019"
+                "schemeId": "BTECH-KTU-2019",
+                "semester": 1,
+                "isDerived": false
             },
             "subject": {
                 "id": "est120",
