@@ -1,5 +1,11 @@
 import { sorter } from "../../Utils/helpers";
-import { dataProvider, dataProviderLegacy, db } from "../firebase";
+import {
+  dataProvider,
+  dataProviderLegacy,
+  db,
+  FieldPath,
+  FieldValue,
+} from "../firebase";
 import { MAPPING } from "../mapping";
 
 /**
@@ -51,12 +57,44 @@ export const ClassroomProvider = {
       .doc(id)
       .update({ ...data });
 
+    const fieldPath = new FieldPath("classrooms", id);
+    await db
+      .collection(MAPPING.DATA)
+      .doc(MAPPING.MASTER_CLASSROOMS)
+      .update(fieldPath, data);
+
     return { data: data, status: 200 };
   },
 
   create: async (resource, params) => {
     const { data } = params;
     await db.collection(MAPPING.CLASSROOMS).doc(data.id).set(data);
+
+    const fieldPath = new FieldPath("classrooms", data.id);
+    await db
+      .collection(MAPPING.DATA)
+      .doc(MAPPING.MASTER_CLASSROOMS)
+      .update(fieldPath, data);
+
     return { data, status: 200 };
+  },
+
+  delete: async (resource, params) => {
+    const { id } = params;
+    await db.collection(MAPPING.CLASSROOMS).doc(id).delete();
+
+    const fieldPath = new FieldPath("classrooms", id);
+    await db
+      .collection(MAPPING.DATA)
+      .doc(MAPPING.MASTER_CLASSROOMS)
+      .update(fieldPath, FieldValue.delete());
+
+    return { data: { id }, status: 200 };
+  },
+
+  deleteMany: async (resource, params) => {
+    const { ids } = params;
+    for (const id of ids) await dataProvider.delete(resource, { id });
+    return { data: ids, status: 200 };
   },
 };

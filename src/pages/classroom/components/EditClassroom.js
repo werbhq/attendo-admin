@@ -109,26 +109,26 @@ export default function EditClassroom({ state }) {
         <SelectInput
           source="course"
           choices={getCourses()}
-          onChange={(e) => setData({ ...data, course: e })}
+          onChange={(e) => setData({ ...data, course: e.target.value })}
           required
         />
         <SelectInput
           source="schemeId"
           choices={getSchemes(data.course)}
-          onChange={(e) => setData({ ...data, scheme: e })}
+          onChange={(e) => setData({ ...data, scheme: e.target.value })}
           required
         />
         <NumberInput source="year" required />
         <SelectInput
           source="branch"
           choices={getBranches(data.scheme)}
-          onChange={(e) => setData({ ...data, branch: e })}
+          onChange={(e) => setData({ ...data, branch: e.target.value })}
           required
         />
         <SelectInput
           source="name"
           choices={data.branch ? Schemes.classNames : []}
-          onChange={(e) => setData({ ...data, name: e })}
+          onChange={(e) => setData({ ...data, name: e.target.value })}
           required
         />
         {isDerived(data.name) && (
@@ -136,7 +136,7 @@ export default function EditClassroom({ state }) {
             <SelectInput
               source="semester"
               choices={getSemesters(data.scheme)}
-              onChange={(e) => setData({ ...data, semester: e })}
+              onChange={(e) => setData({ ...data, semester: e.target.value })}
               required
             />
             <SelectInput
