@@ -36,7 +36,7 @@ export const CourseShow = () => {
             )}
           </ArrayField>
         </Tab>
-        <Tab label="Active Semesters"></Tab>
+        <Tab label="Active Semesters" path="active_semester"></Tab>
       </TabbedShowLayout>
     </Show>
   );
