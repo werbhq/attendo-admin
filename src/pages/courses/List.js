@@ -18,7 +18,7 @@ const filters = [
 const CoursesList = () => {
   return (
     <List exporter={false} filters={filters}>
-      <Datagrid rowClick="show" bulkActionButtons={false}>
+      <Datagrid rowClick="show">
         <TextField source="id" />
         <TextField source="totalSemesters" />
         <ArrayField source="batches">
