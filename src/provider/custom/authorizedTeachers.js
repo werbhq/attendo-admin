@@ -1,5 +1,11 @@
 import { sorter } from "../../Utils/helpers";
-import { dataProviderLegacy, db, FieldPath, FieldValue } from "../firebase";
+import {
+  dataProvider,
+  dataProviderLegacy,
+  db,
+  FieldPath,
+  FieldValue,
+} from "../firebase";
 import { MAPPING } from "../mapping";
 
 /**
@@ -47,5 +53,11 @@ export const AuthTeachersProvider = {
       .update(fieldPath, FieldValue.delete());
 
     return { data: { id }, status: 200 };
+  },
+
+  deleteMany: async (resource, params) => {
+    const { ids } = params;
+    for (const id of ids) await dataProvider.delete(resource, { id });
+    return { data: ids, status: 200 };
   },
 };
