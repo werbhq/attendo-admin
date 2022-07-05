@@ -1,4 +1,5 @@
-import { dataProviderLegacy, db, FieldValue } from "../firebase";
+import { sorter } from "../../Utils/helpers";
+import { dataProviderLegacy, db, FieldPath, FieldValue } from "../firebase";
 import { MAPPING } from "../mapping";
 
 /**
@@ -13,7 +14,7 @@ export const SubjectsProvider = {
       id: MAPPING.SUBJECT,
     });
     const values = Object.values(data.schemes);
-    return { data: values, total: values.length, status: 200 };
+    return { data: sorter(params, values), total: values.length, status: 200 };
   },
 
   getOne: async (resource, params) => {
@@ -26,34 +27,35 @@ export const SubjectsProvider = {
   update: async (resource, params) => {
     const { id, data } = params;
 
+    const fieldPath = new FieldPath("schemes", id);
     await db
       .collection(MAPPING.DATA)
       .doc(MAPPING.SUBJECT)
-      .update({
-        [`schemes.${id}`]: data,
-      });
+      .update(fieldPath, data);
 
     return { data, status: 200 };
   },
+
   delete: async (resource, params) => {
     const { id } = params;
 
+    const fieldPath = new FieldPath("schemes", id);
     await db
       .collection(MAPPING.DATA)
       .doc(MAPPING.SUBJECT)
-      .update({
-        [`schemes.${id}`]: FieldValue.delete(),
-      });
+      .update(fieldPath, FieldValue.delete());
 
     return { data: { id }, status: 200 };
   },
-  create: async (resource, params) => {
-    const { data,id } = params;
 
+  create: async (resource, params) => {
+    const { data, id } = params;
+
+    const fieldPath = new FieldPath("schemes", id);
     await db
       .collection(MAPPING.DATA)
       .doc(MAPPING.SUBJECT)
-      .update({ [`schemes.${id}`] : data});
+      .update(fieldPath, data);
 
     return { data: { id }, status: 200 };
   },

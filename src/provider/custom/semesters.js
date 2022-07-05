@@ -1,3 +1,4 @@
+import { sorter } from "../../Utils/helpers";
 import { dataProviderLegacy } from "../firebase";
 import { MAPPING } from "../mapping";
 
@@ -13,7 +14,7 @@ export const SemestersProvider = {
       id: MAPPING.SEMESTERS,
     });
     const values = Object.values(data.courses);
-    return { data: values, total: values.length };
+    return { data: sorter(params, values), total: values.length };
   },
 
   getOne: async (resource, params) => {

@@ -1,3 +1,4 @@
+import { sorter } from "../../Utils/helpers";
 import { dataProvider, dataProviderLegacy, db } from "../firebase";
 import { MAPPING } from "../mapping";
 
@@ -24,7 +25,7 @@ export const ClassroomProvider = {
       return record;
     });
 
-    return { data, total };
+    return { data: sorter(params, data), total, status: 200 };
   },
 
   getOne: async (resource, params) => {

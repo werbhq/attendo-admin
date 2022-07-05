@@ -1,4 +1,5 @@
-import { dataProviderLegacy, db, FieldValue } from "../firebase";
+import { sorter } from "../../Utils/helpers";
+import { dataProviderLegacy, db, FieldPath, FieldValue } from "../firebase";
 import { MAPPING } from "../mapping";
 
 /**
@@ -12,8 +13,9 @@ export const AuthTeachersProvider = {
     const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
       id: MAPPING.AUTH_TEACHERS,
     });
+
     const values = Object.values(data.teachers);
-    return { data: values, total: values.length, status: 200 };
+    return { data: sorter(params, values), total: values.length, status: 200 };
   },
 
   getOne: async (resource, params) => {
@@ -26,34 +28,23 @@ export const AuthTeachersProvider = {
   update: async (resource, params) => {
     const { id, data } = params;
 
+    const fieldPath = new FieldPath("teachers", id);
     await db
       .collection(MAPPING.DATA)
       .doc(MAPPING.AUTH_TEACHERS)
-      .update({
-        [`teachers.${id}`]: data,
-      });
+      .update(fieldPath, data);
 
     return { data, status: 200 };
   },
+
   delete: async (resource, params) => {
     const { id } = params;
 
+    const fieldPath = new FieldPath("teachers", id);
     await db
       .collection(MAPPING.DATA)
       .doc(MAPPING.AUTH_TEACHERS)
-      .update({
-        [`teachers.${id}`]: FieldValue.delete(),
-      });
-
-    return { data: { id }, status: 200 };
-  },
-  create: async (resource, params) => {
-    const { data, id } = params;
-
-    await db
-      .collection(MAPPING.DATA)
-      .doc(MAPPING.AUTH_TEACHERS)
-      .update({ [`teachers.${id}`]: data });
+      .update(fieldPath, FieldValue.delete());
 
     return { data: { id }, status: 200 };
   },
