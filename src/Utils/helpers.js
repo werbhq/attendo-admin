@@ -24,16 +24,18 @@ export const sorter = (params, data) => {
   if (sort) {
     const field = sort.field;
 
-    data = data.sort((a, b) => {
-      if (typeof a[field] === "string") {
-        if (sort.order === "DESC") return b[field].localeCompare(a[field]);
-        return a[field].localeCompare(b[field]);
-      } else if (typeof a[field] === "number") {
-        if (sort.order === "DESC") return b[field] - a[field];
-        return a[field] - b[field];
-      }
-      return a - b;
-    });
+    if (Array.isArray(data)) {
+      data = data.sort((a, b) => {
+        if (typeof a[field] === "string") {
+          if (sort.order === "DESC") return b[field].localeCompare(a[field]);
+          return a[field].localeCompare(b[field]);
+        } else if (typeof a[field] === "number") {
+          if (sort.order === "DESC") return b[field] - a[field];
+          return a[field] - b[field];
+        }
+        return a - b;
+      });
+    }
   }
 
   if (filters && Object.entries(filters).length) {
