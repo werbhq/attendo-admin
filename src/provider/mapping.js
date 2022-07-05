@@ -4,5 +4,6 @@ export const MAPPING = {
   STUDENTS: "classroomsV2/students",
   SEMESTERS: "semesters",
   DATA: "data",
+  AUTH_TEACHERS: "authorized_teachers",
 };
 //subjectsV2

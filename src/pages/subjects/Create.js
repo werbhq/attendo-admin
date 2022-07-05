@@ -19,7 +19,7 @@ const PostCreate = () => {
 
   const onSubmit = async (data) => {
     const id = `${data.course}-${data.organization}-${data.year}`;
-    data = { id, ...data,semesters:[] };
+    data = { id, ...data, semesters: [] };
     await dataProvider.create(url, { data, id: data.id });
     notify(`Added ${id}`, {
       type: "success",
@@ -43,14 +43,12 @@ const PostCreate = () => {
         />
         <TextInput
           source="year"
-          multiLine={false}
           validate={[required(), number("not a number")]}
           label="year"
           fullWidth
         />
         <TextInput
           source="course"
-          multiLine={true}
           validate={[required(), upperCaseValidation]}
           label="course"
           fullWidth

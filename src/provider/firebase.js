@@ -4,8 +4,9 @@ import {
 } from "react-admin-firebase";
 import config from "./config.json";
 import CustomProviders from "./customProviders";
-import firebase from 'firebase/compat/app';
+import firebase from "firebase/compat/app";
 export const FieldValue = firebase.firestore.FieldValue;
+export const FieldPath = firebase.firestore.FieldPath;
 
 const options = {};
 

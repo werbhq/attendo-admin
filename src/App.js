@@ -5,6 +5,7 @@ import red from "@mui/material/colors/red";
 import Classroom from "./pages/classroom/Index";
 import DashBoard from "./pages/dashboard/Dashboard";
 import Subject from "./pages/subjects/Index";
+import AuthTeachers from "./pages/authTeachers/Index";
 import { authProvider, dataProvider } from "./provider/firebase";
 
 const myTheme = {
@@ -35,6 +36,7 @@ const App = () => (
   >
     <Resource {...Classroom} />
     <Resource {...Subject} />
+    <Resource {...AuthTeachers} />
   </Admin>
 );
 
