@@ -1,6 +1,5 @@
 import { ClassroomShort } from './classroom';
 
-// collections: /teachers
 export interface Teacher {
     id: string;
     emailId: string;
@@ -10,6 +9,17 @@ export interface Teacher {
     phone?: number;
     profilePic?: string;
     classrooms: TeacherClassroom[];
+}
+
+export interface AuthorizedTeacher {
+    teachers: {
+        [email: string]: {
+            id: string;
+            email: string;
+            userName: string;
+            branch: string;
+        };
+    };
 }
 
 export interface TeacherClassroom {

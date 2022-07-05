@@ -6,11 +6,10 @@
         "id": "KTU-BTECH-2019-cs-2",
         "branch": "cs",
         "name": "2",
-        "year": 2019,
         "course": "BTECH",
-        "scheme_id": "KTU-2019",
+        "schemeId": "BTECH-KTU-2019",
         "semester": 4,
-        "autonomous": false
+        "isDerived": false
     },
     "teacher": {
         "id": "amaljoe88@gmail.com",

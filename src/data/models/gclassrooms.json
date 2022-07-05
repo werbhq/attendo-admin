@@ -23,13 +23,13 @@
                 }
             ],
             "classroom": {
-                "id": "MBCET-BTECH-2020-ce1",
-                "branch": "ce",
-                "name": "1",
-                "year": 2020,
+                "id": "KTU-BTECH-2019-cs-2",
+                "branch": "cs",
+                "name": "2",
                 "course": "BTECH",
-                "scheme_id": "MBCET-2020",
-                "autonomous": true
+                "schemeId": "BTECH-KTU-2019",
+                "semester": 4,
+                "isDerived": false
             },
             "subject": {
                 "id": "cst206",
