@@ -20,7 +20,7 @@ const CourseShow = () => {
           <TextField source="id" label="Course" />
           <TextField source="totalSemesters" label="TotalSemesters" />
           <ArrayField source="batches">
-            {record.batches.length !== 0 ? (
+            {record?.batches?.length !== 0 ? (
               <SingleFieldList>
                 <FunctionField
                   render={(record) => (
