@@ -42,7 +42,7 @@ export const sorter = (params, data) => {
     Object.entries(filters).forEach(([e_field, value]) => {
       data = data.filter((e) => {
         if (typeof e[e_field] === "string" || typeof e[e_field] === "number") {
-          return `${e[e_field]}`.includes(value);
+          return `${e[e_field]}`.toUpperCase().includes(value.toUpperCase());
         } else if (Array.isArray(e[e_field])) {
           return e[e_field].includes(value);
         } else {

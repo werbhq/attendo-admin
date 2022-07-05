@@ -5,12 +5,21 @@ import {
   EditButton,
   FunctionField,
   ReferenceField,
+  SearchInput,
+  TextInput,
 } from "react-admin";
 import { MAPPING } from "../../provider/mapping";
 import CustomSemesterField from "./components/CustomSemesterField";
 
+const filters = [
+  <SearchInput source="id" alwaysOn resettable />,
+  <TextInput source="organization" resettable />,
+  <TextInput source="course" resettable />,
+  <TextInput source="year" resettable />,
+];
+
 const SubjectList = () => (
-  <List>
+  <List exporter={false} filters={filters}>
     <Datagrid rowClick="show">
       <TextField source="id" />
       <TextField source="organization" />
