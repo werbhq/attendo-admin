@@ -1,4 +1,4 @@
-import { ClassroomShort } from './classroom';
+import { ClassroomShort, ClassroomShortTeacher } from './classroom';
 import { Student } from './student';
 import { Subject } from './subject';
 
@@ -11,7 +11,7 @@ export interface googleClassroom {
     recoginised: boolean;
     periods: [];
     students: Student[];
-    classroom?: ClassroomShort;
+    classroom?: ClassroomShortTeacher;
     subject?: Subject;
 }
 
