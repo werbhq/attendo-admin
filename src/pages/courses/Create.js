@@ -8,6 +8,7 @@ import {
   useRedirect,
   useRefresh,
   useNotify,
+  BooleanInput,
 } from "react-admin";
 import { autoCapitalize } from "../../Utils/helpers";
 import { dataProvider } from "../../provider/firebase";
@@ -21,7 +22,13 @@ const CourseCreate = () => {
 
   const onSubmit = async (data) => {
     const id = data.id.toUpperCase();
-    data = { ...data, id, batches: [] };
+    const batches = [];
+    let currentYear = new Date().getFullYear();
+    for (let i = data.evenSemester ? 2 : 1; i <= data.totalSemesters; i += 2) {
+      batches.push({ id: currentYear--, sem: i });
+    }
+
+    data = { ...data, id, batches: batches.sort((a, b) => a.sem - b.sem) };
 
     await dataProvider.create(url, { data, id });
     notify(`Added ${id}`, {
@@ -36,6 +43,11 @@ const CourseCreate = () => {
     else return undefined;
   };
 
+  const nonZeroValidation = (value) => {
+    if (value <= 0) return "Positive Numbers Only!";
+    else return undefined;
+  };
+
   return (
     <Create>
       <SimpleForm onSubmit={onSubmit}>
@@ -46,8 +58,14 @@ const CourseCreate = () => {
         />
         <NumberInput
           source="totalSemesters"
-          validate={[required(), number("Not a number"), evenOnlyValidation]}
+          validate={[
+            required(),
+            number("Not a number"),
+            nonZeroValidation,
+            evenOnlyValidation,
+          ]}
         />
+        <BooleanInput source="evenSemester" validate={[required()]} />
       </SimpleForm>
     </Create>
   );

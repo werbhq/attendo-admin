@@ -29,10 +29,11 @@ interface StudentAttendance extends Student {
 }
 
 export interface AttendanceReport {
-    range: {
+    range?: {
         from: Date; // Will be monthly
         to: Date; // Will be monthly
     };
+    semester?: number;
     classroomId: string;
     subjects: Subject[];
     attendances: StudentAttendance[];

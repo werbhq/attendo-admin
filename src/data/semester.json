@@ -3,6 +3,7 @@
         "BTECH": {
             "id": "BTECH",
             "totalSemesters": 8,
+            "evenSemester": true,
             "batches": [
                 {
                     "id": 2018,
@@ -25,6 +26,7 @@
         "MTECH": {
             "id": "MTECH",
             "totalSemesters": 0,
+            "evenSemester": true,
             "batches": []
         }
     }
