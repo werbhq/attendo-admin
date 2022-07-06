@@ -1,10 +1,12 @@
 import * as React from "react";
+
 import { Admin, defaultTheme, Resource } from "react-admin";
 import red from "@mui/material/colors/red";
 
 import Classroom from "./pages/classroom/Index";
 import DashBoard from "./pages/dashboard/Dashboard";
 import Subject from "./pages/subjects/Index";
+import Courses from "./pages/courses/index";
 import AuthTeachers from "./pages/authTeachers/Index";
 import { authProvider, dataProvider } from "./provider/firebase";
 
@@ -34,8 +36,9 @@ const App = () => (
     authProvider={authProvider}
     dashboard={DashBoard}
   >
-    <Resource {...Classroom} />
+    <Resource {...Courses} />
     <Resource {...Subject} />
+    <Resource {...Classroom} />
     <Resource {...AuthTeachers} />
   </Admin>
 );

@@ -1,7 +1,7 @@
 {
     "classrooms": [
         {
-            "id": "BTECH-2019-ce-1",
+            "id": "BTECH-2019-CE-1",
             "branch": "ce",
             "name": "1",
             "year": 2019,
@@ -20,7 +20,7 @@
             ]
         },
         {
-            "id": "BTECH-2019-cs-e-cs402",
+            "id": "BTECH-2019-CS-E-CS402",
             "branch": "cs",
             "name": "e",
             "year": 2019,

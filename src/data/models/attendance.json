@@ -3,9 +3,10 @@
     "date": "2021-05-20",
     "hour": 1,
     "classroom": {
-        "id": "KTU-BTECH-2019-cs-2",
+        "id": "KTU-BTECH-2019-CS-2",
         "branch": "cs",
         "name": "2",
+        "year": 2019,
         "course": "BTECH",
         "schemeId": "BTECH-KTU-2019",
         "semester": 4,

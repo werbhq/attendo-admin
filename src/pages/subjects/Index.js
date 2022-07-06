@@ -2,8 +2,9 @@ import icon from "@mui/icons-material/Class";
 import SubjectList from "./List";
 import SubjectShow from "./Show";
 import SubjectEdit from "./Edit";
-import { MAPPING } from "../../provider/mapping";
 import SubjectCreate from "./Create";
+import { MAPPING } from "../../provider/mapping";
+
 const Subject = {
   name: MAPPING.SUBJECT,
   icon,

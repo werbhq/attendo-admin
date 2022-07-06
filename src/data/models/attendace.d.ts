@@ -1,4 +1,5 @@
-import { ClassroomShort } from './classroom';
+import { ClassroomShort, ClassroomShortTeacher } from './classroom';
+import { Student } from './student';
 import { Subject } from './subject';
 import { TeacherShort } from './teacher';
 
@@ -7,7 +8,7 @@ export interface Attendance {
     date: string;
     dateTime: number;
     hour: number;
-    classroom: ClassroomShort;
+    classroom: ClassroomShortTeacher;
     teacher: TeacherShort;
     subject: Subject;
     absentees?: string[];
@@ -18,4 +19,22 @@ export interface Attendance {
 export interface AutoAttendance extends Attendance {
     meetLookup: string;
     userName: string;
+}
+
+interface StudentAttendance extends Student {
+    attendance: {
+        subjectId: string;
+        percentage: number;
+    }[];
+}
+
+export interface AttendanceReport {
+    range?: {
+        from: Date; // Will be monthly
+        to: Date; // Will be monthly
+    };
+    semester?: number;
+    classroomId: string;
+    subjects: Subject[];
+    attendances: StudentAttendance[];
 }

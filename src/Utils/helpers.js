@@ -24,23 +24,25 @@ export const sorter = (params, data) => {
   if (sort) {
     const field = sort.field;
 
-    data = data.sort((a, b) => {
-      if (typeof a[field] === "string") {
-        if (sort.order === "DESC") return b[field].localeCompare(a[field]);
-        return a[field].localeCompare(b[field]);
-      } else if (typeof a[field] === "number") {
-        if (sort.order === "DESC") return b[field] - a[field];
-        return a[field] - b[field];
-      }
-      return a - b;
-    });
+    if (Array.isArray(data)) {
+      data = data.sort((a, b) => {
+        if (typeof a[field] === "string") {
+          if (sort.order === "DESC") return b[field].localeCompare(a[field]);
+          return a[field].localeCompare(b[field]);
+        } else if (typeof a[field] === "number") {
+          if (sort.order === "DESC") return b[field] - a[field];
+          return a[field] - b[field];
+        }
+        return a - b;
+      });
+    }
   }
 
   if (filters && Object.entries(filters).length) {
     Object.entries(filters).forEach(([e_field, value]) => {
       data = data.filter((e) => {
         if (typeof e[e_field] === "string" || typeof e[e_field] === "number") {
-          return `${e[e_field]}`.includes(value);
+          return `${e[e_field]}`.toUpperCase().includes(value.toUpperCase());
         } else if (Array.isArray(e[e_field])) {
           return e[e_field].includes(value);
         } else {

@@ -1,4 +1,3 @@
-// I found ico from here https://mui.com/material-ui/material-icons/?query=security
 import icon from "@mui/icons-material/LocalPolice";
 
 import { MAPPING } from "../../provider/mapping";
@@ -14,7 +13,7 @@ const Classroom = {
   list: AuthorizedTeacherList,
   show: AuthorizedTeacherShow,
   edit: AuthorizedTeacherEdit,
-  create: AuthorizedTeacherCreate
+  create: AuthorizedTeacherCreate,
 };
 
 export default Classroom;

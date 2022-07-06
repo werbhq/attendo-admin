@@ -1,0 +1,57 @@
+{
+    "range": {
+        "from": "01-05-2022",
+        "to": "01-06-2022"
+    },
+    "classroomId": "KTU-BTECH-2019-CS-2",
+    "subjects": [
+        {
+            "id": "cst302",
+            "code": "CST302",
+            "name": "Compiler Design"
+        },
+        {
+            "id": "cst304",
+            "code": "CST304",
+            "name": "Computer Graphics And Image Processing"
+        }
+    ],
+    "attendances": [
+        {
+            "id": "amaljoe.19cs8877@mbcet.ac.in",
+            "regNo": "MBT19CS8877",
+            "userName": "Amal Joe",
+            "name": "Amal Joe",
+            "rollNo": 64,
+            "email": "amaljoe.19cs8877@mbcet.ac.in",
+            "attendance": [
+                {
+                    "subjectId": "cst302",
+                    "percentage": 20
+                },
+                {
+                    "subjectId": "cst304",
+                    "percentage": 45.7
+                }
+            ]
+        },
+        {
+            "id": "nithinta.19cs088@mbcet.ac.in",
+            "regNo": "MBT19CS088",
+            "userName": "MBT19CS088 NITHIN T A",
+            "name": "Nithin T A",
+            "rollNo": 47,
+            "email": "nithinta.19cs088@mbcet.ac.in",
+            "attendance": [
+                {
+                    "subjectId": "cst302",
+                    "percentage": 50
+                },
+                {
+                    "subjectId": "cst304",
+                    "percentage": 99.7
+                }
+            ]
+        }
+    ]
+}

@@ -25,7 +25,13 @@ const ClassroomsList = () => {
     <List exporter={false} filters={filters}>
       <Datagrid rowClick="show">
         <TextField source="id" />
-        <TextField source="course" />
+        <ReferenceField
+          source="course"
+          reference={MAPPING.SEMESTERS}
+          link="show"
+        >
+          <TextField source="id" />
+        </ReferenceField>
         <TextField source="year" />
         <TextField source="semester" emptyText="-" sortable={false} />
         <FunctionField
