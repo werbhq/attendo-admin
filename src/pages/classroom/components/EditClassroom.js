@@ -18,6 +18,7 @@ import {
 import { MAPPING } from "../../../provider/mapping";
 import { Stack } from "@mui/material";
 import { Schemes } from "../../../Utils/Schemes";
+import { getYears } from "../../../Utils/helpers";
 
 const resource = MAPPING.CLASSROOMS;
 
@@ -53,6 +54,7 @@ export default function EditClassroom({ state }) {
       delete newRecord.semester;
       newRecord.isDerived = false;
     } else {
+      delete newRecord.subjectName;
       newRecord.isDerived = true;
     }
     delete newRecord.students;
@@ -152,6 +154,7 @@ export default function EditClassroom({ state }) {
               source="parentClasses"
               reference={MAPPING.CLASSROOMS}
               filter={{ isDerived: false }}
+              isRequired
             >
               <AutocompleteArrayInput
                 optionText="id"

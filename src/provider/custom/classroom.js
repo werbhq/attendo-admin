@@ -35,15 +35,29 @@ export const ClassroomProvider = {
   },
 
   getOne: async (resource, params) => {
-    let { data } = await dataProviderLegacy.getOne(resource, params);
-    const { data: semesters } = await dataProvider.getList(MAPPING.SEMESTERS);
+    let { data: record } = await dataProviderLegacy.getOne(resource, params);
+    const { data: course } = await dataProvider.getOne(MAPPING.SEMESTERS, {
+      id: record.course,
+    });
+    const { data: subjects } = await dataProvider.getOne(MAPPING.SUBJECT, {
+      id: record.schemeId,
+    });
 
-    const record = { ...data };
-    if (!data.semester) {
-      const course = semesters.find(({ id }) => id === data.course);
+    if (!record.semester) {
       if (course) {
-        const semesterNum = course.batches.find(({ id }) => id === data.year);
+        const semesterNum = course.batches.find(({ id }) => id === record.year);
         if (semesterNum) record.semester = semesterNum.sem;
+      }
+    }
+
+    if (record.semester && record.isDerived) {
+      if (subjects && record.isDerived) {
+        const subject = subjects.semesters
+          .find((e) => e.semester === record.semester)
+          ?.branchSubs?.find((e) => e.branch === record.branch)
+          ?.subjects.find((e) => e.id === record.subjectId);
+
+        record.subjectName = subject?.name;
       }
     }
 
