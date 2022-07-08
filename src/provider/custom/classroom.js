@@ -64,6 +64,16 @@ export const ClassroomProvider = {
     return { data: record };
   },
 
+  getMany: async (resource, params) => {
+    const { ids } = params;
+    const data = await Promise.all(
+      ids.map(
+        async (e) => await (await dataProvider.getOne(resource, { id: e })).data
+      )
+    );
+    return { data, status: 200 };
+  },
+
   update: async (resource, params) => {
     const { id, data } = params;
     await db

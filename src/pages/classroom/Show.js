@@ -56,7 +56,7 @@ export const ClassroomShow = () => {
   const virtualClassEditSaveHandler = async (students = record?.students) => {
     if (!studentVirtualDialouge.enable) {
       const classes = await Promise.all(
-        record.parentClasses.map((e) =>
+        record?.parentClasses?.map((e) =>
           dataProvider.getOne(MAPPING.CLASSROOMS, { id: e })
         )
       );
@@ -93,7 +93,9 @@ export const ClassroomShow = () => {
   const [, { select }] = useRecordSelection(resource);
   const unselectAll = useUnselectAll(resource);
 
-  listContext.onUnselectItems = virtualClassEditSaveHandler;
+  if (record?.isDerived) {
+    listContext.onUnselectItems = virtualClassEditSaveHandler;
+  }
 
   return (
     <Show emptyWhileLoading>
@@ -185,7 +187,17 @@ export const ClassroomShow = () => {
 
         <Tab label="students" path="students">
           <div style={{ margin: "20px 0px" }}>
-            {!record?.isDerived ? (
+            {record?.isDerived ? (
+              <Button
+                size="medium"
+                variant="contained"
+                startIcon={<EditIcon />}
+                disabled={studentVirtualDialouge.enable}
+                onClick={virtualClassEditSaveHandler}
+              >
+                Edit Students
+              </Button>
+            ) : (
               <Button
                 size="medium"
                 variant="contained"
@@ -201,17 +213,6 @@ export const ClassroomShow = () => {
               >
                 Add Student
               </Button>
-            ) : (
-              !studentVirtualDialouge.enable && (
-                <Button
-                  size="medium"
-                  variant="contained"
-                  startIcon={<EditIcon />}
-                  onClick={virtualClassEditSaveHandler}
-                >
-                  Edit Students
-                </Button>
-              )
             )}
           </div>
           <ListContextProvider value={listContext}>

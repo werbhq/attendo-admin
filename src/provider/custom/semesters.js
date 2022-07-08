@@ -27,7 +27,18 @@ export const SemestersProvider = {
     const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
       id: MAPPING.SEMESTERS,
     });
-    return { data: data.courses[params.id] };
+    return { data: data.courses[params.id], status: 200 };
+  },
+
+  getMany: async (resource, params) => {
+    const { ids } = params;
+    const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
+      id: MAPPING.SEMESTERS,
+    });
+
+    const dataResult = ids.map((e) => data.courses[e]);
+
+    return { data: dataResult, status: 200 };
   },
 
   create: async (resource, params) => {

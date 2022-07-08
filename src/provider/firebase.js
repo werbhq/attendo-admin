@@ -15,10 +15,11 @@ export const authProvider = FirebaseAuthProvider(config, options);
 export const db = dataProviderLegacy.app.firestore();
 
 const getCustomConvertor = async (resource, params, method) => {
-  const provider = CustomProviders.find(
-    (e) => e.resource === resource && e[method]
-  );
-  if (provider) return provider[method](resource, params);
+  const provider = CustomProviders.find((e) => e.resource === resource);
+  if (provider) {
+    if (provider[method]) return provider[method](resource, params);
+    else console.error(`${method}() Not Implemented For ${resource}`);
+  }
   return dataProviderLegacy[method](resource, params);
 };
 

@@ -30,6 +30,15 @@ export const SubjectsProvider = {
     return { data: data.schemes[params.id], status: 200 };
   },
 
+  getMany: async (resource, params) => {
+    const { ids } = params;
+    const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
+      id: MAPPING.SUBJECT,
+    });
+    const result = ids.map((e) => data.schemes[e]);
+    return { data: result, status: 200 };
+  },
+
   update: async (resource, params) => {
     const { id, data } = params;
 
