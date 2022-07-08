@@ -12,6 +12,7 @@ import {
   useList,
   useRefresh,
   useNotify,
+  required,
 } from "react-admin";
 import InputLabel from "@mui/material/InputLabel";
 import EditIcon from "@mui/icons-material/Edit";
@@ -25,6 +26,7 @@ import {
   CustomSubjectBulkDeleteButton,
   DeleteButtonDialouge,
 } from "./CustomButtons";
+import { noSpaceValidation } from "../../../Utils/validations";
 
 const url = MAPPING.SUBJECT;
 
@@ -218,9 +220,14 @@ const SubjectTable = () => {
             label="Code"
             fullWidth={true}
             format={(props) => props.toUpperCase()}
-            required
+            validate={[required(), noSpaceValidation]}
           />
-          <TextInput source="name" label="Name" fullWidth={true} required />
+          <TextInput
+            source="name"
+            label="Name"
+            fullWidth={true}
+            validate={[required()]}
+          />
           <Stack direction="row" spacing={3}>
             <SaveButton label={addSubject.add ? "Add" : "Save"} />
             {!addSubject.add && (

@@ -10,9 +10,11 @@ import {
   useNotify,
   useRedirect,
   useDataProvider,
+  NumberInput,
 } from "react-admin";
 import { MAPPING } from "../../provider/mapping";
 import { convertSingleValueListToSelectList } from "../../Utils/helpers";
+import { noSpaceValidation } from "../../Utils/validations";
 const url = MAPPING.SUBJECT;
 
 const SubjectCreate = () => {
@@ -39,28 +41,24 @@ const SubjectCreate = () => {
     redirect("list", url);
   };
 
-  const upperCaseValidation = (value) => {
-    if (value.toUpperCase() !== value) return "UPPER CASE ONLY!";
-    else return undefined;
-  };
-
   return (
     <Create>
       <SimpleForm onSubmit={onSubmit}>
         <TextInput
           source="organization"
-          validate={[required(), upperCaseValidation]}
+          format={(props) => props.toUpperCase()}
+          validate={[required(), noSpaceValidation]}
         />
-        <TextInput
+        <NumberInput
           source="year"
-          validate={[required(), number("not a number")]}
-          label="year"
+          validate={[required(), number("Number Required")]}
+          label="Year"
         />
         <SelectInput
           source="course"
           choices={courses.map(convertSingleValueListToSelectList)}
-          validate={[required(), upperCaseValidation]}
-          label="course"
+          validate={[required(), noSpaceValidation]}
+          label="Course"
         />
       </SimpleForm>
     </Create>
