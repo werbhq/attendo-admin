@@ -23,30 +23,75 @@ const getCustomConvertor = async (resource, params, method) => {
 };
 
 const DataProviderCustom = {
+  /**
+   * @param {string} resource
+   * @param {import("react-admin").CreateParams} params
+   * @returns {Promise<import("react-admin").CreateResult>}
+   * */
   create: async (resource, params) =>
     getCustomConvertor(resource, params, "create"),
 
+  /**
+   * @param {string} resource
+   * @param {import("react-admin").CreateParams} params
+   * @returns {Promise<import("react-admin").DeleteResult>}
+   * */
   delete: async (resource, params) =>
     getCustomConvertor(resource, params, "delete"),
 
+  /**
+   * @param {string} resource
+   * @param {import("react-admin").CreateParams} params
+   * @returns {Promise<import("react-admin").DeleteManyResult>}
+   * */
   deleteMany: async (resource, params) =>
     getCustomConvertor(resource, params, "deleteMany"),
 
+  /**
+   * @param {string} resource
+   * @param {import("react-admin").CreateParams} params
+   * @returns {Promise<import("react-admin").GetListResult>}
+   * */
   getList: async (resource, params) =>
     getCustomConvertor(resource, params, "getList"),
 
+  /**
+   * @param {string} resource
+   * @param {import("react-admin").CreateParams} params
+   * @returns {Promise<import("react-admin").GetOneResult>}
+   * */
   getOne: async (resource, params) =>
     getCustomConvertor(resource, params, "getOne"),
 
+  /**
+   * @param {string} resource
+   * @param {import("react-admin").CreateParams} params
+   * @returns {Promise<import("react-admin").GetManyResult>}
+   * */
   getMany: async (resource, params) =>
     getCustomConvertor(resource, params, "getMany"),
 
+  /**
+   * @param {string} resource
+   * @param {import("react-admin").CreateParams} params
+   * @returns {Promise<import("react-admin").GetManyReferenceResult>}
+   * */
   getManyReference: async (resource, params) =>
     getCustomConvertor(resource, params, "getManyReference"),
 
+  /**
+   * @param {string} resource
+   * @param {import("react-admin").CreateParams} params
+   * @returns {Promise<import("react-admin").UpdateResult>}
+   * */
   update: async (resource, params) =>
     getCustomConvertor(resource, params, "update"),
 
+  /**
+   * @param {string} resource
+   * @param {import("react-admin").CreateParams} params
+   * @returns {Promise<import("react-admin").UpdateResult>}
+   * */
   updateMany: async (resource, params) =>
     getCustomConvertor(resource, params, "updateMany"),
 };
