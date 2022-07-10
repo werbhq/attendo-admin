@@ -4,7 +4,6 @@ import {
   ListContextProvider,
   SimpleForm,
   TextInput,
-  Button,
   FunctionField,
   SaveButton,
   useRecordContext,
@@ -16,6 +15,7 @@ import {
 } from "react-admin";
 import InputLabel from "@mui/material/InputLabel";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -27,6 +27,7 @@ import {
   DeleteButtonDialouge,
 } from "./CustomButtons";
 import { noSpaceValidation } from "../../../Utils/validations";
+import Button from "@mui/material/Button";
 
 const url = MAPPING.SUBJECT;
 
@@ -170,13 +171,15 @@ const SubjectTable = () => {
       <Stack direction="row">
         <Button
           disabled={branchData === undefined || semesterData === undefined}
-          label="ADD SUBJECT"
           variant="contained"
           size="medium"
+          startIcon={<AddIcon />}
           onClick={() => {
             setAddSubject({ ...addSubject, open: true, add: true, record: {} });
           }}
-        />
+        >
+          ADD SUBJECT
+        </Button>
       </Stack>
 
       <ListContextProvider value={tableData} emptyWhileLoading>
