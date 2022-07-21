@@ -5,6 +5,7 @@ import {
 import config from "./config.json";
 import CustomProviders from "./customProviders";
 import firebase from "firebase/compat/app";
+import { getFunctions } from "firebase/functions";
 export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
@@ -13,6 +14,7 @@ const options = {};
 export const dataProviderLegacy = FirebaseDataProvider(config, options);
 export const authProvider = FirebaseAuthProvider(config, options);
 export const db = dataProviderLegacy.app.firestore();
+export const cloudFunctions = getFunctions();
 
 const getCustomConvertor = async (resource, params, method) => {
   const provider = CustomProviders.find((e) => e.resource === resource);
@@ -50,7 +52,7 @@ const DataProviderCustom = {
 
   /**
    * @param {string} resource
-   * @param {import("react-admin").CreateParams} params
+   * @param {import("react-admin").ListParams} params
    * @returns {Promise<import("react-admin").GetListResult>}
    * */
   getList: async (resource, params) =>
@@ -58,7 +60,7 @@ const DataProviderCustom = {
 
   /**
    * @param {string} resource
-   * @param {import("react-admin").CreateParams} params
+   * @param {import("react-admin").GetOneParams} params
    * @returns {Promise<import("react-admin").GetOneResult>}
    * */
   getOne: async (resource, params) =>
@@ -66,7 +68,7 @@ const DataProviderCustom = {
 
   /**
    * @param {string} resource
-   * @param {import("react-admin").CreateParams} params
+   * @param {import("react-admin").GetManyParams} params
    * @returns {Promise<import("react-admin").GetManyResult>}
    * */
   getMany: async (resource, params) =>
@@ -74,7 +76,7 @@ const DataProviderCustom = {
 
   /**
    * @param {string} resource
-   * @param {import("react-admin").CreateParams} params
+   * @param {import("react-admin").GetManyReferenceParams} params
    * @returns {Promise<import("react-admin").GetManyReferenceResult>}
    * */
   getManyReference: async (resource, params) =>
@@ -82,7 +84,7 @@ const DataProviderCustom = {
 
   /**
    * @param {string} resource
-   * @param {import("react-admin").CreateParams} params
+   * @param {import("react-admin").UpdateParams} params
    * @returns {Promise<import("react-admin").UpdateResult>}
    * */
   update: async (resource, params) =>
@@ -90,7 +92,7 @@ const DataProviderCustom = {
 
   /**
    * @param {string} resource
-   * @param {import("react-admin").CreateParams} params
+   * @param {import("react-admin").UpdateManyParams} params
    * @returns {Promise<import("react-admin").UpdateResult>}
    * */
   updateMany: async (resource, params) =>

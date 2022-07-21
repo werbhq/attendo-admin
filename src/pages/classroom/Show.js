@@ -1,4 +1,4 @@
-import { Button, Stack } from "@mui/material";
+import { Button, MenuItem, Select, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import {
@@ -20,6 +20,7 @@ import {
   ListContextProvider,
   useList,
   useRecordSelection,
+  List,
 } from "react-admin";
 import { useState } from "react";
 import EditStudent from "./components/EditStudent";
@@ -30,7 +31,8 @@ import {
   CustomStudentBulkDeleteButton,
   CustomStudentEditButton,
   CustomVirtualStudentSaveButton,
-} from "./components/Show";
+} from "./components/ShowButtons";
+import AttendanceDataGrid from "./components/ShowAttendanceGrid";
 
 const resource = MAPPING.STUDENTS;
 
@@ -88,13 +90,25 @@ export const ClassroomShow = () => {
     }
   };
 
-  const [listData, setListData] = useState(record?.students || []);
+  const [listData, setListData] = useState(record?.students ?? []);
   const listContext = useList({ data: listData, resource });
   const [, { select }] = useRecordSelection(resource);
   const unselectAll = useUnselectAll(resource);
 
   if (record?.isDerived) {
     listContext.onUnselectItems = virtualClassEditSaveHandler;
+  }
+
+  const [semester, setSemester] = useState(record?.semester ?? 1);
+  const [semesterChoices, setSemesterChoices] = useState([]);
+
+  if (semesterChoices.length === 0 && record?.course) {
+    dataProvider.getOne(MAPPING.SEMESTERS, { id: record.course }).then((e) => {
+      const { totalSemesters } = e.data;
+      const semesters = [];
+      for (let i = 1; i <= totalSemesters; i++) semesters.push(i);
+      setSemesterChoices(semesters);
+    });
   }
 
   return (
@@ -255,6 +269,33 @@ export const ClassroomShow = () => {
             </Datagrid>
           </ListContextProvider>
         </Tab>
+
+        {!record?.isDerived && (
+          <Tab label="reports" path="reports">
+            <Select
+              value={semester}
+              label="Semester"
+              onChange={(e) => setSemester(e.target.value)}
+              sx={{ width: "60px" }}
+            >
+              {semesterChoices.map((e) => (
+                <MenuItem value={e} key={e}>
+                  {e}
+                </MenuItem>
+              ))}
+            </Select>
+            <List
+              resource={MAPPING.REPORTS}
+              filter={{ semester, classroomId: record?.id }}
+              pagination={false}
+              exporter={false}
+              actions={null}
+            >
+              <AttendanceDataGrid />
+            </List>
+          </Tab>
+        )}
+
         {studentDialouge.enable && (
           <EditStudent
             state={{
