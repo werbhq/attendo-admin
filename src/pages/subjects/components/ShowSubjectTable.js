@@ -31,6 +31,15 @@ import Button from "@mui/material/Button";
 
 const url = MAPPING.SUBJECT;
 
+function titleCase(str) {
+  var splitStr = str.toLowerCase().split(" ");
+  for (var i = 0; i < splitStr.length; i++) {
+    splitStr[i] =
+      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+  return splitStr.join(" ");
+}
+
 const SubjectTable = () => {
   const data = useRecordContext();
   const refresh = useRefresh();
@@ -82,6 +91,8 @@ const SubjectTable = () => {
   };
 
   const handleSubmit = async (newRecord) => {
+    newRecord.name = titleCase(newRecord.name);
+
     const currentData = semesterData.branchSubs.find(
       (e) => e.branch === branchData
     ).subjects;
@@ -228,6 +239,7 @@ const SubjectTable = () => {
           <TextInput
             source="name"
             label="Name"
+            format={(props) => titleCase(props)}
             fullWidth={true}
             validate={[required()]}
           />
