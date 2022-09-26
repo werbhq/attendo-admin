@@ -91,7 +91,11 @@ export const ClassroomShow = () => {
   };
 
   const [listData, setListData] = useState(record?.students ?? []);
-  const listContext = useList({ data: listData, resource });
+  const listContext = useList({
+    data: listData,
+    resource,
+    sort: { field: "classId", order: "ASC" },
+  });
   const [, { select }] = useRecordSelection(resource);
   const unselectAll = useUnselectAll(resource);
 
