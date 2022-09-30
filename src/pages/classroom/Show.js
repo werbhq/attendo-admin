@@ -1,6 +1,8 @@
 import { Button, MenuItem, Select, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import DownloadIcon from "@mui/icons-material/Download";
+import jsonExport from "jsonexport/dist";
 import {
   BooleanField,
   TextField,
@@ -21,6 +23,7 @@ import {
   useList,
   useRecordSelection,
   List,
+  downloadCSV,
 } from "react-admin";
 import { useState } from "react";
 import EditStudent from "./components/EditStudent";
@@ -33,6 +36,7 @@ import {
   CustomVirtualStudentSaveButton,
 } from "./components/ShowButtons";
 import AttendanceDataGrid from "./components/ShowAttendanceGrid";
+import CSVReader from "react-csv-reader";
 
 const resource = MAPPING.STUDENTS;
 
@@ -205,33 +209,66 @@ export const ClassroomShow = () => {
 
         <Tab label="students" path="students">
           <div style={{ margin: "20px 0px" }}>
-            {record?.isDerived ? (
+            <Stack spacing={"10px"} direction="row">
+              {record?.isDerived ? (
+                <Button
+                  size="medium"
+                  variant="contained"
+                  startIcon={<EditIcon />}
+                  disabled={studentVirtualDialouge.enable}
+                  onClick={virtualClassEditSaveHandler}
+                >
+                  Edit Students
+                </Button>
+              ) : (
+                <Button
+                  size="medium"
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={() => {
+                    setStudentDialouge({
+                      ...studentDialouge,
+                      add: true,
+                      enable: true,
+                      record: {},
+                    });
+                  }}
+                >
+                  Add Student
+                </Button>
+              )}
               <Button
                 size="medium"
                 variant="contained"
-                startIcon={<EditIcon />}
-                disabled={studentVirtualDialouge.enable}
-                onClick={virtualClassEditSaveHandler}
-              >
-                Edit Students
-              </Button>
-            ) : (
-              <Button
-                size="medium"
-                variant="contained"
-                startIcon={<AddIcon />}
+                startIcon={<DownloadIcon />}
                 onClick={() => {
-                  setStudentDialouge({
-                    ...studentDialouge,
-                    add: true,
-                    enable: true,
-                    record: {},
-                  });
+                  jsonExport(
+                    listData,
+                    {
+                      headers:
+                        listData.length !== 0
+                          ? Object.keys(listData[0]).sort()
+                          : {}, // order fields in the export
+                    },
+                    (err, csv) => {
+                      downloadCSV(csv, `${record.id}`); // download as 'posts.csv` file
+                    }
+                  );
                 }}
               >
-                Add Student
+                Download CSV
               </Button>
-            )}
+              <CSVReader
+                parserOptions={{
+                  header: true,
+                  dynamicTyping: true,
+                  skipEmptyLines: true,
+                }}
+                onFileLoaded={(data, fileInfo, originalFile) =>
+                  console.log(data)
+                }
+              ></CSVReader>
+            </Stack>
           </div>
           <ListContextProvider value={listContext}>
             <Datagrid
