@@ -1,7 +1,7 @@
-import { ClassroomShort, ClassroomShortTeacher } from './classroom';
-import { Student } from './student';
-import { Subject } from './subject';
-import { TeacherShort } from './teacher';
+import type { ClassroomShortTeacher } from './classroom';
+import type { Student } from './student';
+import type { Subject } from './subject';
+import type { TeacherShort } from './teacher';
 
 export interface Attendance {
     id: string;

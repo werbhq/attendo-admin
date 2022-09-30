@@ -1,8 +1,8 @@
 export interface Semester {
-    course: string;
+    id: string;
     totalSemesters: number;
     evenSemester: boolean;
-    batch: {
+    batches: {
         id: number;
         sem: number | null;
     }[];

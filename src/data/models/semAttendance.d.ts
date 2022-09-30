@@ -1,4 +1,4 @@
-import { ClassroomShortTeacher } from './classroom';
+import type { ClassroomShortTeacher } from './classroom';
 
 export interface SemAttendance {
     id: string;

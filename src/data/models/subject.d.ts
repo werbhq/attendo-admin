@@ -4,7 +4,7 @@ export interface Subject {
     code?: string;
 }
 
-export interface SubjectList {
+export interface SubjectDoc {
     id: string;
     course: 'BTECH' | 'MTECH';
     organization: string;
@@ -13,7 +13,13 @@ export interface SubjectList {
         semester: number;
         branchSubs: {
             branch: string;
-            subjects: Subject[]; //Change
+            subjects: Subject[]; // Change
         }[];
     }[];
+}
+
+export interface SubjectIndex {
+    schemes: {
+        [id: string]: SubjectDoc;
+    };
 }

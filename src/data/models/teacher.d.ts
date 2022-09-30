@@ -1,4 +1,24 @@
-import { ClassroomShort, ClassroomShortTeacher } from './classroom';
+import type { ClassroomShortTeacher } from './classroom';
+
+interface Period {
+    day: number;
+    hour: number;
+    lastUpdated: string;
+    weight: number;
+}
+
+export interface TeacherClassroom {
+    gclassroomId: string;
+    meetLookup?: string;
+    periods?: Period[];
+    classroom: ClassroomShortTeacher;
+    subject: {
+        id: string;
+        name: string;
+        code?: string;
+    };
+    recognised?: boolean;
+}
 
 export interface Teacher {
     id: string;
@@ -22,37 +42,9 @@ export interface AuthorizedTeacher {
     };
 }
 
-export interface TeacherClassroom {
-    gclassroomId: string;
-    meetLookup?: string;
-    periods?: {
-        day: DAY;
-        hour: number;
-        lastUpdate: string;
-        weight: number;
-    }[];
-    classroom: ClassroomShortTeacher;
-    subject: {
-        id: string;
-        name: string;
-        code?: string;
-    };
-    recognised?: boolean;
-}
-
 export interface TeacherShort {
     id: string;
     name: string;
     emailId: string;
     profilePic: string;
-}
-
-declare enum DAY {
-    MONDAY = 1,
-    TUESDAY = 2,
-    WEDNESDAY = 3,
-    THURSDAY = 4,
-    FRIDAY = 5,
-    SATURDAY = 6,
-    SUNDAY = 7,
 }

@@ -1,24 +1,25 @@
-import { ClassroomShort, ClassroomShortTeacher } from './classroom';
-import { Student } from './student';
-import { Subject } from './subject';
+import type { ClassroomShortTeacher } from './classroom';
+import type { Student } from './student';
+import type { Subject } from './subject';
+import type { Period } from './teacher';
 
-export interface googleClassroom {
+export interface GoogleClassroom {
     id: string;
     title: string;
     subTitle: string;
     link: string;
     code: string;
     recoginised: boolean;
-    periods: [];
     students: Student[];
     classroom?: ClassroomShortTeacher;
     subject?: Subject;
+    periods?: Period[];
 }
 
-export interface GoogleClassroom {
+export interface GoogleClassroomDoc {
     teacher: {
         id: string;
         email: string;
     };
-    googleClassrooms: googleClassroom[];
+    googleClassrooms: GoogleClassroom[];
 }
