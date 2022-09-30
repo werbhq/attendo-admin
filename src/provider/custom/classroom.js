@@ -28,6 +28,11 @@ export const ClassroomProvider = {
           if (semesterNum) record.semester = semesterNum.sem;
         }
       }
+
+      if (record.isDerived) {
+        record.parentClasses = Object.keys(record.parentClasses);
+      }
+
       return record;
     });
 
@@ -61,6 +66,10 @@ export const ClassroomProvider = {
       }
     }
 
+    if (record.isDerived) {
+      record.parentClasses = Object.keys(record.parentClasses);
+    }
+
     return { data: record };
   },
 
@@ -76,6 +85,26 @@ export const ClassroomProvider = {
 
   update: async (resource, params) => {
     const { id, data } = params;
+
+    if (data.isDerived) {
+      const parentClasses = {};
+      await Promise.all(
+        data?.parentClasses.map(async (e) => {
+          const { data } = await dataProvider.getOne(resource, { id: e });
+          parentClasses[data.id] = {
+            id: data.id,
+            branch: data.branch,
+            name: data.name,
+            course: data.course,
+            year: data.year,
+            schemeId: data.schemeId,
+          };
+        })
+      );
+
+      data.parentClasses = parentClasses;
+    }
+
     await db
       .collection(MAPPING.CLASSROOMS)
       .doc(id)
@@ -92,6 +121,27 @@ export const ClassroomProvider = {
 
   create: async (resource, params) => {
     const { data } = params;
+
+    if (data.isDerived) {
+      const parentClasses = {};
+
+      await Promise.all(
+        data?.parentClasses(async (e) => {
+          const { data } = await dataProvider.getOne(resource, { id: e });
+          parentClasses[data.id] = {
+            id: data.id,
+            branch: data.branch,
+            name: data.name,
+            course: data.course,
+            year: data.year,
+            schemeId: data.schemeId,
+          };
+        })
+      );
+
+      data.parentClasses = parentClasses;
+    }
+
     await db.collection(MAPPING.CLASSROOMS).doc(data.id).set(data);
 
     const fieldPath = new FieldPath("classrooms", data.id);
