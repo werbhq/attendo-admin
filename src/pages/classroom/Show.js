@@ -2,6 +2,7 @@ import { Button, MenuItem, Select, Stack } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DownloadIcon from "@mui/icons-material/Download";
+import UploadIcon from "@mui/icons-material/Upload";
 import jsonExport from "jsonexport/dist";
 import {
   BooleanField,
@@ -24,8 +25,9 @@ import {
   useRecordSelection,
   List,
   downloadCSV,
+  useNotify,
 } from "react-admin";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EditStudent from "./components/EditStudent";
 import { MAPPING } from "../../provider/mapping";
 import EditClassroom from "./components/EditClassroom";
@@ -52,15 +54,14 @@ export const ClassroomShow = () => {
     schemes: [],
   });
 
-  const { record } = useShowController();
-  const dataProvider = useDataProvider();
+  const [studentVirtualDialouge, setStudentVirtualDialouge] = useState(false);
 
-  const [studentVirtualDialouge, setStudentVirtualDialouge] = useState({
-    enable: false,
-  });
+  const { record, isLoading } = useShowController();
+  const dataProvider = useDataProvider();
+  const notify = useNotify();
 
   const virtualClassEditSaveHandler = async (students = record?.students) => {
-    if (!studentVirtualDialouge.enable) {
+    if (!studentVirtualDialouge) {
       const classes = await Promise.all(
         record?.parentClasses?.map((e) =>
           dataProvider.getOne(MAPPING.CLASSROOMS, { id: e })
@@ -78,23 +79,15 @@ export const ClassroomShow = () => {
 
       setListData(fullStudents);
       select(record?.students.map((e) => e.id));
-
-      setStudentVirtualDialouge({
-        ...studentVirtualDialouge,
-        enable: true,
-      });
+      setStudentVirtualDialouge(true);
     } else {
       unselectAll();
-      setStudentVirtualDialouge({
-        ...studentVirtualDialouge,
-        enable: false,
-      });
-
+      setStudentVirtualDialouge(false);
       setListData(students);
     }
   };
 
-  const [listData, setListData] = useState(record?.students ?? []);
+  const [listData, setListData] = useState([]);
   const listContext = useList({
     data: listData,
     resource,
@@ -107,7 +100,7 @@ export const ClassroomShow = () => {
     listContext.onUnselectItems = virtualClassEditSaveHandler;
   }
 
-  const [semester, setSemester] = useState(record?.semester ?? 1);
+  const [semester, setSemester] = useState(1);
   const [semesterChoices, setSemesterChoices] = useState([]);
 
   if (semesterChoices.length === 0 && record?.course) {
@@ -118,6 +111,15 @@ export const ClassroomShow = () => {
       setSemesterChoices(semesters);
     });
   }
+
+  useEffect(() => {
+    if (isLoading === false) {
+      setListData(record?.students ?? []);
+      setSemester(record?.semester ?? 1);
+    }
+  }, [setListData, isLoading, record, setSemester]);
+
+  const headers = ["id", "email", "regNo", "rollNo", "name", "userName"];
 
   return (
     <Show emptyWhileLoading>
@@ -209,13 +211,17 @@ export const ClassroomShow = () => {
 
         <Tab label="students" path="students">
           <div style={{ margin: "20px 0px" }}>
-            <Stack spacing={"10px"} direction="row">
+            <Stack
+              spacing={"10px"}
+              direction="row"
+              justifyContent={"space-between"}
+            >
               {record?.isDerived ? (
                 <Button
                   size="medium"
                   variant="contained"
                   startIcon={<EditIcon />}
-                  disabled={studentVirtualDialouge.enable}
+                  disabled={studentVirtualDialouge}
                   onClick={virtualClassEditSaveHandler}
                 >
                   Edit Students
@@ -237,44 +243,82 @@ export const ClassroomShow = () => {
                   Add Student
                 </Button>
               )}
-              <Button
-                size="medium"
-                variant="contained"
-                startIcon={<DownloadIcon />}
-                onClick={() => {
-                  jsonExport(
-                    listData,
-                    {
-                      headers:
-                        listData.length !== 0
-                          ? Object.keys(listData[0]).sort()
-                          : {}, // order fields in the export
-                    },
-                    (err, csv) => {
-                      downloadCSV(csv, `${record.id}`); // download as 'posts.csv` file
-                    }
-                  );
-                }}
-              >
-                Download CSV
-              </Button>
-              <CSVReader
-                parserOptions={{
-                  header: true,
-                  dynamicTyping: true,
-                  skipEmptyLines: true,
-                }}
-                onFileLoaded={(data, fileInfo, originalFile) =>
-                  console.log(data)
-                }
-              ></CSVReader>
+              {!record?.isDerived && (
+                <Stack spacing={"10px"} direction="row">
+                  <Button
+                    size="medium"
+                    variant="outlined"
+                    startIcon={<DownloadIcon />}
+                    onClick={() => {
+                      jsonExport(
+                        listData,
+                        {
+                          headers,
+                        },
+                        (err, csv) => {
+                          downloadCSV(csv, `${record.id}`);
+                        }
+                      );
+                    }}
+                  >
+                    Export
+                  </Button>
+                  <Button
+                    size="medium"
+                    variant="outlined"
+                    startIcon={<UploadIcon />}
+                  >
+                    <CSVReader
+                      parserOptions={{
+                        header: true,
+                        dynamicTyping: true,
+                        skipEmptyLines: true,
+                      }}
+                      label="Import"
+                      inputStyle={{ display: "none" }}
+                      onFileLoaded={async (data) => {
+                        const invalidHeader = data.some(
+                          (e) => Object.keys(e).sort() === headers.sort()
+                        );
+                        if (invalidHeader) {
+                          return notify(
+                            `Headers are invalid. Proper headers are ${headers.join(
+                              ","
+                            )}`,
+                            {
+                              type: "error",
+                            }
+                          );
+                        }
+
+                        await dataProvider.update(MAPPING.CLASSROOMS, {
+                          id: record.id,
+                          data: {
+                            ...record,
+                            students: data,
+                          },
+                        });
+
+                        notify(
+                          `Updated ${data.length} Students of ${record.id}`,
+                          { type: "success" }
+                        );
+                        setListData(data);
+                      }}
+                      onError={() => {
+                        notify(`Error Importing CSV`, { type: "error" });
+                      }}
+                    ></CSVReader>
+                  </Button>
+                </Stack>
+              )}
             </Stack>
           </div>
           <ListContextProvider value={listContext}>
             <Datagrid
               bulkActionButtons={
                 record?.isDerived ? (
-                  studentVirtualDialouge.enable && (
+                  studentVirtualDialouge && (
                     <CustomVirtualStudentSaveButton
                       list={listData}
                       callback={virtualClassEditSaveHandler}
