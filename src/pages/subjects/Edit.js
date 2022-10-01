@@ -90,7 +90,11 @@ const SubjectEdit = () => {
             removeButton={CustomDelete()}
             getItemLabel={() => ""} // To remove index numbers
           >
-            <NumberInput source="semester" label="Semester Number" />
+            <NumberInput
+              source="semester"
+              onWheel={(e) => e.preventDefault()}
+              label="Semester Number"
+            />
           </SimpleFormIterator>
         </ArrayInput>
         <Stack spacing={3} direction={"row"} sx={{ mt: "20px" }}>

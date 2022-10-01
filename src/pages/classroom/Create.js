@@ -69,7 +69,7 @@ const CreateClassroom = ({ schemes: schemeData }) => {
         onChange={(e) => setData({ ...data, scheme: e.target.value })}
         required
       />
-      <NumberInput source="year" required />
+      <NumberInput source="year" onWheel={(e) => e.preventDefault()} required />
       <SelectInput
         source="branch"
         choices={getBranches(data.scheme)}

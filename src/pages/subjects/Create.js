@@ -51,6 +51,7 @@ const SubjectCreate = () => {
         />
         <NumberInput
           source="year"
+          onWheel={(e) => e.preventDefault()}
           validate={[required(), number("Number Required")]}
           label="Year"
         />

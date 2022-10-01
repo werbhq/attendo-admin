@@ -117,7 +117,13 @@ export default function EditStudent({ state }) {
         {!dialouge.add && (
           <TextInput source="id" label="Id" disabled={true} sx={style} />
         )}
-        <NumberInput source="rollNo" label="Roll" sx={style} required />
+        <NumberInput
+          source="rollNo"
+          label="Roll"
+          sx={style}
+          onWheel={(e) => e.preventDefault()}
+          required
+        />
         <TextInput
           source="regNo"
           label="Registration Number"

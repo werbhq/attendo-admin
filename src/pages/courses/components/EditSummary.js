@@ -75,6 +75,7 @@ export default function EditSummary({ state }) {
         <TextInput source="id" disabled />
         <NumberInput
           source="totalSemesters"
+          onWheel={(e) => e.preventDefault()}
           validate={[
             required(),
             number("Not a number"),
