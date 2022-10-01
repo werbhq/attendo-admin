@@ -29,7 +29,7 @@ export const ReportsProvider = {
 
     const subjects = {};
     response?.subjects?.forEach((e) => {
-      subjects[e.id.toLowerCase()] = e.name;
+      subjects[e.subjectId.toLowerCase()] = e.name;
     });
 
     const attendances = response?.attendances?.map((e) => ({

@@ -25,8 +25,17 @@ const MyDatagridRow = ({ record, id, children }) => (
           <TableCell key={`${e.subjectId}`}>
             <Tooltip title={e.name}>
               <Typography variant="subtitle">
-                <span style={{ color: e.percentage < 70 ? "red" : "black" }}>
-                  {Math.round(e.percentage, 2)}%
+                <span
+                  style={{
+                    color:
+                      e.percentage < 70 && e.percentage !== -1
+                        ? "red"
+                        : "black",
+                  }}
+                >
+                  {e.percentage !== -1
+                    ? `${Math.round(e.percentage, 2)}%`
+                    : "-"}
                 </span>
               </Typography>
             </Tooltip>
