@@ -121,6 +121,29 @@ export const ClassroomShow = () => {
 
   const headers = ["id", "email", "regNo", "rollNo", "name", "userName"];
 
+  const exporterReports = (data) => {
+    let headersReports = ["id", "regNo", "rollNo", "name"];
+    const dataForExport = data.map(
+      ({ id, regNo, rollNo, name, attendance }) => {
+        const data = { id, regNo, rollNo, name };
+        attendance.forEach((e) => {
+          data[`${e.name} [${e.subjectId.toUpperCase()}]`] =
+            e.percentage === -1 ? "-" : `${e.percentage}%`;
+        });
+        return data;
+      }
+    );
+
+    jsonExport(
+      dataForExport,
+      {
+        headers: headersReports,
+      },
+      (err, csv) => {
+        downloadCSV(csv, `${record.id} S${record.semester} Report`);
+      }
+    );
+  };
   return (
     <Show emptyWhileLoading>
       <TabbedShowLayout>
@@ -369,12 +392,12 @@ export const ClassroomShow = () => {
                 </MenuItem>
               ))}
             </Select>
+
             <List
               resource={MAPPING.REPORTS}
               filter={{ semester, classroomId: record?.id }}
               pagination={false}
-              exporter={false}
-              actions={null}
+              exporter={exporterReports}
             >
               <AttendanceDataGrid />
             </List>
