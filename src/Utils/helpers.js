@@ -1,4 +1,7 @@
-export const sortByRoll = (a, b) => a.rollNo - b.rollNo;
+export const sortByRoll = (a, b) => {
+  if (a?.classId !== b?.classId) return a?.classId.localeCompare(b?.classId);
+  return a.rollNo - b.rollNo;
+};
 
 export const autoCapitalize = (value) => value && value.toUpperCase();
 
