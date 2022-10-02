@@ -1,4 +1,11 @@
-import { Button, MenuItem, Select, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -26,6 +33,8 @@ import {
   List,
   downloadCSV,
   useNotify,
+  ExportButton,
+  TopToolbar,
 } from "react-admin";
 import { useState, useEffect } from "react";
 import EditStudent from "./components/EditStudent";
@@ -144,9 +153,34 @@ export const ClassroomShow = () => {
       }
     );
   };
+
+  const ReporterToolBar = () => (
+    <TopToolbar>
+      <Stack direction="row" spacing={2}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Typography>Semester</Typography>
+        </Box>
+        <Select
+          value={semester}
+          label="Semester"
+          onChange={(e) => setSemester(e.target.value)}
+          sx={{ width: "60px" }}
+        >
+          {semesterChoices.map((e) => (
+            <MenuItem value={e} key={e}>
+              {e}
+            </MenuItem>
+          ))}
+        </Select>
+        <ExportButton />
+      </Stack>
+    </TopToolbar>
+  );
+
   return (
     <Show emptyWhileLoading>
       <TabbedShowLayout>
+        {/* Summary */}
         <Tab label="summary">
           <TextField source="id" />
           <ReferenceField
@@ -232,6 +266,7 @@ export const ClassroomShow = () => {
           </div>
         </Tab>
 
+        {/* Students */}
         <Tab label="students" path="students">
           <div style={{ margin: "20px 0px" }}>
             <Stack
@@ -378,32 +413,23 @@ export const ClassroomShow = () => {
           </ListContextProvider>
         </Tab>
 
+        {/* Reports */}
         {!record?.isDerived && (
           <Tab label="reports" path="reports">
-            <Select
-              value={semester}
-              label="Semester"
-              onChange={(e) => setSemester(e.target.value)}
-              sx={{ width: "60px" }}
-            >
-              {semesterChoices.map((e) => (
-                <MenuItem value={e} key={e}>
-                  {e}
-                </MenuItem>
-              ))}
-            </Select>
-
             <List
               resource={MAPPING.REPORTS}
               filter={{ semester, classroomId: record?.id }}
               pagination={false}
               exporter={exporterReports}
+              actions={<ReporterToolBar />}
+              empty={false}
             >
               <AttendanceDataGrid />
             </List>
           </Tab>
         )}
 
+        {/* Popup */}
         {studentDialouge.enable && (
           <EditStudent
             state={{
