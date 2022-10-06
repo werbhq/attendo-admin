@@ -126,7 +126,7 @@ export const ClassroomProvider = {
       const parentClasses = {};
 
       await Promise.all(
-        data?.parentClasses(async (e) => {
+        data?.parentClasses.map(async (e) => {
           const { data } = await dataProvider.getOne(resource, { id: e });
           parentClasses[data.id] = {
             id: data.id,
