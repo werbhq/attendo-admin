@@ -13,7 +13,7 @@ import { MAPPING } from "../../provider/mapping";
 import { Schemes } from "../../Utils/Schemes";
 
 const filters = [
-  <SearchInput source="id" alwaysOn resettable />,
+  <SearchInput source="id" placeholder="Enter Id" alwaysOn resettable />,
   <TextInput source="course" resettable />,
   <TextInput source="branch" resettable />,
   <TextInput source="name" resettable />,
@@ -32,6 +32,12 @@ const ClassroomsList = () => {
         >
           <TextField source="id" />
         </ReferenceField>
+        <TextField
+          source="subjectName"
+          label="Subject"
+          emptyText="-"
+          sortable={false}
+        />
         <TextField source="year" />
         <TextField source="semester" emptyText="-" sortable={false} />
         <FunctionField

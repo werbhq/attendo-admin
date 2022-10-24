@@ -21,7 +21,7 @@ const MyDatagridRow = ({ record, id, children }) => (
         <TableCell key={`${id}-${field.props.source}`}>{field}</TableCell>
       ))}
       {record.attendance
-        .sort(({ name: a }, { name: b }) => a.localeCompare(b))
+        .sort(({ name: a }, { name: b }) => a?.localeCompare(b))
         .map((e) => {
           return (
             <TableCell key={`${e.subjectId}`}>
@@ -64,7 +64,7 @@ const DatagridHeader = (props) => {
           </TableCell>
         ))}
         {subjects
-          .sort(({ name: a }, { name: b }) => a.localeCompare(b))
+          .sort(({ name: a }, { name: b }) => a?.localeCompare(b))
           .map(({ name, id }) => (
             <TableCell key={id}>
               <Tooltip title={name}>

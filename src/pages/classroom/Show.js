@@ -268,110 +268,102 @@ export const ClassroomShow = () => {
 
         {/* Students */}
         <Tab label="students" path="students">
-          <div style={{ margin: "20px 0px" }}>
-            <Stack
-              spacing={"10px"}
-              direction="row"
-              justifyContent={"space-between"}
-            >
-              {record?.isDerived ? (
+          <Stack
+            spacing={"10px"}
+            sx={{ margin: "20px 0px" }}
+            direction="row"
+            justifyContent={"space-between"}
+          >
+            {record?.isDerived ? (
+              <Button
+                size="medium"
+                variant="contained"
+                startIcon={<EditIcon />}
+                disabled={studentVirtualDialouge}
+                onClick={virtualClassEditSaveHandler}
+              >
+                Edit Students
+              </Button>
+            ) : (
+              <Button
+                size="medium"
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => {
+                  setStudentDialouge({
+                    ...studentDialouge,
+                    add: true,
+                    enable: true,
+                    record: {},
+                  });
+                }}
+              >
+                Add Student
+              </Button>
+            )}
+            {!record?.isDerived && (
+              <Stack spacing={"10px"} direction="row">
                 <Button
                   size="medium"
-                  variant="contained"
-                  startIcon={<EditIcon />}
-                  disabled={studentVirtualDialouge}
-                  onClick={virtualClassEditSaveHandler}
-                >
-                  Edit Students
-                </Button>
-              ) : (
-                <Button
-                  size="medium"
-                  variant="contained"
-                  startIcon={<AddIcon />}
+                  variant="outlined"
+                  startIcon={<DownloadIcon />}
                   onClick={() => {
-                    setStudentDialouge({
-                      ...studentDialouge,
-                      add: true,
-                      enable: true,
-                      record: {},
+                    jsonExport(listData, { headers }, (err, csv) => {
+                      downloadCSV(csv, `${record.id}`);
                     });
                   }}
                 >
-                  Add Student
+                  Export
                 </Button>
-              )}
-              {!record?.isDerived && (
-                <Stack spacing={"10px"} direction="row">
-                  <Button
-                    size="medium"
-                    variant="outlined"
-                    startIcon={<DownloadIcon />}
-                    onClick={() => {
-                      jsonExport(
-                        listData,
-                        {
-                          headers,
-                        },
-                        (err, csv) => {
-                          downloadCSV(csv, `${record.id}`);
-                        }
-                      );
+                <Button
+                  size="medium"
+                  variant="outlined"
+                  startIcon={<UploadIcon />}
+                >
+                  <CSVReader
+                    parserOptions={{
+                      header: true,
+                      dynamicTyping: true,
+                      skipEmptyLines: true,
                     }}
-                  >
-                    Export
-                  </Button>
-                  <Button
-                    size="medium"
-                    variant="outlined"
-                    startIcon={<UploadIcon />}
-                  >
-                    <CSVReader
-                      parserOptions={{
-                        header: true,
-                        dynamicTyping: true,
-                        skipEmptyLines: true,
-                      }}
-                      label="Import"
-                      inputStyle={{ display: "none" }}
-                      onFileLoaded={async (data) => {
-                        const invalidHeader = data.some(
-                          (e) => Object.keys(e).sort() === headers.sort()
+                    label="Import"
+                    inputStyle={{ display: "none" }}
+                    onFileLoaded={async (data) => {
+                      const invalidHeader = data.some(
+                        (e) => Object.keys(e).sort() === headers.sort()
+                      );
+                      if (invalidHeader) {
+                        return notify(
+                          `Headers are invalid. Proper headers are ${headers.join(
+                            ","
+                          )}`,
+                          { type: "error" }
                         );
-                        if (invalidHeader) {
-                          return notify(
-                            `Headers are invalid. Proper headers are ${headers.join(
-                              ","
-                            )}`,
-                            {
-                              type: "error",
-                            }
-                          );
-                        }
+                      }
 
-                        await dataProvider.update(MAPPING.CLASSROOMS, {
-                          id: record.id,
-                          data: {
-                            ...record,
-                            students: data,
-                          },
-                        });
+                      await dataProvider.update(MAPPING.CLASSROOMS, {
+                        id: record.id,
+                        data: {
+                          ...record,
+                          students: data,
+                        },
+                      });
 
-                        notify(
-                          `Updated ${data.length} Students of ${record.id}`,
-                          { type: "success" }
-                        );
-                        setListData(data);
-                      }}
-                      onError={() => {
-                        notify(`Error Importing CSV`, { type: "error" });
-                      }}
-                    ></CSVReader>
-                  </Button>
-                </Stack>
-              )}
-            </Stack>
-          </div>
+                      notify(
+                        `Updated ${data.length} Students of ${record.id}`,
+                        { type: "success" }
+                      );
+                      setListData(data);
+                    }}
+                    onError={() => {
+                      notify(`Error Importing CSV`, { type: "error" });
+                    }}
+                  ></CSVReader>
+                </Button>
+              </Stack>
+            )}
+          </Stack>
+
           <ListContextProvider value={listContext}>
             <Datagrid
               sx={{ paddingTop: "30px" }}

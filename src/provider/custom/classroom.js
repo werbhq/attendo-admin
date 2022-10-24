@@ -18,6 +18,7 @@ export const ClassroomProvider = {
   getList: async (resource, params) => {
     let { data, total } = await dataProviderLegacy.getList(resource, params);
     const { data: semesters } = await dataProvider.getList(MAPPING.SEMESTERS);
+    const { data: subjects } = await dataProvider.getList(MAPPING.SUBJECT);
 
     data = data.map((e) => {
       const record = { ...e };
@@ -31,6 +32,18 @@ export const ClassroomProvider = {
 
       if (record.isDerived) {
         record.parentClasses = Object.keys(record.parentClasses);
+      }
+
+      if (record.semester && record.isDerived) {
+        const subjectsScheme = subjects.find((e) => e.id === record.schemeId);
+        if (subjectsScheme) {
+          const subject = subjectsScheme.semesters
+            .find((e) => e.semester === record.semester)
+            ?.branchSubs?.find((e) => e.branch === record.branch)
+            ?.subjects.find((e) => e.id === record.subjectId);
+
+          record.subjectName = subject?.name;
+        }
       }
 
       return record;
@@ -55,15 +68,13 @@ export const ClassroomProvider = {
       }
     }
 
-    if (record.semester && record.isDerived) {
-      if (subjects && record.isDerived) {
-        const subject = subjects.semesters
-          .find((e) => e.semester === record.semester)
-          ?.branchSubs?.find((e) => e.branch === record.branch)
-          ?.subjects.find((e) => e.id === record.subjectId);
+    if (record.semester && subjects && record.isDerived) {
+      const subject = subjects.semesters
+        .find((e) => e.semester === record.semester)
+        ?.branchSubs?.find((e) => e.branch === record.branch)
+        ?.subjects.find((e) => e.id === record.subjectId);
 
-        record.subjectName = subject?.name;
-      }
+      record.subjectName = subject?.name;
     }
 
     if (record.isDerived) {
