@@ -20,28 +20,30 @@ const MyDatagridRow = ({ record, id, children }) => (
       {React.Children.map(children, (field) => (
         <TableCell key={`${id}-${field.props.source}`}>{field}</TableCell>
       ))}
-      {record.attendance.map((e) => {
-        return (
-          <TableCell key={`${e.subjectId}`}>
-            <Tooltip title={e.name}>
-              <Typography variant="subtitle">
-                <span
-                  style={{
-                    color:
-                      e.percentage < 70 && e.percentage !== -1
-                        ? "red"
-                        : "black",
-                  }}
-                >
-                  {e.percentage !== -1
-                    ? `${Math.round(e.percentage, 2)}%`
-                    : "-"}
-                </span>
-              </Typography>
-            </Tooltip>
-          </TableCell>
-        );
-      })}
+      {record.attendance
+        .sort(({ name: a }, { name: b }) => a.localeCompare(b))
+        .map((e) => {
+          return (
+            <TableCell key={`${e.subjectId}`}>
+              <Tooltip title={`${e.name} (${e.subjectId.toUpperCase()})`}>
+                <Typography variant="subtitle">
+                  <span
+                    style={{
+                      color:
+                        e.percentage < 70 && e.percentage !== -1
+                          ? "red"
+                          : "black",
+                    }}
+                  >
+                    {e.percentage !== -1
+                      ? `${Math.round(e.percentage, 2)}%`
+                      : "-"}
+                  </span>
+                </Typography>
+              </Tooltip>
+            </TableCell>
+          );
+        })}
     </TableRow>
   </RecordContextProvider>
 );
@@ -61,13 +63,21 @@ const DatagridHeader = (props) => {
             {convertToTitleCase(field.props.source)}
           </TableCell>
         ))}
-        {subjects.map((field) => (
-          <TableCell key={field.id}>
-            <Tooltip title={field.name}>
-              <Typography variant="subtitle">{field.id}</Typography>
-            </Tooltip>
-          </TableCell>
-        ))}
+        {subjects
+          .sort(({ name: a }, { name: b }) => a.localeCompare(b))
+          .map(({ name, id }) => (
+            <TableCell key={id}>
+              <Tooltip title={name}>
+                <Typography variant="subtitle">
+                  {`${name
+                    .split(" ")
+                    .map((e) => e[0])
+                    .filter((e) => ![")", "("].includes(e))
+                    .join("")} (${id})`}
+                </Typography>
+              </Tooltip>
+            </TableCell>
+          ))}
       </TableRow>
     </TableHead>
   );
