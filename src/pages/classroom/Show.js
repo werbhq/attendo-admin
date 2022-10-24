@@ -209,16 +209,16 @@ export const ClassroomShow = () => {
               Schemes.classNames.find(({ id }) => record.name === id).name
             }
           ></FunctionField>
-          {record?.isDerived && (
+          {!!record?.isDerived && (
             <TextField source="subjectName" label="Subject"></TextField>
           )}
 
           <BooleanField source="isDerived" label="Virtual Class" />
 
-          {record?.isDerived && (
+          {!!record?.isDerived && (
             <ArrayField source="parentClasses">
               <SingleFieldList
-                style={{
+                sx={{
                   flexDirection: "column",
                   padding: "10px 0px",
                 }}
@@ -226,7 +226,7 @@ export const ClassroomShow = () => {
                 linkType={false}
               >
                 <FunctionField
-                  render={(record) => (
+                  render={() => (
                     <ReferenceField
                       source="id"
                       reference={MAPPING.CLASSROOMS}
@@ -374,6 +374,7 @@ export const ClassroomShow = () => {
           </div>
           <ListContextProvider value={listContext}>
             <Datagrid
+              sx={{ paddingTop: "30px" }}
               bulkActionButtons={
                 record?.isDerived ? (
                   studentVirtualDialouge && (

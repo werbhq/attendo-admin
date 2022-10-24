@@ -150,7 +150,10 @@ export const ClassroomProvider = {
       .doc(MAPPING.MASTER_CLASSROOMS)
       .update(fieldPath, data);
 
-    return { data, status: 200 };
+    const record = data;
+    record.parentClasses = Object.keys(record.parentClasses);
+
+    return { data: record, status: 200 };
   },
 
   delete: async (resource, params) => {
