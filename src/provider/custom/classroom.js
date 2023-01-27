@@ -162,7 +162,9 @@ export const ClassroomProvider = {
       .update(fieldPath, data);
 
     const record = data;
-    record.parentClasses = Object.keys(record.parentClasses);
+
+    if (data.isDerived)
+      record.parentClasses = Object.keys(record.parentClasses);
 
     return { data: record, status: 200 };
   },
