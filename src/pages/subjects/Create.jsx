@@ -33,12 +33,18 @@ const SubjectCreate = () => {
   const onSubmit = async (data) => {
     const id = `${data.course}-${data.organization}-${data.year}`;
     data = { id, ...data, semesters: [] };
-    await dataProvider.create(url, { data, id: data.id });
-    notify(`Added ${id}`, {
-      type: "success",
-    });
-    refresh();
-    redirect("list", url);
+    try {
+      await dataProvider.create(url, { data, id: data.id });
+      notify(`Added ${id}`, {
+        type: "success",
+      });
+      refresh();
+      redirect("list", url);
+    } catch (error) {
+      notify(error.message, {
+        type: "error",
+      });
+    }
   };
 
   return (

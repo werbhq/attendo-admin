@@ -66,6 +66,12 @@ export const SubjectsProvider = {
   create: async (resource, params) => {
     const { data, id } = params;
 
+    const { schemes } = (
+      await db.collection(MAPPING.DATA).doc(MAPPING.SUBJECT).get()
+    ).data();
+
+    if (!!schemes[id]) throw new Error(`${id} subject already exists`);
+
     const fieldPath = new FieldPath("schemes", id);
     await db
       .collection(MAPPING.DATA)

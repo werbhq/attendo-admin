@@ -133,6 +133,13 @@ export const ClassroomProvider = {
   create: async (resource, params) => {
     const { data } = params;
 
+    const { exists: documentExists } = await db
+      .collection(MAPPING.CLASSROOMS)
+      .doc(data.id)
+      .get();
+
+    if (documentExists) throw new Error(`${data.id} classroom already exists`);
+
     if (data.isDerived) {
       const parentClasses = {};
 
