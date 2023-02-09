@@ -48,7 +48,7 @@ import {
 } from "./components/ShowButtons";
 import AttendanceDataGrid from "./components/ShowAttendanceGrid";
 import CSVReader from "react-csv-reader";
-
+import ClassroomSubject from "./components/ShowClassroomSubject";
 const resource = MAPPING.STUDENTS;
 
 export const ClassroomShow = () => {
@@ -76,7 +76,6 @@ export const ClassroomShow = () => {
           dataProvider.getOne(MAPPING.CLASSROOMS, { id: e })
         )
       );
-
       const fullStudents = [];
       classes?.forEach((e) => {
         const students = e.data.students.map((_e) => ({
@@ -439,6 +438,9 @@ export const ClassroomShow = () => {
             }}
           />
         )}
+        <Tab label="subject" path="subject">
+           <ClassroomSubject />
+        </Tab>
       </TabbedShowLayout>
     </Show>
   );

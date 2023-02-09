@@ -3,6 +3,7 @@ import {
   FirebaseDataProvider,
 } from "react-admin-firebase";
 import config from "./config.json";
+import config2 from "./config2.json"
 import CustomProviders from "./customProviders";
 import firebase from "firebase/compat/app";
 import { getFunctions } from "firebase/functions";
@@ -10,9 +11,10 @@ export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
 const options = {};
+const kDev=false;
 
-export const dataProviderLegacy = FirebaseDataProvider(config, options);
-export const authProvider = FirebaseAuthProvider(config, options);
+export const dataProviderLegacy = kDev?FirebaseDataProvider(config, options):FirebaseDataProvider(config2, options);
+export const authProvider = kDev?FirebaseAuthProvider(config, options):FirebaseAuthProvider(config2, options);
 export const db = dataProviderLegacy.app.firestore();
 export const cloudFunctions = getFunctions();
 
