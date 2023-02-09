@@ -97,7 +97,6 @@ const ClassroomSubject = () => {
         }
       }
       setTeachers(tchrs);
-      // e.data.map((e)=>e).findIndex((g)=>g.branch==="cs")
     });
   }
   const [addSubject, setAddSubject] = useState({
@@ -110,18 +109,17 @@ const ClassroomSubject = () => {
   };
 
   const handleSubmit = async (newRecord) => {
-    console.log(newRecord);
     const oldData = data;
-    const currentData = data.subjects===undefined?[]:data.subjects.filter(subjectFind);
+    const currentData =
+      data.subjects === undefined ? [] : data.subjects.filter(subjectFind);
     const newData_subjects = currentData;
 
-    // foundIndata_subj
-
-    // console.log(currentData.length);
+  
     const selected_subj = newRecord.Subject;
-    const foundIndata_subj = branchData.subjects.filter((e) =>
-      selected_subj.includes(e.id)
-    );
+    const foundIndata_subj =
+      branchData.subjects === undefined
+        ? []
+        : branchData.subjects.filter((e) => selected_subj.includes(e.id));
 
     const foundInSubj = [];
     for (let i = 0; i < selected_subj.length; i++) {
@@ -131,13 +129,21 @@ const ClassroomSubject = () => {
     }
 
     const selected_teacher = newRecord.Teachers.map((e) => e.id);
-
     const foundInTchr = teachers.filter((e) => selected_teacher.includes(e.id));
-
     for (let i = 0; i < newRecord.Subject.map((e) => e.id).length; i++) {
       if (foundInSubj[i] !== -1) {
         for (let j = 0; j < foundInTchr.length; j++) {
-          newData_subjects[foundInSubj[i]].teachers.push(foundInTchr[j]);
+          const a = foundInTchr[j];
+          if (
+            currentData[foundInSubj[i]].teachers.filter((e) => e.id === a.id)
+              .length === 0
+          )
+            newData_subjects[foundInSubj[i]].teachers.push(foundInTchr[j]);
+          else {
+            refresh();
+            notify(` ${a.name} is already present`);
+            handleClose();
+          }
         }
       } else {
         newData_subjects.push({
@@ -148,7 +154,6 @@ const ClassroomSubject = () => {
         });
       }
     }
-    console.log(newData_subjects)
 
     data.subjects = newData_subjects;
     await dataProvider.update(MAPPING.CLASSROOMS, {
@@ -162,7 +167,7 @@ const ClassroomSubject = () => {
   };
 
   const tableData = useList({
-    data: data.subjects===undefined?[]:data.subjects?.filter(subjectFind),
+    data: data.subjects === undefined ? [] : data.subjects?.filter(subjectFind),
   });
 
   return (
