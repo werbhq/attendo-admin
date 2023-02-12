@@ -213,7 +213,7 @@ export const ClassroomShow = () => {
           )}
 
           <BooleanField source="isDerived" label="Virtual Class" />
-
+          {console.log(record)}
           {!!record?.isDerived && (
             <ArrayField source="parentClasses">
               <SingleFieldList
@@ -221,7 +221,7 @@ export const ClassroomShow = () => {
                   flexDirection: "column",
                   padding: "10px 0px",
                 }}
-                data={record.parentClasses.map((e) => ({ id: e }))}
+                data={record.parentClasses}
                 linkType={false}
               >
                 <FunctionField
@@ -439,7 +439,7 @@ export const ClassroomShow = () => {
           />
         )}
         <Tab label="subject" path="subject">
-           <ClassroomSubject />
+          <ClassroomSubject />
         </Tab>
       </TabbedShowLayout>
     </Show>
