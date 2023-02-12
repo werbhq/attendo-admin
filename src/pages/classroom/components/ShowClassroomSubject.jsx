@@ -87,14 +87,12 @@ const ClassroomSubject = () => {
     dataProvider1.getList(MAPPING.AUTH_TEACHERS).then((e) => {
       const tchrs = [];
       for (let i = 0; i < e.data.length; i++) {
-        if (e.data[i].branch.includes(data.branch)) {
-          let tchr_obj = {
-            id: e.data[i].id,
-            emailId: e.data[i].email,
-            name: titleCase(e.data[i].userName),
-          };
-          tchrs.push(tchr_obj);
-        }
+        let tchr_obj = {
+          id: e.data[i].id,
+          emailId: e.data[i].email,
+          name: titleCase(e.data[i].userName),
+        };
+        tchrs.push(tchr_obj);
       }
       setTeachers(tchrs);
     });
@@ -114,7 +112,6 @@ const ClassroomSubject = () => {
       data.subjects === undefined ? [] : data.subjects.filter(subjectFind);
     const newData_subjects = currentData;
 
-  
     const selected_subj = newRecord.Subject;
     const foundIndata_subj =
       branchData.subjects === undefined
