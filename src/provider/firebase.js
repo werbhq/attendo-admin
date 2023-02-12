@@ -3,7 +3,7 @@ import {
   FirebaseDataProvider,
 } from "react-admin-firebase";
 import config from "./config.json";
-import config2 from "./config2.json"
+import config2 from "./config2.json";
 import CustomProviders from "./customProviders";
 import firebase from "firebase/compat/app";
 import { getFunctions } from "firebase/functions";
@@ -11,12 +11,25 @@ export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
 const options = {};
-const kDev=false;
+const kMode = "emulate"; // dev, prod, emulate
 
-export const dataProviderLegacy = kDev?FirebaseDataProvider(config, options):FirebaseDataProvider(config2, options);
-export const authProvider = kDev?FirebaseAuthProvider(config, options):FirebaseAuthProvider(config2, options);
+export const dataProviderLegacy =
+  kMode === "prod"
+    ? FirebaseDataProvider(config, options)
+    : FirebaseDataProvider(config2, options);
+export const authProvider =
+  kMode === "prod"
+    ? FirebaseAuthProvider(config, options)
+    : FirebaseAuthProvider(config2, options);
 export const db = dataProviderLegacy.app.firestore();
 export const cloudFunctions = getFunctions();
+
+if (kMode === "emulate") {
+  firebase.firestore().useEmulator("localhost", 8090);
+  firebase.auth().useEmulator("http://localhost:9099/");
+  firebase.functions().useEmulator("localhost", 5001);
+  firebase.storage().useEmulator("localhost", 9199);
+}
 
 const getCustomConvertor = async (resource, params, method) => {
   const provider = CustomProviders.find((e) => e.resource === resource);
