@@ -213,7 +213,6 @@ export const ClassroomShow = () => {
           )}
 
           <BooleanField source="isDerived" label="Virtual Class" />
-          {console.log(record)}
           {!!record?.isDerived && (
             <ArrayField source="parentClasses">
               <SingleFieldList

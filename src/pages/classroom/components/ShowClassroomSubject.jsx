@@ -158,6 +158,7 @@ const ClassroomSubject = () => {
           teachers: foundInTchr,
           semester: semester,
         });
+        if (data.subjects === undefined) data.subjects = [];
         for (let subject of newData_subjects) {
           if (!data.subjects.includes(subject)) data.subjects.push(subject);
         }
