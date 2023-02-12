@@ -49,6 +49,8 @@ import {
 import AttendanceDataGrid from "./components/ShowAttendanceGrid";
 import CSVReader from "react-csv-reader";
 import ClassroomSubject from "./components/ShowClassroomSubject";
+import { Chip } from "@mui/material";
+
 const resource = MAPPING.STUDENTS;
 
 export const ClassroomShow = () => {
@@ -237,7 +239,16 @@ export const ClassroomShow = () => {
               </SingleFieldList>
             </ArrayField>
           )}
-
+          {!!record?.isDerived && (
+            <ArrayField source="Teachers">
+              
+              <ul style={{ padding: 0, margin: 0 }}>
+                {record.teachers===undefined?null:record.teachers.map((e) => (
+                  <Chip key={e.id} sx={{ ml: 0.5, mt: 1 }} label={e.id} />
+                ))}
+              </ul>
+            </ArrayField>
+          )}
           <FunctionField
             label="Students Count"
             render={(record) => record.students.length}
@@ -437,9 +448,11 @@ export const ClassroomShow = () => {
             }}
           />
         )}
-        <Tab label="subject" path="subject">
-          <ClassroomSubject />
-        </Tab>
+        {!record?.isDerived && (
+          <Tab label="subject" path="subject">
+            <ClassroomSubject />
+          </Tab>
+        )}
       </TabbedShowLayout>
     </Show>
   );

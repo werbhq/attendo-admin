@@ -3,34 +3,25 @@ import {
   Datagrid,
   ListContextProvider,
   SimpleForm,
-  TextInput,
-  FunctionField,
   SaveButton,
   useRecordContext,
-  useShowController,
   useDataProvider,
   useList,
   useRefresh,
   useNotify,
-  required,
   WrapperField,
-  ReferenceArrayInput,
   AutocompleteArrayInput,
   SelectInput,
-  ChipField,
 } from "react-admin";
 import MyTeacher from "./CustomTeacherField";
-import InputLabel from "@mui/material/InputLabel";
-import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { useState, useEffect, Chip } from "react";
+import { useState} from "react";
 import { Dialog } from "@mui/material";
 import { MAPPING } from "../../../provider/mapping";
 import { CustomSubjectBulkDeleteButton } from "../components/CustomButton";
-import { noSpaceValidation } from "../../../Utils/validations";
 import Button from "@mui/material/Button";
 
 function titleCase(str) {

@@ -18,8 +18,23 @@ import {
 import { MAPPING } from "../../../provider/mapping";
 import { Stack } from "@mui/material";
 import { Schemes } from "../../../Utils/Schemes";
+import { useState } from "react";
 
 const resource = MAPPING.CLASSROOMS;
+function titleCase(str) {
+  var title_name = str
+    .split(".")
+    .map((word) =>
+      word.length > 2
+        ? word.charAt(0).toUpperCase() + word.slice(1)
+        : word.charAt(0).toUpperCase() +
+          word.charAt(1).toUpperCase() +
+          word.slice(2)
+    )
+    .toString()
+    .replace(",", " ");
+  return title_name;
+}
 
 export default function EditClassroom({ state }) {
   const dataProvider = useDataProvider();
@@ -51,17 +66,31 @@ export default function EditClassroom({ state }) {
       delete newRecord.subjectId;
       delete newRecord.parentClasses;
       delete newRecord.semester;
+      delete newRecord.teachers;
       newRecord.isDerived = false;
     } else {
       delete newRecord.subjectName;
       newRecord.isDerived = true;
     }
     delete newRecord.students;
+    console.log(newRecord);
+    const selected_teacher = newRecord.teachers.map((e) => e.id);
 
-    await dataProvider.update(resource, {
-      id: newRecord.id,
-      data: newRecord,
-    });
+    const foundInTchr = teachers.filter((e) => selected_teacher.includes(e.id));
+    console.log(foundInTchr);
+    for (let i = 0; i < newRecord.teachers.length; i++) {
+      for (let j = 0; i < foundInTchr.length; j++) {
+        if (newRecord.teachers[i].id === foundInTchr[j].id) {
+          newRecord.teachers[i] = foundInTchr[j];
+        }
+      }
+    }
+    console.log(newRecord);
+
+    // await dataProvider.update(resource, {
+    //   id: newRecord.id,
+    //   data: newRecord,
+    // });
     refresh();
     notify(`Edited ${newRecord.id}`, {
       type: "success",
@@ -92,7 +121,23 @@ export default function EditClassroom({ state }) {
 
     return errors;
   };
+  const [teachers, setTeachers] = useState([]);
+  const dataProvider1 = useDataProvider();
 
+  if (teachers.length === 0) {
+    dataProvider1.getList(MAPPING.AUTH_TEACHERS).then((e) => {
+      const tchrs = [];
+      for (let i = 0; i < e.data.length; i++) {
+        let tchr_obj = {
+          id: e.data[i].id,
+          emailId: e.data[i].email,
+          name: e.data[i].userName,
+        };
+        tchrs.push(tchr_obj);
+      }
+      setTeachers(tchrs);
+    });
+  }
   return (
     <Dialog
       open={dialouge.enable}
@@ -166,6 +211,17 @@ export default function EditClassroom({ state }) {
                 isRequired
               />
             </ReferenceArrayInput>
+            <AutocompleteArrayInput
+              source="teachers"
+              parse={(value) => value && value.map((v) => ({ id: v }))}
+              format={(value) => value && value.map((v) => v.id)}
+              choices={teachers}
+              optionText={(choice) => `${titleCase(choice.name)}`}
+              filterToQuery={(searchText) => ({ id: searchText })}
+              emptyText="No Option"
+              sx={{ minWidth: 300 }}
+              isRequired
+            />
           </>
         )}
         <Stack direction="row" spacing={2}>
