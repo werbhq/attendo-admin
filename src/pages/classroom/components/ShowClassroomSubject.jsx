@@ -124,11 +124,18 @@ const ClassroomSubject = () => {
         currentData.findIndex((e) => selected_subj[i].includes(e.subject.id))
       );
     }
-
+    console.log(foundInSubj);
+    console.log(foundIndata_subj);
     const selected_teacher = newRecord.Teachers.map((e) => e.id);
     const foundInTchr = teachers.filter((e) => selected_teacher.includes(e.id));
     for (let i = 0; i < newRecord.Subject.map((e) => e.id).length; i++) {
       if (foundInSubj[i] !== -1) {
+        let subject_index;
+        for (let k = 0; k < data.subjects.length; k++) {
+          if (data.subjects[k] === newData_subjects[foundInSubj[i]]) {
+            subject_index = k;
+          }
+        }
         for (let j = 0; j < foundInTchr.length; j++) {
           const a = foundInTchr[j];
           if (
@@ -142,6 +149,8 @@ const ClassroomSubject = () => {
             handleClose();
           }
         }
+        data.subjects[subject_index].teachers =
+          newData_subjects[foundInSubj[i]].teachers;
       } else {
         newData_subjects.push({
           id: foundIndata_subj[i].id + "-" + foundInTchr[0].id + "-" + semester,
@@ -149,10 +158,12 @@ const ClassroomSubject = () => {
           teachers: foundInTchr,
           semester: semester,
         });
+        for (let subject of newData_subjects) {
+          if (!data.subjects.includes(subject)) data.subjects.push(subject);
+        }
       }
     }
 
-    data.subjects = newData_subjects;
     await dataProvider.update(MAPPING.CLASSROOMS, {
       id: data.id,
       data: data,
