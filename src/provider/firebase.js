@@ -11,7 +11,7 @@ export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
 const options = {};
-const kMode = "emulate"; // dev, prod, emulate
+const kMode = "dev"; // dev, prod, emulate
 
 export const dataProviderLegacy =
   kMode === "prod"

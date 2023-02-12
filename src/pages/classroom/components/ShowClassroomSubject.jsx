@@ -63,18 +63,21 @@ const ClassroomSubject = () => {
     dataProvider.getOne(MAPPING.SUBJECT, { id: data.schemeId }).then((e) => {
       const sem = data.semester;
       const semIndex = e.data.semesters.findIndex((g) => g.semester === sem);
-      const branch = data.branch;
-      const branchIndex = e.data.semesters[semIndex].branchSubs.findIndex(
-        (f) => f.branch === branch
-      );
-      const totalSemesters = e.data.semesters.length;
-      const semesters = [];
-      for (let i = 0; i < totalSemesters; i++)
-        semesters.push(e.data.semesters[i]);
-
-      setsemesterChoices(semesters);
-      setSemester(e.data.semesters[semIndex].semester);
-      setBranchData(e.data.semesters[semIndex].branchSubs[branchIndex]);
+      if (semIndex !== -1) {
+        const branch = data.branch;
+        if (e.data.semesters[semIndex] !== undefined) {
+          const branchIndex = e.data.semesters[semIndex].branchSubs.findIndex(
+            (f) => f.branch === branch
+          );
+          const totalSemesters = e.data.semesters.length;
+          const semesters = [];
+          for (let i = 0; i < totalSemesters; i++)
+            semesters.push(e.data.semesters[i]);
+          setsemesterChoices(semesters);
+          setSemester(e.data.semesters[semIndex].semester);
+          setBranchData(e.data.semesters[semIndex].branchSubs[branchIndex]);
+        }
+      }
     });
   }
   function subjectFind(value) {
@@ -108,8 +111,7 @@ const ClassroomSubject = () => {
 
   const handleSubmit = async (newRecord) => {
     const oldData = data;
-    const currentData =
-      data.subjects === undefined ? [] : data.subjects.filter(subjectFind);
+    const currentData = data.subjects === undefined ? [] : data.subjects;
     const newData_subjects = currentData;
 
     const selected_subj = newRecord.Subject;
@@ -124,15 +126,13 @@ const ClassroomSubject = () => {
         currentData.findIndex((e) => selected_subj[i].includes(e.subject.id))
       );
     }
-    console.log(foundInSubj);
-    console.log(foundIndata_subj);
     const selected_teacher = newRecord.Teachers.map((e) => e.id);
     const foundInTchr = teachers.filter((e) => selected_teacher.includes(e.id));
     for (let i = 0; i < newRecord.Subject.map((e) => e.id).length; i++) {
       if (foundInSubj[i] !== -1) {
         let subject_index;
-        for (let k = 0; k < data.subjects.length; k++) {
-          if (data.subjects[k] === newData_subjects[foundInSubj[i]]) {
+        for (let k = 0; k < currentData.length; k++) {
+          if (currentData[k] === newData_subjects[foundInSubj[i]]) {
             subject_index = k;
           }
         }
@@ -149,7 +149,7 @@ const ClassroomSubject = () => {
             handleClose();
           }
         }
-        data.subjects[subject_index].teachers =
+        currentData[subject_index].teachers =
           newData_subjects[foundInSubj[i]].teachers;
       } else {
         newData_subjects.push({
@@ -158,9 +158,8 @@ const ClassroomSubject = () => {
           teachers: foundInTchr,
           semester: semester,
         });
-        if (data.subjects === undefined) data.subjects = [];
         for (let subject of newData_subjects) {
-          if (!data.subjects.includes(subject)) data.subjects.push(subject);
+          if (!currentData.includes(subject)) currentData.push(subject);
         }
       }
     }
@@ -178,6 +177,22 @@ const ClassroomSubject = () => {
   const tableData = useList({
     data: data.subjects === undefined ? [] : data.subjects?.filter(subjectFind),
   });
+  function check_subject() {
+    let a = false;
+    if (semesterChoices.length === 0) {
+      a = true;
+    } else if (branchData !== undefined) {
+      branchData.subjects !== undefined
+        ? branchData.subjects.length !== 0
+          ? (a = false)
+          : (a = true)
+        : (a = false);
+    } else if (branchData === undefined) {
+      a = true;
+    }
+
+    return a;
+  }
 
   return (
     <Stack spacing={5}>
@@ -189,13 +204,13 @@ const ClassroomSubject = () => {
             const semDetails = semesterChoices?.find(
               (e) => e.semester === value.target.value
             );
-
-            const branchIndex = semDetails.branchSubs.findIndex(
-              (f) => f.branch === data.branch
-            );
-            setSemester(semDetails.semester);
-            setBranchData(semDetails.branchSubs[branchIndex]);
-
+            if (semDetails !== undefined) {
+              const branchIndex = semDetails.branchSubs.findIndex(
+                (f) => f.branch === data.branch
+              );
+              setSemester(semDetails.semester);
+              setBranchData(semDetails.branchSubs[branchIndex]);
+            }
             //   setBranchData(semesterChoices.branchSubs[0]?.branch);
           }}
           sx={{ width: "60px" }}
@@ -209,7 +224,7 @@ const ClassroomSubject = () => {
       </Stack>
       <Stack direction="row">
         <Button
-          disabled={branchData === undefined || semester === undefined}
+          disabled={check_subject()}
           variant="contained"
           size="medium"
           startIcon={<AddIcon />}
@@ -250,9 +265,10 @@ const ClassroomSubject = () => {
           <SelectInput
             source="Subject"
             parse={(value) => [value]}
-            choices={branchData.subjects}
+            choices={branchData?.subjects}
             optionText={(choice) => `${choice.code} - ${choice.name}`}
             filterToQuery={(searchText) => ({ id: searchText })}
+            emptyText="No Option"
             isRequired
           />
           <AutocompleteArrayInput
