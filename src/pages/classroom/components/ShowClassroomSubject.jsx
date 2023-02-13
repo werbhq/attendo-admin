@@ -5,6 +5,7 @@ import {
   SimpleForm,
   SaveButton,
   useRecordContext,
+  FunctionField,
   useDataProvider,
   useList,
   useRefresh,
@@ -23,6 +24,7 @@ import { Dialog } from "@mui/material";
 import { MAPPING } from "../../../provider/mapping";
 import { CustomSubjectBulkDeleteButton } from "../components/CustomButton";
 import Button from "@mui/material/Button";
+import EditIcon from "@mui/icons-material/Edit";
 
 function titleCase(str) {
   var title_name = str
@@ -52,11 +54,15 @@ const ClassroomSubject = () => {
 
   if (semesterChoices.length === 0) {
     dataProvider.getOne(MAPPING.SUBJECT, { id: data.schemeId }).then((e) => {
+      //current sem from the classroom
       const sem = data.semester;
+      //semester data from the subjects
       const semIndex = e.data.semesters.findIndex((g) => g.semester === sem);
       if (semIndex !== -1) {
+        //current branch from classroom
         const branch = data.branch;
         if (e.data.semesters[semIndex] !== undefined) {
+          //branch data from subject
           const branchIndex = e.data.semesters[semIndex].branchSubs.findIndex(
             (f) => f.branch === branch
           );
@@ -64,19 +70,20 @@ const ClassroomSubject = () => {
           const semesters = [];
           for (let i = 0; i < totalSemesters; i++)
             semesters.push(e.data.semesters[i]);
-          setsemesterChoices(semesters);
-          setSemester(e.data.semesters[semIndex].semester);
-          setBranchData(e.data.semesters[semIndex].branchSubs[branchIndex]);
+          setsemesterChoices(semesters); //list of semester data of each classroon
+          setSemester(e.data.semesters[semIndex].semester); //current semester
+          setBranchData(e.data.semesters[semIndex].branchSubs[branchIndex]); //branch data
         }
       }
     });
   }
+
+  //subjects of the current semester..changes acc to semesters
   function subjectFind(value) {
     return value.semester === semester;
   }
-
+  //teachers data
   const [teachers, setTeachers] = useState([]);
-
   if (teachers.length === 0) {
     dataProvider1.getList(MAPPING.AUTH_TEACHERS).then((e) => {
       const tchrs = [];
@@ -91,11 +98,13 @@ const ClassroomSubject = () => {
       setTeachers(tchrs);
     });
   }
+
   const [addSubject, setAddSubject] = useState({
-    open: false,
-    add: false,
-    record: {},
+    open: false, //opening/closing the dialogue
+    record: {}, //record regarding the current inputted data
   });
+
+  //closes dialogue
   const handleClose = () => {
     setAddSubject({ ...addSubject, open: false });
   };
@@ -103,28 +112,35 @@ const ClassroomSubject = () => {
   const handleSubmit = async (newRecord) => {
     const oldData = data;
     const currentData = data.subjects === undefined ? [] : data.subjects;
-    const newData_subjects = currentData;
+    const newData_subjects = currentData; //adds the newRecord
 
+    //subject in the newRecord
     const selected_subj = newRecord.Subject;
+    //if the now added subject is already present in the classroom
     const foundIndata_subj =
       branchData.subjects === undefined
         ? []
         : branchData.subjects.filter((e) => selected_subj.includes(e.id));
-
+    //foundInSubj has the index of the subject in the classroom
     const foundInSubj = [];
     for (let i = 0; i < selected_subj.length; i++) {
       foundInSubj.push(
         currentData.findIndex((e) => selected_subj[i].includes(e.subject.id))
       );
     }
+
+    //teacher in the newRecord
     const selected_teacher = newRecord.Teachers.map((e) => e.id);
+    //if the now added teacher is already present in the classroom
     const foundInTchr = teachers.filter((e) => selected_teacher.includes(e.id));
+
     for (let i = 0; i < newRecord.Subject.map((e) => e.id).length; i++) {
+      //if a new subject is being added
       if (foundInSubj[i] !== -1) {
         const subject_index = currentData.indexOf(
           newData_subjects[foundInSubj[i]]
         );
-
+        //to avoid tchr duplication
         for (let j = 0; j < foundInTchr.length; j++) {
           const a = foundInTchr[j];
           if (
@@ -138,6 +154,7 @@ const ClassroomSubject = () => {
             handleClose();
           }
         }
+        //modify currentData with the new teachers array
         currentData[subject_index].teachers =
           newData_subjects[foundInSubj[i]].teachers;
       } else {
@@ -147,6 +164,7 @@ const ClassroomSubject = () => {
           teachers: foundInTchr,
           semester: semester,
         });
+        //check if current data doesnt have any of the subjects in newdatasubjects
         for (let subject of newData_subjects) {
           if (!currentData.includes(subject)) currentData.push(subject);
         }
@@ -162,10 +180,11 @@ const ClassroomSubject = () => {
     notify("Classroom Subject Updated");
     handleClose();
   };
-
+  //tableData for the listProvider
   const tableData = useList({
     data: data.subjects === undefined ? [] : data.subjects?.filter(subjectFind),
   });
+  //for disabling of addsubject button where there is no data
   function check_subject() {
     let a = false;
     if (semesterChoices.length === 0) {
@@ -218,7 +237,7 @@ const ClassroomSubject = () => {
           size="medium"
           startIcon={<AddIcon />}
           onClick={() => {
-            setAddSubject({ open: true, add: true, record: {} });
+            setAddSubject({ open: true, record: {} });
           }}
         >
           ADD SUBJECT
@@ -245,6 +264,7 @@ const ClassroomSubject = () => {
           </WrapperField>
         </Datagrid>
       </ListContextProvider>
+
       <Dialog open={addSubject.open} onClose={handleClose} fullWidth={true}>
         <SimpleForm
           record={addSubject.record}
@@ -272,7 +292,7 @@ const ClassroomSubject = () => {
             isRequired
           />
           <Stack direction="row" spacing={3}>
-            <SaveButton label={addSubject.add ? "Add" : "Save"} />
+            <SaveButton label="Add" />
           </Stack>
         </SimpleForm>
       </Dialog>
