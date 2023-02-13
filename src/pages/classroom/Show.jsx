@@ -216,36 +216,24 @@ export const ClassroomShow = () => {
 
           <BooleanField source="isDerived" label="Virtual Class" />
           {!!record?.isDerived && (
-            <ArrayField source="parentClasses">
-              <SingleFieldList
-                sx={{
-                  flexDirection: "column",
-                  padding: "10px 0px",
-                }}
-                data={record.parentClasses}
-                linkType={false}
-              >
-                <FunctionField
-                  render={() => (
-                    <ReferenceField
-                      source="id"
-                      reference={MAPPING.CLASSROOMS}
-                      link="show"
-                    >
-                      <TextField source="id" />
-                    </ReferenceField>
-                  )}
-                />
-              </SingleFieldList>
+            <ArrayField source="Parent Classes">
+              <ul style={{ padding: 0, margin: 0 }}>
+                {record.parentClasses === undefined
+                  ? null
+                  : record.parentClasses.map((e) => (
+                      <Chip key={e} sx={{ mt: 1 }} label={e} />
+                    ))}
+              </ul>
             </ArrayField>
           )}
           {!!record?.isDerived && (
             <ArrayField source="Teachers">
-              
               <ul style={{ padding: 0, margin: 0 }}>
-                {record.teachers===undefined?null:record.teachers.map((e) => (
-                  <Chip key={e.id} sx={{ ml: 0.5, mt: 1 }} label={e.name} />
-                ))}
+                {record.teachers === undefined
+                  ? null
+                  : record.teachers.map((e) => (
+                      <Chip key={e.id} sx={{  mt: 1 }} label={e.name} />
+                    ))}
               </ul>
             </ArrayField>
           )}
