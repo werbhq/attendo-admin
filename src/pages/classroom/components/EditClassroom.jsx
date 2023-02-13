@@ -73,24 +73,26 @@ export default function EditClassroom({ state }) {
       newRecord.isDerived = true;
     }
     delete newRecord.students;
-    console.log(newRecord);
-    const selected_teacher = newRecord.teachers.map((e) => e.id);
-
-    const foundInTchr = teachers.filter((e) => selected_teacher.includes(e.id));
-    console.log(foundInTchr);
-    for (let i = 0; i < newRecord.teachers.length; i++) {
-      for (let j = 0; i < foundInTchr.length; j++) {
-        if (newRecord.teachers[i].id === foundInTchr[j].id) {
-          newRecord.teachers[i] = foundInTchr[j];
+    if (isDerived(newRecord.name)) {
+      const selected_teacher = newRecord.teachers.map((e) => e.id);
+      const foundInTchr = teachers.filter((e) =>
+        selected_teacher.includes(e.id)
+      );
+      const new_teachers = [];
+      for (let teacher of newRecord.teachers) {
+        for (let tchr of foundInTchr) {
+          if (tchr.id === teacher.id) {
+            new_teachers.push(tchr);
+          }
         }
       }
+      newRecord.teachers = new_teachers;
     }
-    console.log(newRecord);
 
-    // await dataProvider.update(resource, {
-    //   id: newRecord.id,
-    //   data: newRecord,
-    // });
+    await dataProvider.update(resource, {
+      id: newRecord.id,
+      data: newRecord,
+    });
     refresh();
     notify(`Edited ${newRecord.id}`, {
       type: "success",
@@ -131,7 +133,7 @@ export default function EditClassroom({ state }) {
         let tchr_obj = {
           id: e.data[i].id,
           emailId: e.data[i].email,
-          name: e.data[i].userName,
+          name: titleCase(e.data[i].userName),
         };
         tchrs.push(tchr_obj);
       }

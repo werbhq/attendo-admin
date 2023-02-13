@@ -18,7 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import { useState} from "react";
+import { useState } from "react";
 import { Dialog } from "@mui/material";
 import { MAPPING } from "../../../provider/mapping";
 import { CustomSubjectBulkDeleteButton } from "../components/CustomButton";
@@ -121,12 +121,10 @@ const ClassroomSubject = () => {
     const foundInTchr = teachers.filter((e) => selected_teacher.includes(e.id));
     for (let i = 0; i < newRecord.Subject.map((e) => e.id).length; i++) {
       if (foundInSubj[i] !== -1) {
-        let subject_index;
-        for (let k = 0; k < currentData.length; k++) {
-          if (currentData[k] === newData_subjects[foundInSubj[i]]) {
-            subject_index = k;
-          }
-        }
+        const subject_index = currentData.indexOf(
+          newData_subjects[foundInSubj[i]]
+        );
+
         for (let j = 0; j < foundInTchr.length; j++) {
           const a = foundInTchr[j];
           if (
@@ -154,7 +152,7 @@ const ClassroomSubject = () => {
         }
       }
     }
-
+    data.subjects = currentData;
     await dataProvider.update(MAPPING.CLASSROOMS, {
       id: data.id,
       data: data,

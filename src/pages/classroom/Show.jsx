@@ -244,7 +244,7 @@ export const ClassroomShow = () => {
               
               <ul style={{ padding: 0, margin: 0 }}>
                 {record.teachers===undefined?null:record.teachers.map((e) => (
-                  <Chip key={e.id} sx={{ ml: 0.5, mt: 1 }} label={e.id} />
+                  <Chip key={e.id} sx={{ ml: 0.5, mt: 1 }} label={e.name} />
                 ))}
               </ul>
             </ArrayField>
