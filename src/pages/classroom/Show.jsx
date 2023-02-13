@@ -221,7 +221,7 @@ export const ClassroomShow = () => {
                 {record.parentClasses === undefined
                   ? null
                   : record.parentClasses.map((e) => (
-                      <Chip key={e} sx={{ mt: 1 }} label={e} />
+                      <Chip key={e} sx={{ ml: 0.5, mt: 1 }} label={e} />
                     ))}
               </ul>
             </ArrayField>
@@ -232,7 +232,7 @@ export const ClassroomShow = () => {
                 {record.teachers === undefined
                   ? null
                   : record.teachers.map((e) => (
-                      <Chip key={e.id} sx={{  mt: 1 }} label={e.name} />
+                      <Chip key={e.id} sx={{ ml: 0.5, mt: 1 }} label={e.name} />
                     ))}
               </ul>
             </ArrayField>

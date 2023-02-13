@@ -110,7 +110,7 @@ const CreateClassroom = ({ schemes: schemeData }) => {
               filterToQuery={(searchText) => ({ id: searchText })}
               isRequired
             />
-          </ReferenceArrayInput>
+          </ReferenceArrayInput>    
         </>
       )}
     </SimpleForm>
@@ -131,7 +131,16 @@ const ClassroomsCreate = () => {
       delete data.semester;
       data.isDerived = false;
     } else {
-      data.isDerived = true;
+      const scheme = schemeData.find((e) => e.id === data.schemeId);
+      console.log(scheme);
+      const sem = scheme.semesters.find((e) => e.semester === data.semester);
+      console.log(sem);
+      const brnch = sem.branchSubs.find((e) => e.branch === data.branch);
+      console.log(brnch);
+      const sub = brnch.subjects.find((e) => e.id === data.subjectId);
+      console.log(sub);
+      data.subjectName = sub.name;
+      data.isDerived = true;    
     }
     return {
       ...data,
