@@ -90,8 +90,10 @@ export default function EditClassroom({ state }) {
     }
     const data_subjects = getSubjects(data.scheme, data.branch, data.semester);
     const subj = data_subjects.find((e) => e.id === newRecord.subjectId);
-    newRecord.subjectId = subj.id;
-    newRecord.subjectName = subj.name;
+    newRecord.subject = {};
+    newRecord.subject.id = subj.id;
+    newRecord.subject.code = subj.id.toUpperCase();
+    newRecord.subject.name = subj.name;
 
     await dataProvider.update(resource, {
       id: newRecord.id,

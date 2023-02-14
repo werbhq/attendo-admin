@@ -178,7 +178,6 @@ const ClassroomsCreate = () => {
       const sem = scheme.semesters.find((e) => e.semester === data.semester);
       const brnch = sem.branchSubs.find((e) => e.branch === data.branch);
       const sub = brnch.subjects.find((e) => e.id === data.subjectId);
-      console.log(data.teachers);
       const selected_teacher = data.teachers.map((e) => e.id);
       const foundInTchr = teachers.filter((e) =>
         selected_teacher.includes(e.id)
@@ -191,10 +190,12 @@ const ClassroomsCreate = () => {
           }
         }
       }
-      console.log(new_teachers)
 
       data.teachers = new_teachers;
-      data.subjectName = sub.name;
+      data.subject = {};
+      data.subject.name = sub.name;
+      data.subject.id = data.subjectId;
+      data.subject.code = data.subjectId.toUpperCase();
       data.isDerived = true;
       console.log(data);
     }
