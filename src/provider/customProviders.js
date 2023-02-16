@@ -4,6 +4,7 @@ import { SubjectsProvider } from "./custom/subjects";
 import { SemestersProvider } from "./custom/semesters";
 import { AuthTeachersProvider } from "./custom/authorizedTeachers";
 import { ReportsProvider } from "./custom/reports";
+import { BatchesProvider } from "./custom/batches";
 
 // ADD YOUR PROVIDERS HERE
 const CustomProviders = [
@@ -13,6 +14,7 @@ const CustomProviders = [
   SubjectsProvider,
   AuthTeachersProvider,
   ReportsProvider,
+  BatchesProvider,
 ];
 
 export default CustomProviders;

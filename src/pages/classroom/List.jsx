@@ -25,15 +25,20 @@ const ClassroomsList = () => {
     <List exporter={false} filters={filters}>
       <Datagrid rowClick="show">
         <TextField source="id" />
-        <TextField source="batch.course" label="Course" />
-
+        <ReferenceField
+          source="course"
+          reference={MAPPING.SEMESTERS}
+          link="show"
+        >
+          <TextField source="id" />
+        </ReferenceField>
         <TextField
           source="subjectName"
           label="Subject"
           emptyText="-"
           sortable={false}
         />
-        <TextField source="batch.yearOfJoining" label="Year Of Joining" />
+        <TextField source="year" />
         <TextField source="semester" emptyText="-" sortable={false} />
         <FunctionField
           label="Branch"
@@ -50,8 +55,13 @@ const ClassroomsList = () => {
           label="Students"
           render={(record) => record.students.length}
         ></FunctionField>
-        <TextField source="batch.schemeId" label="Scheme Id" />
-
+        <ReferenceField
+          source="schemeId"
+          reference={MAPPING.SUBJECT}
+          link="show"
+        >
+          <TextField source="id" />
+        </ReferenceField>
         <BooleanField source="isDerived" label="Virtual Class" />
       </Datagrid>
     </List>
