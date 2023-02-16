@@ -18,8 +18,23 @@ import {
 import { MAPPING } from "../../../provider/mapping";
 import { Stack } from "@mui/material";
 import { Schemes } from "../../../Utils/Schemes";
+import { useState } from "react";
 
 const resource = MAPPING.CLASSROOMS;
+function titleCase(str) {
+  var title_name = str
+    .split(".")
+    .map((word) =>
+      word.length > 2
+        ? word.charAt(0).toUpperCase() + word.slice(1)
+        : word.charAt(0).toUpperCase() +
+          word.charAt(1).toUpperCase() +
+          word.slice(2)
+    )
+    .toString()
+    .replace(",", " ");
+  return title_name;
+}
 
 export default function EditClassroom({ state }) {
   const dataProvider = useDataProvider();
@@ -51,11 +66,34 @@ export default function EditClassroom({ state }) {
       delete newRecord.subjectId;
       delete newRecord.parentClasses;
       delete newRecord.semester;
+      delete newRecord.teachers;
       newRecord.isDerived = false;
     } else {
+      delete newRecord.subjectName;
       newRecord.isDerived = true;
     }
     delete newRecord.students;
+    if (isDerived(newRecord.name)) {
+      const selected_teacher = newRecord.teachers.map((e) => e.id);
+      const foundInTchr = teachers.filter((e) =>
+        selected_teacher.includes(e.id)
+      );
+      const new_teachers = [];
+      for (let teacher of newRecord.teachers) {
+        for (let tchr of foundInTchr) {
+          if (tchr.id === teacher.id) {
+            new_teachers.push(tchr);
+          }
+        }
+      }
+      newRecord.teachers = new_teachers;
+    }
+    const data_subjects = getSubjects(data.scheme, data.branch, data.semester);
+    const subj = data_subjects.find((e) => e.id === newRecord.subjectId);
+    newRecord.subject = {};
+    newRecord.subject.id = subj.id;
+    newRecord.subject.code = subj.id.toUpperCase();
+    newRecord.subject.name = subj.name;
 
     await dataProvider.update(resource, {
       id: newRecord.id,
@@ -91,7 +129,23 @@ export default function EditClassroom({ state }) {
 
     return errors;
   };
+  const [teachers, setTeachers] = useState([]);
+  const dataProvider1 = useDataProvider();
 
+  if (teachers.length === 0) {
+    dataProvider1.getList(MAPPING.AUTH_TEACHERS).then((e) => {
+      const tchrs = [];
+      for (let i = 0; i < e.data.length; i++) {
+        let tchr_obj = {
+          id: e.data[i].id,
+          emailId: e.data[i].email,
+          name: titleCase(e.data[i].userName),
+        };
+        tchrs.push(tchr_obj);
+      }
+      setTeachers(tchrs);
+    });
+  }
   return (
     <Dialog
       open={dialouge.enable}
@@ -118,7 +172,11 @@ export default function EditClassroom({ state }) {
           onChange={(e) => setData({ ...data, scheme: e.target.value })}
           required
         />
-        <NumberInput source="year" required />
+        <NumberInput
+          source="year"
+          onWheel={(e) => e.preventDefault()}
+          required
+        />
         <SelectInput
           source="branch"
           choices={getBranches(data.scheme)}
@@ -152,6 +210,7 @@ export default function EditClassroom({ state }) {
               source="parentClasses"
               reference={MAPPING.CLASSROOMS}
               filter={{ isDerived: false }}
+              isRequired
             >
               <AutocompleteArrayInput
                 optionText="id"
@@ -160,6 +219,17 @@ export default function EditClassroom({ state }) {
                 isRequired
               />
             </ReferenceArrayInput>
+            <AutocompleteArrayInput
+              source="teachers"
+              parse={(value) => value && value.map((v) => ({ id: v }))}
+              format={(value) => value && value.map((v) => v.id)}
+              choices={teachers}
+              optionText={(choice) => `${titleCase(choice.name)}`}
+              filterToQuery={(searchText) => ({ id: searchText })}
+              emptyText="No Option"
+              sx={{ minWidth: 300 }}
+              isRequired
+            />
           </>
         )}
         <Stack direction="row" spacing={2}>

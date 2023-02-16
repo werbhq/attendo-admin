@@ -1,8 +1,8 @@
-import { ClassroomShortTeacher } from './classroom';
+import type { ClassroomShortTeacher } from './classroom';
 
-export interface MonthlyAttendance {
+export interface SemAttendance {
     id: string;
-    date: string;
+    semester: number;
     classroom: ClassroomShortTeacher;
     totalAttendance: {
         [subjectId: string]: {
@@ -17,7 +17,7 @@ export interface MonthlyAttendance {
             attendances: {
                 [subjectId: string]: {
                     subjectId: string;
-                    present: number;
+                    absent: number;
                 };
             };
         };

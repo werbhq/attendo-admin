@@ -1,4 +1,7 @@
-export const sortByRoll = (a, b) => a.rollNo - b.rollNo;
+export const sortByRoll = (a, b) => {
+  if (a?.classId !== b?.classId) return a?.classId?.localeCompare(b?.classId);
+  return a.rollNo - b.rollNo;
+};
 
 export const autoCapitalize = (value) => value && value.toUpperCase();
 
@@ -21,14 +24,18 @@ export const sorter = (params, data) => {
   const sort = params?.sort;
   const filters = params?.filter;
 
+  if (filters && filters["subjectName"]) {
+    console.log(data);
+  }
+
   if (sort) {
     const field = sort.field;
 
     if (Array.isArray(data)) {
       data = data.sort((a, b) => {
         if (typeof a[field] === "string") {
-          if (sort.order === "DESC") return b[field].localeCompare(a[field]);
-          return a[field].localeCompare(b[field]);
+          if (sort.order === "DESC") return b[field]?.localeCompare(a[field]);
+          return a[field]?.localeCompare(b[field]);
         } else if (typeof a[field] === "number") {
           if (sort.order === "DESC") return b[field] - a[field];
           return a[field] - b[field];

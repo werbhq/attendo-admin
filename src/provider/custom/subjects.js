@@ -30,6 +30,15 @@ export const SubjectsProvider = {
     return { data: data.schemes[params.id], status: 200 };
   },
 
+  getMany: async (resource, params) => {
+    const { ids } = params;
+    const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
+      id: MAPPING.SUBJECT,
+    });
+    const result = ids.map((e) => data.schemes[e]);
+    return { data: result, status: 200 };
+  },
+
   update: async (resource, params) => {
     const { id, data } = params;
 
@@ -56,6 +65,12 @@ export const SubjectsProvider = {
 
   create: async (resource, params) => {
     const { data, id } = params;
+
+    const { schemes } = (
+      await db.collection(MAPPING.DATA).doc(MAPPING.SUBJECT).get()
+    ).data();
+
+    if (!!schemes[id]) throw new Error(`${id} subject already exists`);
 
     const fieldPath = new FieldPath("schemes", id);
     await db

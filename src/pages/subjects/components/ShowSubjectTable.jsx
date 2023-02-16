@@ -4,7 +4,6 @@ import {
   ListContextProvider,
   SimpleForm,
   TextInput,
-  Button,
   FunctionField,
   SaveButton,
   useRecordContext,
@@ -12,9 +11,11 @@ import {
   useList,
   useRefresh,
   useNotify,
+  required,
 } from "react-admin";
 import InputLabel from "@mui/material/InputLabel";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import Stack from "@mui/material/Stack";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -25,8 +26,19 @@ import {
   CustomSubjectBulkDeleteButton,
   DeleteButtonDialouge,
 } from "./CustomButtons";
+import { noSpaceValidation } from "../../../Utils/validations";
+import Button from "@mui/material/Button";
 
 const url = MAPPING.SUBJECT;
+
+function titleCase(str) {
+  var splitStr = str.toLowerCase().split(" ");
+  for (var i = 0; i < splitStr.length; i++) {
+    splitStr[i] =
+      splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+  }
+  return splitStr.join(" ");
+}
 
 const SubjectTable = () => {
   const data = useRecordContext();
@@ -79,6 +91,8 @@ const SubjectTable = () => {
   };
 
   const handleSubmit = async (newRecord) => {
+    newRecord.name = titleCase(newRecord.name);
+
     const currentData = semesterData.branchSubs.find(
       (e) => e.branch === branchData
     ).subjects;
@@ -168,13 +182,15 @@ const SubjectTable = () => {
       <Stack direction="row">
         <Button
           disabled={branchData === undefined || semesterData === undefined}
-          label="ADD SUBJECT"
           variant="contained"
           size="medium"
+          startIcon={<AddIcon />}
           onClick={() => {
             setAddSubject({ ...addSubject, open: true, add: true, record: {} });
           }}
-        />
+        >
+          ADD SUBJECT
+        </Button>
       </Stack>
 
       <ListContextProvider value={tableData} emptyWhileLoading>
@@ -218,9 +234,15 @@ const SubjectTable = () => {
             label="Code"
             fullWidth={true}
             format={(props) => props.toUpperCase()}
-            required
+            validate={[required(), noSpaceValidation]}
           />
-          <TextInput source="name" label="Name" fullWidth={true} required />
+          <TextInput
+            source="name"
+            label="Name"
+            format={(props) => titleCase(props)}
+            fullWidth={true}
+            validate={[required()]}
+          />
           <Stack direction="row" spacing={3}>
             <SaveButton label={addSubject.add ? "Add" : "Save"} />
             {!addSubject.add && (

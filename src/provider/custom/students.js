@@ -20,7 +20,7 @@ export const StudentsProvider = {
         .doc(MAPPING.MASTER_CLASSROOMS)
         .update(fieldPath, data);
     });
-    return { data: record, status: 200 };
+    return { data: { id, ...record }, status: 200 };
   },
 
   updateMany: async (resource, params) => {

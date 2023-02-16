@@ -9,6 +9,7 @@ import Subject from "./pages/subjects/Index";
 import Courses from "./pages/courses/index";
 import AuthTeachers from "./pages/authTeachers/Index";
 import { authProvider, dataProvider } from "./provider/firebase";
+import { CustomLayout } from "./components/ui/Layout";
 
 const myTheme = {
   ...defaultTheme,
@@ -35,6 +36,7 @@ const App = () => (
     dataProvider={dataProvider}
     authProvider={authProvider}
     dashboard={DashBoard}
+    layout={CustomLayout}
   >
     <Resource {...Courses} />
     <Resource {...Subject} />

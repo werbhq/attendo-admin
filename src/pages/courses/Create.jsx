@@ -58,6 +58,7 @@ const CourseCreate = () => {
         />
         <NumberInput
           source="totalSemesters"
+          onWheel={(e) => e.preventDefault()}
           validate={[
             required(),
             number("Not a number"),

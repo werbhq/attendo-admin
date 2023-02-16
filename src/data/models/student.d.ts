@@ -5,5 +5,6 @@ export interface Student {
     userName: string;
     name: string;
     rollNo: number;
-    aliases: string[];
+    classId?: string;
+    aliases?: string[];
 }

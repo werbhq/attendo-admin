@@ -12,6 +12,7 @@ import {
   useRefresh,
   useNotify,
   useRedirect,
+  required,
 } from "react-admin";
 import { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
@@ -20,6 +21,7 @@ import { CustomAdd, CustomDelete } from "./CustomButtons";
 import { dataProvider } from "../../../provider/firebase";
 import { MAPPING } from "../../../provider/mapping";
 import CustomSemesterField from "./CustomSemesterField";
+import { noSpaceValidation } from "../../../Utils/validations";
 
 const url = MAPPING.SUBJECT;
 
@@ -114,6 +116,7 @@ const SemesterTable = () => {
                 source="branch"
                 label="branch"
                 format={(e) => e.toLowerCase()}
+                validate={[required(), noSpaceValidation]}
               />
             </SimpleFormIterator>
           </ArrayInput>

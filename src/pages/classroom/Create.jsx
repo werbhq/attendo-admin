@@ -12,6 +12,20 @@ import { MAPPING } from "../../provider/mapping";
 
 import { getClassroomId } from "../../Utils/helpers";
 import { Schemes } from "../../Utils/Schemes";
+function titleCase(str) {
+  var title_name = str
+    .split(".")
+    .map((word) =>
+      word.length > 2
+        ? word.charAt(0).toUpperCase() + word.slice(1)
+        : word.charAt(0).toUpperCase() +
+          word.charAt(1).toUpperCase() +
+          word.slice(2)
+    )
+    .toString()
+    .replace(",", " ");
+  return title_name;
+}
 
 const CreateClassroom = ({ schemes: schemeData }) => {
   const {
@@ -69,7 +83,7 @@ const CreateClassroom = ({ schemes: schemeData }) => {
         onChange={(e) => setData({ ...data, scheme: e.target.value })}
         required
       />
-      <NumberInput source="year" required />
+      <NumberInput source="year" onWheel={(e) => e.preventDefault()} required />
       <SelectInput
         source="branch"
         choices={getBranches(data.scheme)}
@@ -111,6 +125,20 @@ const CreateClassroom = ({ schemes: schemeData }) => {
               isRequired
             />
           </ReferenceArrayInput>
+          <ReferenceArrayInput
+            source="teachers"
+            reference={MAPPING.AUTH_TEACHERS}
+            filter={{ isDerived: false }}
+          >
+            <AutocompleteArrayInput
+              parse={(value) => value && value.map((v) => ({ id: v }))}
+              format={(value) => value && value.map((v) => v.id)}
+              optionText={(choice) => `${titleCase(choice.userName)}`}
+              source="id"
+              filterToQuery={(searchText) => ({ id: searchText })}
+              isRequired
+            />
+          </ReferenceArrayInput>
         </>
       )}
     </SimpleForm>
@@ -123,7 +151,22 @@ const ClassroomsCreate = () => {
   if (schemeData.length === 0) {
     dataProvider.getList(MAPPING.SUBJECT).then((e) => setData(e.data));
   }
-
+  const [teachers, setTeachers] = useState([]);
+  const dataProvider1 = useDataProvider();
+  if (teachers.length === 0) {
+    dataProvider1.getList(MAPPING.AUTH_TEACHERS).then((e) => {
+      const tchrs = [];
+      for (let i = 0; i < e.data.length; i++) {
+        let tchr_obj = {
+          id: e.data[i].id,
+          emailId: e.data[i].email,
+          name: titleCase(e.data[i].userName),
+        };
+        tchrs.push(tchr_obj);
+      }
+      setTeachers(tchrs);
+    });
+  }
   const transformSubmit = (data) => {
     if (!new Schemes(null).isDerived(data.name)) {
       delete data.subjectId;
@@ -131,7 +174,30 @@ const ClassroomsCreate = () => {
       delete data.semester;
       data.isDerived = false;
     } else {
+      const scheme = schemeData.find((e) => e.id === data.schemeId);
+      const sem = scheme.semesters.find((e) => e.semester === data.semester);
+      const brnch = sem.branchSubs.find((e) => e.branch === data.branch);
+      const sub = brnch.subjects.find((e) => e.id === data.subjectId);
+      const selected_teacher = data.teachers.map((e) => e.id);
+      const foundInTchr = teachers.filter((e) =>
+        selected_teacher.includes(e.id)
+      );
+      const new_teachers = [];
+      for (let teacher of data.teachers) {
+        for (let tchr of foundInTchr) {
+          if (tchr.id === teacher.id) {
+            new_teachers.push(tchr);
+          }
+        }
+      }
+
+      data.teachers = new_teachers;
+      data.subject = {};
+      data.subject.name = sub.name;
+      data.subject.id = data.subjectId;
+      data.subject.code = data.subjectId.toUpperCase();
       data.isDerived = true;
+      console.log(data);
     }
     return {
       ...data,
