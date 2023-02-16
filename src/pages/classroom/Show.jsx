@@ -25,6 +25,7 @@ import {
   useDataProvider,
   useUnselectAll,
   SingleFieldList,
+  SimpleShowLayout,
   useShowController,
   ArrayField,
   ListContextProvider,
@@ -183,65 +184,63 @@ export const ClassroomShow = () => {
       <TabbedShowLayout>
         {/* Summary */}
         <Tab label="summary">
-          <TextField source="id" />
-          <ReferenceField
-            source="schemeId"
-            reference={MAPPING.SUBJECT}
-            link="show"
-          >
+          <SimpleShowLayout>
             <TextField source="id" />
-          </ReferenceField>
-          <ReferenceField
-            source="course"
-            reference={MAPPING.SEMESTERS}
-            link="show"
-          >
-            <TextField source="id" />
-          </ReferenceField>
-          <TextField source="year" />
-          <TextField source="semester" emptyText="-" />
-          <FunctionField
-            label="Branch"
-            render={(record) => record.branch.toUpperCase()}
-          ></FunctionField>
-          <FunctionField
-            label="Name"
-            render={(record) =>
-              Schemes.classNames.find(({ id }) => record.name === id).name
-            }
-          ></FunctionField>
-          {!!record?.isDerived && (
-            <TextField source="subjectName" label="Subject"></TextField>
-          )}
+            <FunctionField
+              label="Branch"
+              render={(record) => record.branch.toUpperCase()}
+            ></FunctionField>
+            <FunctionField
+              label="Name"
+              render={(record) =>
+                Schemes.classNames.find(({ id }) => record.name === id).name
+              }
+            ></FunctionField>
+            {!!record?.isDerived && (
+              <TextField source="subjectName" label="Subject"></TextField>
+            )}
 
-          <BooleanField source="isDerived" label="Virtual Class" />
-          {!!record?.isDerived && (
-            <ArrayField source="Parent Classes">
-              <ul style={{ padding: 0, margin: 0 }}>
-                {record.parentClasses === undefined
-                  ? null
-                  : record.parentClasses.map((e) => (
-                      <Chip key={e} sx={{ ml: 0.5, mt: 1 }} label={e} />
-                    ))}
-              </ul>
-            </ArrayField>
-          )}
-          {!!record?.isDerived && (
-            <ArrayField source="Teachers">
-              <ul style={{ padding: 0, margin: 0 }}>
-                {record.teachers === undefined
-                  ? null
-                  : record.teachers.map((e) => (
-                      <Chip key={e.id} sx={{ ml: 0.5, mt: 1 }} label={e.name} />
-                    ))}
-              </ul>
-            </ArrayField>
-          )}
-          <FunctionField
-            label="Students Count"
-            render={(record) => record.students.length}
-          ></FunctionField>
-
+            <BooleanField source="isDerived" label="Virtual Class" />
+            {!!record?.isDerived && (
+              <ArrayField source="Parent Classes">
+                <ul style={{ padding: 0, margin: 0 }}>
+                  {record.parentClasses === undefined
+                    ? null
+                    : record.parentClasses.map((e) => (
+                        <Chip key={e} sx={{ ml: 0.5, mt: 1 }} label={e} />
+                      ))}
+                </ul>
+              </ArrayField>
+            )}
+            {!!record?.isDerived && (
+              <ArrayField source="Teachers">
+                <ul style={{ padding: 0, margin: 0 }}>
+                  {record.teachers === undefined
+                    ? null
+                    : record.teachers.map((e) => (
+                        <Chip
+                          key={e.id}
+                          sx={{ ml: 0.5, mt: 1 }}
+                          label={e.name}
+                        />
+                      ))}
+                </ul>
+              </ArrayField>
+            )}
+            <FunctionField
+              label="Students Count"
+              render={(record) => record.students.length}
+            ></FunctionField>
+          </SimpleShowLayout>
+          <SimpleShowLayout label="BATCH">
+            <TextField source="batch.id" label="Batch Id" />
+            <TextField source="batch.course" label="Course" />
+            <TextField source="batch.name" label="Batch Name" />
+            <TextField source="batch.schemeId" label="Scheme Id" />
+            <BooleanField source="batch.running" label="Running" />
+            <TextField source="batch.semester" label="Semester" />
+            <TextField source="batch.yearOfJoining" label="Year Of Joining" />
+          </SimpleShowLayout>
           <div style={{ margin: "20px 0px" }}>
             <Stack direction="row" spacing={2}>
               <Button

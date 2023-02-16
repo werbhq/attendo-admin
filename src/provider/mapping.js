@@ -7,6 +7,5 @@ export const MAPPING = {
   AUTH_TEACHERS: "authorized_teachers",
   MASTER_CLASSROOMS: "master_classrooms",
   REPORTS: "reports",
-  BATCHES: "batches"
 };
 //subjectsV2
