@@ -243,6 +243,7 @@ export const ClassroomShow = () => {
           <div style={{ margin: "20px 0px" }}>
             <Stack direction="row" spacing={2}>
               <Button
+                disabled={true}
                 size="small"
                 variant="outlined"
                 startIcon={<EditIcon />}
