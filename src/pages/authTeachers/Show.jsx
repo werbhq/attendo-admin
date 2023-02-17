@@ -7,7 +7,7 @@ const AuthorizedTeacherShow = () => (
       <TextField source="id" />
       <EmailField source="email" />
       <TextField source="userName" />
-      <BooleanField source="created" defaultChecked={false}/>
+      <BooleanField source="created" looseValue/>
       <TextField source="branch" />
     </SimpleShowLayout>
   </Show>

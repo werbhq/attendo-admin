@@ -11,10 +11,15 @@ import {
   BooleanInput,
   useTranslate,
   BulkDeleteButton,
-  BulkUpdateButton
+  BulkUpdateButton,
+  
+  SelectInput,
+  required
 } from "react-admin";
 
 import { Chip } from '@mui/material';
+import ClearIcon from '@mui/icons-material/Clear';
+
 import CustomProviders from "../../provider/customProviders";
 import { dataProvider } from "../../provider/firebase";
 
@@ -28,7 +33,7 @@ const QuickFilter = ({ label }) => {
 const filters = [
   <SearchInput source="id" alwaysOn resettable />,
   <TextInput source="branch" resettable />,
-  <QuickFilter source="created" label="Create" defaultValue="-" />,
+  <QuickFilter source="created" label="Create" defaultValue={true}/>,
 ];
 
 
@@ -82,7 +87,7 @@ const AuthorizedTeacherList = () => {
     <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons/>}>
       <EmailField source="email" />
       <TextField source="userName" />
-      <BooleanField source="created" defaultValue={false} looseValue={false}/>
+      <BooleanField source="created" looseValue/>
       <TextField source="branch" />
     </Datagrid>
   </List>
