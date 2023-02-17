@@ -25,21 +25,16 @@ const ClassroomsList = () => {
     <List exporter={false} filters={filters}>
       <Datagrid rowClick="show">
         <TextField source="id" />
-        <ReferenceField
-          source="course"
-          reference={MAPPING.SEMESTERS}
-          link="show"
-        >
-          <TextField source="id" />
-        </ReferenceField>
+        <TextField source="batch.name" label="Batch Name"/>
+
         <TextField
           source="subjectName"
           label="Subject"
           emptyText="-"
           sortable={false}
         />
-        <TextField source="year" />
-        <TextField source="semester" emptyText="-" sortable={false} />
+        <TextField source="batch.yearOfJoining" label="Year"/>
+        <TextField source="batch.semester" label="Semester" />
         <FunctionField
           label="Branch"
           render={(record) => record.branch.toUpperCase()}

@@ -36,54 +36,67 @@ const CreateClassroom = ({ schemes: schemeData }) => {
     getSubjects,
     isDerived,
   } = new Schemes(schemeData);
-
-  const validateClassroom = (values) => {
-    const errors = {};
-    const id = (e) => e.id;
-
-    const customValidator = (data, fieldName) => {
-      if (!data.map(id).includes(values[fieldName])) {
-        errors[fieldName] = "ra.validation.required";
-      }
-    };
-
-    customValidator(getSchemes(data.course), "schemeId");
-    customValidator(getBranches(data.scheme), "branch");
-    customValidator(Schemes.classNames, "name");
-    if (isDerived(values.name)) {
-      customValidator(getSemesters(data.scheme), "semester");
-      customValidator(
-        getSubjects(data.scheme, data.branch, data.semester),
-        "subjectId"
-      );
-    }
-
-    return errors;
-  };
-
   const [data, setData] = useState({
     course: null,
     scheme: null,
     branch: null,
     name: null,
     semester: null,
+    batch: null,
   });
+  const [batch, setBatch] = useState([]);
+  const [batchData, setBatchData] = useState([]);
+  const dataProvider2 = useDataProvider();
+  if (batch.length === 0) {
+    dataProvider2.getList(MAPPING.BATCHES).then((e) => {
+      const batches = [];
+      for (let i = 0; i < e.data.length; i++) {
+        let batch_obj = {
+          id: e.data[i].name,
+          name: e.data[i].name,
+        };
+        batches.push(batch_obj);
+      }
+      setBatchData(e.data);
+      setBatch(batches);
+    });
+  }
+  function changeBatch(a) {
+    setData({ ...data, batch: a });
+    setData({
+      ...data,
+      scheme: batchData.find((e) => e.name === a).schemeId,
+      semester: batchData.find((e) => e.name === a).semester,
+    });
+  }
+
+  const validateClassroom = (values) => {
+    const errors = {};
+    const id = (e) => e.id;
+    const customValidator = (data, fieldName) => {
+      if (!data.map(id).includes(values[fieldName])) {
+        errors[fieldName] = "ra.validation.required";
+      }
+    };
+    customValidator(Schemes.classNames, "name");
+    if (isDerived(values.name)) {
+      customValidator(
+        getSubjects(data.scheme, data.branch, data.semester),
+        "subjectId"
+      );
+    }
+    console.log(errors);
+    return errors;
+  };
 
   return (
     <SimpleForm style={{ alignItems: "stretch" }} validate={validateClassroom}>
       <SelectInput
-        source="course"
-        choices={getCourses()}
-        onChange={(e) => setData({ ...data, course: e.target.value })}
+        source="batch.name"
+        choices={batch}
+        onChange={(e) => changeBatch(e.target.value)}
         required
       />
-      <SelectInput
-        source="schemeId"
-        choices={getSchemes(data.course)}
-        onChange={(e) => setData({ ...data, scheme: e.target.value })}
-        required
-      />
-      <NumberInput source="year" onWheel={(e) => e.preventDefault()} required />
       <SelectInput
         source="branch"
         choices={getBranches(data.scheme)}
@@ -98,12 +111,6 @@ const CreateClassroom = ({ schemes: schemeData }) => {
       />
       {isDerived(data.name) && (
         <>
-          <SelectInput
-            source="semester"
-            choices={getSemesters(data.scheme)}
-            onChange={(e) => setData({ ...data, semester: e.target.value })}
-            required
-          />
           <SelectInput
             source="subjectId"
             choices={
@@ -167,15 +174,25 @@ const ClassroomsCreate = () => {
       setTeachers(tchrs);
     });
   }
+  const [batchData, setBatchData] = useState([]);
+  const dataProvider2 = useDataProvider();
+  dataProvider2.getList(MAPPING.BATCHES).then((e) => {
+    setBatchData(e.data);
+  });
   const transformSubmit = (data) => {
+    console.log(data);
+    console.log(getClassroomId(data));
+    data.batch = batchData.find((e) => e.name === data.batch.name);
+
     if (!new Schemes(null).isDerived(data.name)) {
       delete data.subjectId;
       delete data.parentClasses;
-      delete data.semester;
       data.isDerived = false;
     } else {
-      const scheme = schemeData.find((e) => e.id === data.schemeId);
-      const sem = scheme.semesters.find((e) => e.semester === data.semester);
+      const scheme = schemeData.find((e) => e.id === data.batch.schemeId);
+      const sem = scheme.semesters.find(
+        (e) => e.semester === data.batch.semester
+      );
       const brnch = sem.branchSubs.find((e) => e.branch === data.branch);
       const sub = brnch.subjects.find((e) => e.id === data.subjectId);
       const selected_teacher = data.teachers.map((e) => e.id);
@@ -197,8 +214,9 @@ const ClassroomsCreate = () => {
       data.subject.id = data.subjectId;
       data.subject.code = data.subjectId.toUpperCase();
       data.isDerived = true;
-      console.log(data);
     }
+
+    console.log(data);
     return {
       ...data,
       id: getClassroomId(data),

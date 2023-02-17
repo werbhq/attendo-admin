@@ -68,7 +68,7 @@ export default function EditSummary({ state }) {
         resource={resource}
         onSubmit={handleSave}
       >
-        <TextInput source="name" format={autoCapitalize} />
+        <TextInput source="name" format={autoCapitalize} disabled={true} />
         <NumberInput
           source="semester"
           onWheel={(e) => e.preventDefault()}

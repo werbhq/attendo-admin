@@ -10,6 +10,7 @@ import {
   useNotify,
   SelectInput,
   BooleanInput,
+  useDataProvider,
 } from "react-admin";
 import { useState } from "react";
 import { autoCapitalize } from "../../Utils/helpers";
@@ -17,14 +18,28 @@ import { dataProvider } from "../../provider/firebase";
 import { MAPPING } from "../../provider/mapping";
 import { convertSingleValueListToSelectList } from "../../Utils/helpers";
 import { noSpaceValidation } from "../../Utils/validations";
+import { Schemes } from "../../Utils/Schemes";
 const url = MAPPING.BATCHES;
 const BatchesCreate = () => {
+  const dataProvider = useDataProvider();
+  const [schemeData, setSchemeData] = useState([]);
+
+  dataProvider.getList(MAPPING.SUBJECT).then((e) => {
+    setSchemeData(e.data);
+  });
+  const {
+    getBranches,
+    getCourses,
+    getSchemes,
+    getSemesters,
+    getSubjects,
+    isDerived,
+  } = new Schemes(schemeData);
   const refresh = useRefresh();
   const notify = useNotify();
   const redirect = useRedirect();
 
   const onSubmit = async (data) => {
-    console.log(data);
     const id = data.course.toLowerCase() + "-" + data.yearOfJoining;
     data.id = id;
     await dataProvider.create(url, { data, id });
@@ -42,6 +57,16 @@ const BatchesCreate = () => {
     });
   }
 
+  const [data, setData] = useState({
+    course: null,
+    scheme: null,
+    semester: null,
+  });
+  const possibleValues = ["BTECH", "MTECH"];
+  const choices = possibleValues.map((value) => ({
+    id: value,
+    name: value,
+  }));
   return (
     <Create>
       <SimpleForm onSubmit={onSubmit} fullWidth={true}>
@@ -51,11 +76,18 @@ const BatchesCreate = () => {
           validate={[required()]}
           format={autoCapitalize}
         />
-        <TextInput
+        <SelectInput
+          source="course"
+          choices={choices}
+          validate={[required(), noSpaceValidation]}
+          label="Course"
+          onChange={(e) => setData({ ...data, course: e.target.value })}
+        />
+        <SelectInput
           source="schemeId"
-          label="Scheme Id"
-          validate={[required()]}
-          format={autoCapitalize}
+          choices={getSchemes(data.course)}
+          onChange={(e) => setData({ ...data, scheme: e.target.value })}
+          required
         />
         <NumberInput
           source="yearOfJoining"
@@ -63,19 +95,15 @@ const BatchesCreate = () => {
           validate={[required(), number("Number Required")]}
           label="Year Of Joining"
         />
-        <NumberInput
+        <SelectInput
           source="semester"
           onWheel={(e) => e.preventDefault()}
           validate={[required(), number("Number Required")]}
+          choices={getSemesters(data.scheme)}
+          onChange={(e) => setData({ ...data, semester: e.target.value })}
           label="Semester"
+        />
 
-        />
-        <SelectInput
-          source="course"
-          choices={courses.map(convertSingleValueListToSelectList)}
-          validate={[required(), noSpaceValidation]}
-          label="Course"
-        />
         <BooleanInput source="running" validate={[required()]} />
       </SimpleForm>
     </Create>
