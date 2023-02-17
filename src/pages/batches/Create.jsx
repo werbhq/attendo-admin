@@ -12,7 +12,7 @@ import {
   BooleanInput,
   useDataProvider,
 } from "react-admin";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { autoCapitalize } from "../../Utils/helpers";
 import { dataProvider } from "../../provider/firebase";
 import { MAPPING } from "../../provider/mapping";
@@ -67,6 +67,10 @@ const BatchesCreate = () => {
     id: value,
     name: value,
   }));
+
+  //to avoid glitching
+  const schemeChoices = useMemo(() => getSchemes(data.course), [data.course]);
+
   return (
     <Create>
       <SimpleForm onSubmit={onSubmit} fullWidth={true}>
@@ -85,7 +89,7 @@ const BatchesCreate = () => {
         />
         <SelectInput
           source="schemeId"
-          choices={getSchemes(data.course)}
+          choices={schemeChoices}
           onChange={(e) => setData({ ...data, scheme: e.target.value })}
           required
         />
