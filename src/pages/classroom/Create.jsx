@@ -63,11 +63,18 @@ const CreateClassroom = ({ schemes: schemeData }) => {
   }
   function changeBatch(a) {
     setData({ ...data, batch: a });
-    setData({
-      ...data,
-      scheme: batchData.find((e) => e.name === a).schemeId,
-      semester: batchData.find((e) => e.name === a).semester,
-    });
+    if (isDerived(data.name)) {
+      setData({
+        ...data,
+        scheme: batchData.find((e) => e.name === a).schemeId,
+      });
+    } else {
+      setData({
+        ...data,
+        scheme: batchData.find((e) => e.name === a).schemeId,
+        semester: batchData.find((e) => e.name === a).semester,
+      });
+    }
   }
 
   const validateClassroom = (values) => {
@@ -111,6 +118,12 @@ const CreateClassroom = ({ schemes: schemeData }) => {
       />
       {isDerived(data.name) && (
         <>
+          <SelectInput
+            source="semester"
+            choices={getSemesters(data.scheme)}
+            onChange={(e) => setData({ ...data, semester: e.target.value })}
+            required
+          />
           <SelectInput
             source="subjectId"
             choices={
@@ -187,14 +200,16 @@ const ClassroomsCreate = () => {
     if (!new Schemes(null).isDerived(data.name)) {
       delete data.subjectId;
       delete data.parentClasses;
+      delete data.semester
       data.isDerived = false;
     } else {
       const scheme = schemeData.find((e) => e.id === data.batch.schemeId);
       const sem = scheme.semesters.find(
-        (e) => e.semester === data.batch.semester
+        (e) => e.semester === data.semester
       );
       const brnch = sem.branchSubs.find((e) => e.branch === data.branch);
       const sub = brnch.subjects.find((e) => e.id === data.subjectId);
+      
       const selected_teacher = data.teachers.map((e) => e.id);
       const foundInTchr = teachers.filter((e) =>
         selected_teacher.includes(e.id)

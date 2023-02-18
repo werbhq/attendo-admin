@@ -14,7 +14,7 @@ import { Schemes } from "../../Utils/Schemes";
 
 const filters = [
   <SearchInput source="id" placeholder="Enter Id" alwaysOn resettable />,
-  <TextInput source="course" resettable />,
+  <TextInput source="batch" resettable />,
   <TextInput source="branch" resettable />,
   <TextInput source="name" resettable />,
   <QuickFilter source="isDerived" label="Virtual" defaultValue={true} />,
@@ -25,7 +25,7 @@ const ClassroomsList = () => {
     <List exporter={false} filters={filters}>
       <Datagrid rowClick="show">
         <TextField source="id" />
-        <TextField source="batch.name" label="Batch Name"/>
+        <TextField source="batch.name" label="Batch"/>
 
         <TextField
           source="subjectName"

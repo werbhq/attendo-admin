@@ -12,7 +12,7 @@ import {
   BooleanInput,
   useDataProvider,
 } from "react-admin";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { autoCapitalize } from "../../Utils/helpers";
 import { dataProvider } from "../../provider/firebase";
 import { MAPPING } from "../../provider/mapping";
@@ -27,14 +27,7 @@ const BatchesCreate = () => {
   dataProvider.getList(MAPPING.SUBJECT).then((e) => {
     setSchemeData(e.data);
   });
-  const {
-    getBranches,
-    getCourses,
-    getSchemes,
-    getSemesters,
-    getSubjects,
-    isDerived,
-  } = new Schemes(schemeData);
+  const { getSchemes, getSemesters } = new Schemes(schemeData);
   const refresh = useRefresh();
   const notify = useNotify();
   const redirect = useRedirect();
@@ -67,15 +60,14 @@ const BatchesCreate = () => {
     id: value,
     name: value,
   }));
+
+  //to avoid glitching
+  const schemeChoices = useMemo(() => getSchemes(data.course), [data.course]);
+
   return (
     <Create>
-      <SimpleForm onSubmit={onSubmit} fullWidth={true}>
-        <TextInput
-          source="name"
-          label="Batch Name"
-          validate={[required()]}
-          format={autoCapitalize}
-        />
+      <SimpleForm onSubmit={onSubmit}>
+        <TextInput source="name" label="Batch Name" validate={[required()]} />
         <SelectInput
           source="course"
           choices={choices}
@@ -85,7 +77,7 @@ const BatchesCreate = () => {
         />
         <SelectInput
           source="schemeId"
-          choices={getSchemes(data.course)}
+          choices={schemeChoices}
           onChange={(e) => setData({ ...data, scheme: e.target.value })}
           required
         />
@@ -95,13 +87,14 @@ const BatchesCreate = () => {
           validate={[required(), number("Number Required")]}
           label="Year Of Joining"
         />
-        <SelectInput
+
+        <NumberInput
           source="semester"
           onWheel={(e) => e.preventDefault()}
           validate={[required(), number("Number Required")]}
-          choices={getSemesters(data.scheme)}
-          onChange={(e) => setData({ ...data, semester: e.target.value })}
           label="Semester"
+          onChange={(e) => setData({ ...data, semester: e.target.value })}
+          max={getSemesters(data.scheme).length}
         />
 
         <BooleanInput source="running" validate={[required()]} />
