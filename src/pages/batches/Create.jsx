@@ -28,12 +28,10 @@ const BatchesCreate = () => {
     setSchemeData(e.data);
   });
   const {
-    getBranches,
-    getCourses,
+
     getSchemes,
     getSemesters,
-    getSubjects,
-    isDerived,
+  
   } = new Schemes(schemeData);
   const refresh = useRefresh();
   const notify = useNotify();
@@ -73,12 +71,11 @@ const BatchesCreate = () => {
 
   return (
     <Create>
-      <SimpleForm onSubmit={onSubmit} fullWidth={true}>
+      <SimpleForm onSubmit={onSubmit} >
         <TextInput
           source="name"
           label="Batch Name"
           validate={[required()]}
-          format={autoCapitalize}
         />
         <SelectInput
           source="course"

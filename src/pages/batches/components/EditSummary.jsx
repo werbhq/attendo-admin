@@ -26,7 +26,7 @@ import {
 } from "@mui/material";
 import { MAPPING } from "../../../provider/mapping";
 import { autoCapitalize } from "../../../Utils/helpers";
-
+import { Schemes } from "../../../Utils/Schemes";
 const resource = MAPPING.BATCHES;
 
 export default function EditSummary({ state }) {
@@ -36,10 +36,11 @@ export default function EditSummary({ state }) {
   const redirect = useRedirect();
   const record = useRecordContext();
   const { setdialouge, dialouge } = state;
-  const [totalSemesters, setTotalSemesters] = useState(1);
 
-  dataProvider.getOne(MAPPING.SEMESTERS, { id: record.course }).then((e) => {
-    setTotalSemesters(e.data.totalSemesters);
+  const [schemeData, setSchemeData] = useState([]);
+  const { getSchemes, getSemesters } = new Schemes(schemeData);
+  dataProvider.getList(MAPPING.SUBJECT).then((e) => {
+    setSchemeData(e.data);
   });
 
   const handleSave = async (data) => {
@@ -74,7 +75,7 @@ export default function EditSummary({ state }) {
           onWheel={(e) => e.preventDefault()}
           validate={[required(), number("Number Required")]}
           label="Semester"
-          max={totalSemesters}
+          max={getSemesters(record.schemeId).length}
         />
 
         <BooleanInput source="running" validate={[required()]} />
