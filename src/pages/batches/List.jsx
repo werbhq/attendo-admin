@@ -1,15 +1,10 @@
 import {
   Datagrid,
   List,
-  ChipField,
-  SingleFieldList,
   TextField,
   BooleanField,
   SearchInput,
   TextInput,
-  NumberField,
-  useRecordContext,
-  useListContext,
 } from "react-admin";
 import QuickFilter from "../../components/ui/QuickFilter";
 const filters = [
@@ -26,7 +21,6 @@ const filters = [
   <TextInput source="semester" resettable />,
 ];
 const BatchesList = () => {
-
   return (
     <List exporter={false} filters={filters}>
       <Datagrid rowClick="show">
@@ -34,8 +28,7 @@ const BatchesList = () => {
         <TextField source="course" />
         <TextField source="schemeId" />
         <TextField source="yearOfJoining" />
-        <BooleanField source="running" />
-
+        <BooleanField source="running" label="Running" />
         <TextField source="semester" emptyText="-" sortable={false} />
       </Datagrid>
     </List>

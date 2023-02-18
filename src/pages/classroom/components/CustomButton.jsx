@@ -1,5 +1,4 @@
 import {
-  IconButton,
   Dialog,
   DialogActions,
   DialogContent,
@@ -15,7 +14,6 @@ import {
   useNotify,
   useListContext,
   useUnselectAll,
-  useRedirect,
 } from "react-admin";
 import { useState } from "react";
 import { MAPPING } from "../../../provider/mapping";

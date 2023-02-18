@@ -3,7 +3,6 @@ import {
   Create,
   SimpleForm,
   SelectInput,
-  NumberInput,
   useDataProvider,
   ReferenceArrayInput,
   AutocompleteArrayInput,
@@ -30,8 +29,6 @@ function titleCase(str) {
 const CreateClassroom = ({ schemes: schemeData }) => {
   const {
     getBranches,
-    getCourses,
-    getSchemes,
     getSemesters,
     getSubjects,
     isDerived,
@@ -85,14 +82,17 @@ const CreateClassroom = ({ schemes: schemeData }) => {
         errors[fieldName] = "ra.validation.required";
       }
     };
+    customValidator(getBranches(data.scheme), "branch");
     customValidator(Schemes.classNames, "name");
     if (isDerived(values.name)) {
       customValidator(
         getSubjects(data.scheme, data.branch, data.semester),
         "subjectId"
       );
+      customValidator(getSemesters(data.scheme), "semester");
+
+
     }
-    console.log(errors);
     return errors;
   };
 
@@ -130,6 +130,11 @@ const CreateClassroom = ({ schemes: schemeData }) => {
               data.semester
                 ? getSubjects(data.scheme, data.branch, data.semester)
                 : []
+            }
+            disabled={
+              getSubjects(data.scheme, data.branch, data.semester).length === 0
+                ? true
+                : false
             }
             required
           />
@@ -193,23 +198,19 @@ const ClassroomsCreate = () => {
     setBatchData(e.data);
   });
   const transformSubmit = (data) => {
-    console.log(data);
-    console.log(getClassroomId(data));
     data.batch = batchData.find((e) => e.name === data.batch.name);
 
     if (!new Schemes(null).isDerived(data.name)) {
       delete data.subjectId;
       delete data.parentClasses;
-      delete data.semester
+      delete data.semester;
       data.isDerived = false;
     } else {
       const scheme = schemeData.find((e) => e.id === data.batch.schemeId);
-      const sem = scheme.semesters.find(
-        (e) => e.semester === data.semester
-      );
+      const sem = scheme.semesters.find((e) => e.semester === data.semester);
       const brnch = sem.branchSubs.find((e) => e.branch === data.branch);
       const sub = brnch.subjects.find((e) => e.id === data.subjectId);
-      
+
       const selected_teacher = data.teachers.map((e) => e.id);
       const foundInTchr = teachers.filter((e) =>
         selected_teacher.includes(e.id)
@@ -231,7 +232,6 @@ const ClassroomsCreate = () => {
       data.isDerived = true;
     }
 
-    console.log(data);
     return {
       ...data,
       id: getClassroomId(data),

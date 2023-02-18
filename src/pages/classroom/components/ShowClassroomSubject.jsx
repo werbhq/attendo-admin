@@ -5,7 +5,6 @@ import {
   SimpleForm,
   SaveButton,
   useRecordContext,
-  FunctionField,
   useDataProvider,
   useList,
   useRefresh,
@@ -24,7 +23,6 @@ import { Dialog } from "@mui/material";
 import { MAPPING } from "../../../provider/mapping";
 import { CustomSubjectBulkDeleteButton } from "../components/CustomButton";
 import Button from "@mui/material/Button";
-import EditIcon from "@mui/icons-material/Edit";
 
 function titleCase(str) {
   var title_name = str
@@ -51,16 +49,15 @@ const ClassroomSubject = () => {
   const [branchData, setBranchData] = useState([]);
   const dataProvider = useDataProvider();
   const dataProvider1 = useDataProvider();
-
   if (semesterChoices.length === 0) {
     dataProvider.getOne(MAPPING.SUBJECT, { id: data.schemeId }).then((e) => {
       //current sem from the classroom
-      const sem = data.semester;
+      const sem = data.isDerived ? data.semester : data.batch.semester;
       //semester data from the subjects
       const semIndex = e.data.semesters.findIndex((g) => g.semester === sem);
       if (semIndex !== -1) {
         //current branch from classroom
-        const branch = data.branch;
+        const branch = data.branch ;
         if (e.data.semesters[semIndex] !== undefined) {
           //branch data from subject
           const branchIndex = e.data.semesters[semIndex].branchSubs.findIndex(
