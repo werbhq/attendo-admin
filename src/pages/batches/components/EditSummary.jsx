@@ -77,8 +77,10 @@ export default function EditSummary({ state }) {
           label="Semester"
           max={getSemesters(record.schemeId).length}
         />
+       <Box sx={{ display: "flex", alignItems: "center" }}>
 
-        <BooleanInput source="running" validate={[required()]} />
+          <BooleanInput source="running" validate={[required()]} />
+        </Box>
         <Stack direction="row" spacing={2}>
           <SaveButton label="Save" />
           <DeleteWithConfirmButton

@@ -227,18 +227,38 @@ export const ClassroomShow = () => {
                 </ul>
               </ArrayField>
             )}
+            {!!record?.isDerived && (
+              <TextField
+                source="semester"
+                label="Semester"
+                emptyText="-"
+              />
+            )}
             <FunctionField
               label="Students Count"
               render={(record) => record.students.length}
             ></FunctionField>
+            <p
+              class="MuiTypography-root MuiTypography-body1 RaLabeled-label css-mes6ti-MuiTypography-root"
+              sx={{ fontSize: 2 }}
+            >
+              <span>Batch</span>
+            </p>
           </SimpleShowLayout>
-          <SimpleShowLayout label="BATCH">
+
+          <SimpleShowLayout sx={{ ml: 2,mt:-3}}>
             <TextField source="batch.name" label="Batch Name" />
             <BooleanField source="batch.running" label="Running" />
             <TextField source="batch.schemeId" label="Scheme Id" />
             <TextField source="batch.course" label="Course" />
             <TextField source="batch.yearOfJoining" label="Year Of Joining" />
-            <TextField source="batch.semester" label="Semester" emptyText="-" />
+            {!record?.isDerived && (
+              <TextField
+                source="batch.semester"
+                label="Semester"
+                emptyText="-"
+              />
+            )}{" "}
           </SimpleShowLayout>
           <div style={{ margin: "20px 0px" }}>
             <Stack direction="row" spacing={2}>
@@ -270,7 +290,7 @@ export const ClassroomShow = () => {
             direction="row"
             justifyContent={"space-between"}
           >
-            {record?.isDerived ? (
+            {!!record?.isDerived ? (
               <Button
                 size="medium"
                 variant="contained"

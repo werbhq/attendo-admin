@@ -27,12 +27,7 @@ const BatchesCreate = () => {
   dataProvider.getList(MAPPING.SUBJECT).then((e) => {
     setSchemeData(e.data);
   });
-  const {
-
-    getSchemes,
-    getSemesters,
-  
-  } = new Schemes(schemeData);
+  const { getSchemes, getSemesters } = new Schemes(schemeData);
   const refresh = useRefresh();
   const notify = useNotify();
   const redirect = useRedirect();
@@ -71,12 +66,8 @@ const BatchesCreate = () => {
 
   return (
     <Create>
-      <SimpleForm onSubmit={onSubmit} >
-        <TextInput
-          source="name"
-          label="Batch Name"
-          validate={[required()]}
-        />
+      <SimpleForm onSubmit={onSubmit}>
+        <TextInput source="name" label="Batch Name" validate={[required()]} />
         <SelectInput
           source="course"
           choices={choices}
@@ -96,13 +87,14 @@ const BatchesCreate = () => {
           validate={[required(), number("Number Required")]}
           label="Year Of Joining"
         />
-        <SelectInput
+
+        <NumberInput
           source="semester"
           onWheel={(e) => e.preventDefault()}
           validate={[required(), number("Number Required")]}
-          choices={getSemesters(data.scheme)}
-          onChange={(e) => setData({ ...data, semester: e.target.value })}
           label="Semester"
+          onChange={(e) => setData({ ...data, semester: e.target.value })}
+          max={getSemesters(data.scheme).length}
         />
 
         <BooleanInput source="running" validate={[required()]} />
