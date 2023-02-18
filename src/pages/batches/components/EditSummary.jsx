@@ -2,7 +2,6 @@ import * as React from "react";
 import Dialog from "@mui/material/Dialog";
 import { useState } from "react";
 import {
-  NumberInput,
   SimpleForm,
   useDataProvider,
   useRecordContext,
@@ -13,16 +12,12 @@ import {
   useRedirect,
   TextInput,
   required,
-  number,
+  SelectInput,
   BooleanInput,
 } from "react-admin";
 import {
   Box,
-  Button,
-  MenuItem,
-  Select,
   Stack,
-  Typography,
 } from "@mui/material";
 import { MAPPING } from "../../../provider/mapping";
 import { autoCapitalize } from "../../../Utils/helpers";
@@ -38,7 +33,7 @@ export default function EditSummary({ state }) {
   const { setdialouge, dialouge } = state;
 
   const [schemeData, setSchemeData] = useState([]);
-  const { getSchemes, getSemesters } = new Schemes(schemeData);
+  const { getSemesters } = new Schemes(schemeData);
   dataProvider.getList(MAPPING.SUBJECT).then((e) => {
     setSchemeData(e.data);
   });
@@ -70,15 +65,13 @@ export default function EditSummary({ state }) {
         onSubmit={handleSave}
       >
         <TextInput source="name" format={autoCapitalize} disabled={true} />
-        <NumberInput
-          source="semester"
-          onWheel={(e) => e.preventDefault()}
-          validate={[required(), number("Number Required")]}
-          label="Semester"
-          max={getSemesters(record.schemeId).length}
-        />
-       <Box sx={{ display: "flex", alignItems: "center" }}>
 
+        <SelectInput
+          source="semester"
+          choices={getSemesters(record.schemeId)}
+          required
+        />
+        <Box sx={{ display: "flex", alignItems: "center" }}>
           <BooleanInput source="running" validate={[required()]} />
         </Box>
         <Stack direction="row" spacing={2}>

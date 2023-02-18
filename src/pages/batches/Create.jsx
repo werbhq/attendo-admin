@@ -13,10 +13,7 @@ import {
   useDataProvider,
 } from "react-admin";
 import { useState, useMemo } from "react";
-import { autoCapitalize } from "../../Utils/helpers";
-import { dataProvider } from "../../provider/firebase";
 import { MAPPING } from "../../provider/mapping";
-import { convertSingleValueListToSelectList } from "../../Utils/helpers";
 import { noSpaceValidation } from "../../Utils/validations";
 import { Schemes } from "../../Utils/Schemes";
 const url = MAPPING.BATCHES;
@@ -43,12 +40,6 @@ const BatchesCreate = () => {
     redirect("list", url);
   };
 
-  const [courses, setCourses] = useState([]);
-  if (courses.length === 0) {
-    dataProvider.getList(MAPPING.SEMESTERS).then((e) => {
-      setCourses(e.data.map(({ id }) => id));
-    });
-  }
 
   const [data, setData] = useState({
     course: null,
@@ -62,11 +53,25 @@ const BatchesCreate = () => {
   }));
 
   //to avoid glitching
+  // eslint-disable-next-line
   const schemeChoices = useMemo(() => getSchemes(data.course), [data.course]);
-
+  const validateBatches = (values) => {
+    const errors = {};
+    const id = (e) => e.id;
+    
+    const customValidator = (data, fieldName) => {
+      if (!data.map(id).includes(values[fieldName])) {
+        errors[fieldName] = "ra.validation.required";
+      }
+    };
+    customValidator(choices, "course");
+    customValidator(schemeChoices, "schemeId");
+      customValidator(getSemesters(data.scheme), "semester");
+    return errors;
+  };
   return (
     <Create>
-      <SimpleForm onSubmit={onSubmit}>
+      <SimpleForm onSubmit={onSubmit} validate={validateBatches}>
         <TextInput source="name" label="Batch Name" validate={[required()]} />
         <SelectInput
           source="course"
@@ -79,6 +84,7 @@ const BatchesCreate = () => {
           source="schemeId"
           choices={schemeChoices}
           onChange={(e) => setData({ ...data, scheme: e.target.value })}
+          disabled={schemeChoices.length===0?true:false}
           required
         />
         <NumberInput
@@ -88,13 +94,13 @@ const BatchesCreate = () => {
           label="Year Of Joining"
         />
 
-        <NumberInput
+        <SelectInput
           source="semester"
-          onWheel={(e) => e.preventDefault()}
-          validate={[required(), number("Number Required")]}
-          label="Semester"
+          choices={getSemesters(data.scheme)}
           onChange={(e) => setData({ ...data, semester: e.target.value })}
-          max={getSemesters(data.scheme).length}
+          disabled={getSemesters(data.scheme).length===0?true:false}
+
+          required
         />
 
         <BooleanInput source="running" validate={[required()]} />

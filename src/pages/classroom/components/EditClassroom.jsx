@@ -2,11 +2,6 @@ import * as React from "react";
 import Dialog from "@mui/material/Dialog";
 
 import {
-  number,
-  required,
-  ArrayInput,
-  TextField,
-  NumberInput,
   SimpleForm,
   useDataProvider,
   useRecordContext,
@@ -101,7 +96,6 @@ export default function EditClassroom({ state }) {
       setBatch(batches);
     });
   }
-  console.log(batchData);
   const handleSave = async (newRecord) => {
     if (!isDerived(newRecord.name)) {
       delete newRecord.subjectId;
@@ -188,7 +182,6 @@ export default function EditClassroom({ state }) {
         onSubmit={handleSave}
         validate={validateClassroom}
       >
-        
         <SelectInput
           label="Course"
           source="batch.course"
@@ -205,7 +198,7 @@ export default function EditClassroom({ state }) {
           required
           disabled={true}
         />
-     
+
         <SelectInput
           source="batch.name"
           label="Batch Name"
@@ -240,6 +233,12 @@ export default function EditClassroom({ state }) {
                 data.semester
                   ? getSubjects(data.scheme, data.branch, data.semester)
                   : []
+              }
+              disabled={
+                getSubjects(data.scheme, data.branch, data.semester).length ===
+                0
+                  ? true
+                  : false
               }
               required
             />
