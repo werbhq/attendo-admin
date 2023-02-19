@@ -135,7 +135,7 @@ export const ClassroomShow = () => {
       ({ id, regNo, rollNo, name, attendance }) => {
         const data = { id, regNo, rollNo, name };
         attendance.forEach((e) => {
-          data[`${e.name} [${e.subjectId.toUpperCase()}]`] =
+          data[`${e.name} [${e.subject.id.toUpperCase()}]`] =
             e.percentage === -1 ? "-" : `${e.percentage}%`;
         });
         return data;
@@ -267,7 +267,6 @@ export const ClassroomShow = () => {
           <div style={{ margin: "20px 0px" }}>
             <Stack direction="row" spacing={2}>
               <Button
-                disabled={true}
                 size="small"
                 variant="outlined"
                 startIcon={<EditIcon />}

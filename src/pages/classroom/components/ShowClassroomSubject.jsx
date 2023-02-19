@@ -49,30 +49,33 @@ const ClassroomSubject = () => {
   const [branchData, setBranchData] = useState([]);
   const dataProvider = useDataProvider();
   const dataProvider1 = useDataProvider();
+  console.log(data);
   if (semesterChoices.length === 0) {
-    dataProvider.getOne(MAPPING.SUBJECT, { id: data.schemeId }).then((e) => {
-      //current sem from the classroom
-      const sem = data.isDerived ? data.semester : data.batch.semester;
-      //semester data from the subjects
-      const semIndex = e.data.semesters.findIndex((g) => g.semester === sem);
-      if (semIndex !== -1) {
-        //current branch from classroom
-        const branch = data.branch ;
-        if (e.data.semesters[semIndex] !== undefined) {
-          //branch data from subject
-          const branchIndex = e.data.semesters[semIndex].branchSubs.findIndex(
-            (f) => f.branch === branch
-          );
-          const totalSemesters = e.data.semesters.length;
-          const semesters = [];
-          for (let i = 0; i < totalSemesters; i++)
-            semesters.push(e.data.semesters[i]);
-          setsemesterChoices(semesters); //list of semester data of each classroon
-          setSemester(e.data.semesters[semIndex].semester); //current semester
-          setBranchData(e.data.semesters[semIndex].branchSubs[branchIndex]); //branch data
+    dataProvider
+      .getOne(MAPPING.SUBJECT, { id: data.batch.schemeId })
+      .then((e) => {
+        //current sem from the classroom
+        const sem = data.isDerived ? data.semester : data.batch.semester;
+        //semester data from the subjects
+        const semIndex = e.data.semesters.findIndex((g) => g.semester === sem);
+        if (semIndex !== -1) {
+          //current branch from classroom
+          const branch = data.branch;
+          if (e.data.semesters[semIndex] !== undefined) {
+            //branch data from subject
+            const branchIndex = e.data.semesters[semIndex].branchSubs.findIndex(
+              (f) => f.branch === branch
+            );
+            const totalSemesters = e.data.semesters.length;
+            const semesters = [];
+            for (let i = 0; i < totalSemesters; i++)
+              semesters.push(e.data.semesters[i]);
+            setsemesterChoices(semesters); //list of semester data of each classroon
+            setSemester(e.data.semesters[semIndex].semester); //current semester
+            setBranchData(e.data.semesters[semIndex].branchSubs[branchIndex]); //branch data
+          }
         }
-      }
-    });
+      });
   }
 
   //subjects of the current semester..changes acc to semesters

@@ -106,9 +106,13 @@ export const ClassroomProvider = {
             id: data.id,
             branch: data.branch,
             name: data.name,
-            course: data.course,
-            year: data.year,
-            schemeId: data.schemeId,
+            batch: {
+              course: data.batch.course,
+              yearOfJoining: data.batch.yearOfJoining,
+              id: data.batch.id,
+              name: data.batch.name,
+              schemeId: data.batch.schemeId,
+            },
           };
         })
       );
@@ -150,9 +154,13 @@ export const ClassroomProvider = {
             id: data.id,
             branch: data.branch,
             name: data.name,
-            course: data.course,
-            year: data.year,
-            schemeId: data.schemeId,
+            batch: {
+              course: data.batch.course,
+              yearOfJoining: data.batch.yearOfJoining,
+              id: data.batch.id,
+              name: data.batch.name,
+              schemeId: data.batch.schemeId,
+            },
           };
         })
       );

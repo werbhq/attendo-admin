@@ -28,7 +28,7 @@ const ClassroomsList = () => {
         <TextField source="batch.name" label="Batch"/>
 
         <TextField
-          source="subjectName"
+          source="subject.name"
           label="Subject"
           emptyText="-"
           sortable={false}
@@ -51,7 +51,7 @@ const ClassroomsList = () => {
           render={(record) => record.students.length}
         ></FunctionField>
         <ReferenceField
-          source="schemeId"
+          source="batch.schemeId"
           reference={MAPPING.SUBJECT}
           link="show"
         >
