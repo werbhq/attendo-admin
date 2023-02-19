@@ -234,7 +234,7 @@ export default function EditClassroom({ state }) {
               disabled={true}
             />
             <SelectInput
-              source="subject.name"
+              source="subject.id"
               label="Subject"
               choices={
                 data.semester
