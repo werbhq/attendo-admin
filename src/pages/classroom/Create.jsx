@@ -133,10 +133,11 @@ const CreateClassroom = ({ schemes: schemeData }) => {
             }
             required
           />
+          
           <ReferenceArrayInput
             source="parentClasses"
             reference={MAPPING.CLASSROOMS}
-            filter={{ isDerived: false }}
+            filter={{ isDerived: false, branch:data.branch}}
           >
             <AutocompleteArrayInput
               optionText="id"
