@@ -8,9 +8,11 @@ import {
   AutocompleteArrayInput,
 } from "react-admin";
 import { MAPPING } from "../../provider/mapping";
-
+import { useEffect } from "react";
 import { getClassroomId } from "../../Utils/helpers";
 import { Schemes } from "../../Utils/Schemes";
+import { v4 as uuidv4 } from "uuid";
+
 function titleCase(str) {
   var title_name = str
     .split(".")
@@ -133,11 +135,10 @@ const CreateClassroom = ({ schemes: schemeData }) => {
             }
             required
           />
-          
           <ReferenceArrayInput
             source="parentClasses"
             reference={MAPPING.CLASSROOMS}
-            filter={{ isDerived: false, branch:data.branch}}
+            filter={{ isDerived: false, branch: data.branch }}
           >
             <AutocompleteArrayInput
               optionText="id"
@@ -193,6 +194,10 @@ const ClassroomsCreate = () => {
   dataProvider2.getList(MAPPING.BATCHES).then((e) => {
     setBatchData(e.data);
   });
+  function getId(data) {
+    const id = getClassroomId(data) + "-" + uuidv4().substring(0, 4);
+    return id;
+  }
   const transformSubmit = (data) => {
     data.batch = batchData.find((e) => e.name === data.batch.name);
     if (!new Schemes(null).isDerived(data.name)) {
@@ -224,9 +229,13 @@ const ClassroomsCreate = () => {
       data.subject = sub;
       data.isDerived = true;
     }
+    const classroomId = new Schemes(null).isDerived(data.name)
+      ? getId(data)
+      : getClassroomId(data);
+    console.log(classroomId);
     return {
       ...data,
-      id: getClassroomId(data),
+      id: classroomId,
       students: [],
     };
   };
