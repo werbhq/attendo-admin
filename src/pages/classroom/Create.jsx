@@ -8,7 +8,6 @@ import {
   AutocompleteArrayInput,
 } from "react-admin";
 import { MAPPING } from "../../provider/mapping";
-import { useEffect } from "react";
 import { getClassroomId } from "../../Utils/helpers";
 import { Schemes } from "../../Utils/Schemes";
 import { v4 as uuidv4 } from "uuid";
