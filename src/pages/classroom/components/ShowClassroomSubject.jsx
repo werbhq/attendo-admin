@@ -49,7 +49,6 @@ const ClassroomSubject = () => {
   const [branchData, setBranchData] = useState([]);
   const dataProvider = useDataProvider();
   const dataProvider1 = useDataProvider();
-  console.log(data);
   if (semesterChoices.length === 0) {
     dataProvider
       .getOne(MAPPING.SUBJECT, { id: data.batch.schemeId })
