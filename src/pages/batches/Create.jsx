@@ -85,6 +85,7 @@ const BatchesCreate = () => {
           choices={schemeChoices}
           onChange={(e) => setData({ ...data, scheme: e.target.value })}
           disabled={schemeChoices.length===0?true:false}
+          filter={{ course: data.course}}
           required
         />
         <NumberInput
