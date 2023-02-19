@@ -81,7 +81,6 @@ export default function EditClassroom({ state }) {
     });
   }
   const [batch, setBatch] = useState([]);
-  const [batchData, setBatchData] = useState([]);
   const dataProvider2 = useDataProvider();
   if (batch.length === 0) {
     dataProvider2.getList(MAPPING.BATCHES).then((e) => {
@@ -93,7 +92,6 @@ export default function EditClassroom({ state }) {
         };
         batches.push(batch_obj);
       }
-      setBatchData(e.data);
       setBatch(batches);
     });
   }
@@ -137,7 +135,6 @@ export default function EditClassroom({ state }) {
     }
     delete newRecord.students;
 
-    // newRecord.batch = batchData.find((e) => e.id === newRecord.batch.id);
     await dataProvider.update(resource, {
       id: newRecord.id,
       data: newRecord,
