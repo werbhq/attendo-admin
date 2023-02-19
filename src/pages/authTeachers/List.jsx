@@ -1,4 +1,6 @@
 import { MAPPING } from "../../provider/mapping";
+import { cloudFunctions } from "../../provider/firebase";
+
 
 import {
   Datagrid,
@@ -17,6 +19,10 @@ import {
   required
 } from "react-admin";
 
+import { httpsCallable } from "firebase/functions";
+
+
+
 import { Chip } from '@mui/material';
 import ClearIcon from '@mui/icons-material/Clear';
 
@@ -24,7 +30,9 @@ import CustomProviders from "../../provider/customProviders";
 import { dataProvider } from "../../provider/firebase";
 
 
-const QuickFilter = ({ label }) => {
+const QuickFilter = ({ label, source, value }) => {
+  // console.log("ETF")
+  //   console.log(label,source,value);
     const translate = useTranslate();
     return <Chip sx={{ marginBottom: 1 }} label={translate(label)} />;
 };
@@ -33,7 +41,8 @@ const QuickFilter = ({ label }) => {
 const filters = [
   <SearchInput source="id" alwaysOn resettable />,
   <TextInput source="branch" resettable />,
-  <QuickFilter source="created" label="Create" defaultValue={true}/>,
+  //<SelectInput source="created" label="new create" choices={[{id: true, name: "True"}, {id:false, name: "False"}]}/>,
+  <QuickFilter source="created" label="Create"/>,
 ];
 
 
@@ -49,45 +58,25 @@ const AuthorizedTeacherList = () => {
 );};
 
   const handleBulkUpdate = async (data) => {
-    // console.log("here");
-    // console.log(data);
+      
+    const createAccountApi = httpsCallable(
+      cloudFunctions,
+      "createAccounts"
+    );
+    
+    const response = await (
+      await createAccountApi(["navaneethvenu.19cs084@mbcet.ac.in"])
+    ).data;
 
-    let dataSet = [];
-    for(let id of data.selectedIds)
-    {
-      // console.log("count"+id);
-      let newData = {};
+    console.log(response);
 
-      await dataProvider.getOne(data.resource,{id:id})
-      .then((e)=>{
-        console.log(e);
-        newData = e.data;
-        newData.created = false;
-      });
-
-      // console.log(newData);
-
-      dataSet.push(newData);    
-
-    }
-
-    const newObj = {
-        ids: data.selectedIds,
-        data: dataSet,
-    };
-    console.log(newObj);
-    await dataProvider.updateMany(data.resource,newObj );
-    // data is an object containing the new values for the fields
-    // In this example, we are updating the status field to "approved"
-    // data.created = false;
-    // return dataProvider.createEmails('myResource', data); // Replace 'myResource' with your resource name
   };
 
   return (<List exporter={false} filters={filters} >
     <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons/>}>
       <EmailField source="email" />
       <TextField source="userName" />
-      <BooleanField source="created" looseValue/>
+      <BooleanField source="created" looseValue sortable={false}/>
       <TextField source="branch" />
     </Datagrid>
   </List>
