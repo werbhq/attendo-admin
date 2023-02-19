@@ -8,7 +8,7 @@ import { MAPPING } from "../../provider/mapping";
 const Subject = {
   name: MAPPING.SUBJECT,
   icon,
-  options: { label: "Subjects" },
+  options: { label: "Syllabus" },
   list: SubjectList,
   show: SubjectShow,
   edit: SubjectEdit,

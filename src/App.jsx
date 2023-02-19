@@ -6,7 +6,6 @@ import red from "@mui/material/colors/red";
 import Classroom from "./pages/classroom/Index";
 import DashBoard from "./pages/dashboard/Dashboard";
 import Subject from "./pages/subjects/Index";
-// import Courses from "./pages/courses/index";
 import Batches from "./pages/batches/Index";
 import AuthTeachers from "./pages/authTeachers/Index";
 import { authProvider, dataProvider } from "./provider/firebase";
@@ -39,11 +38,11 @@ const App = () => (
     dashboard={DashBoard}
     layout={CustomLayout}
   >
-    {/* <Resource {...Courses} /> */}
-    <Resource {...Batches} />
-    <Resource {...Subject} />
-    <Resource {...Classroom} />
     <Resource {...AuthTeachers} />
+    <Resource {...Subject} />
+    <Resource {...Batches} />
+    {/* <Resource {...Courses} /> */}
+    <Resource {...Classroom} />
   </Admin>
 );
 

@@ -4,11 +4,7 @@ import {
   Tab,
   TabbedShowLayout,
   TextField,
-  ArrayField,
-  ChipField,
   FunctionField,
-  SingleFieldList,
-  useShowController,
   BooleanField,
 } from "react-admin";
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,7 +12,6 @@ import { useState } from "react";
 import EditSummary from "./components/EditSummary.jsx";
 
 const BatchesShow = () => {
-  const { record } = useShowController();
   const [summaryDialouge, setSummaryDialouge] = useState({ enable: false });
   return (
     <Show>

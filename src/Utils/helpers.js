@@ -25,7 +25,6 @@ export const sorter = (params, data) => {
   const filters = params?.filter;
 
   if (filters && filters["subjectName"]) {
-    console.log(data);
   }
 
   if (sort) {

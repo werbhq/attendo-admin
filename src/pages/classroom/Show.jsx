@@ -25,7 +25,6 @@ import {
   EmailField,
   useDataProvider,
   useUnselectAll,
-  SingleFieldList,
   useShowController,
   ArrayField,
   ListContextProvider,
@@ -110,13 +109,11 @@ export const ClassroomShow = () => {
   if (record?.isDerived) {
     listContext.onUnselectItems = virtualClassEditSaveHandler;
   }
-
   const [semester, setSemester] = useState(1);
   const [semesterChoices, setSemesterChoices] = useState([]);
-
-  if (semesterChoices.length === 0 && record?.course) {
-    dataProvider.getOne(MAPPING.SEMESTERS, { id: record.course }).then((e) => {
-      const { totalSemesters } = e.data;
+  if (semesterChoices.length === 0) {
+    dataProvider.getOne(MAPPING.SUBJECT, { id: record.batch===[]?"":record.batch.schemeId}).then((e) => {
+      const { totalSemesters } = e.data.semesters.length;
       const semesters = [];
       for (let i = 1; i <= totalSemesters; i++) semesters.push(i);
       setSemesterChoices(semesters);
@@ -144,16 +141,27 @@ export const ClassroomShow = () => {
         return data;
       }
     );
-
-    jsonExport(
-      dataForExport,
-      {
-        headers: headersReports,
-      },
-      (err, csv) => {
-        downloadCSV(csv, `${record.id} S${record.semester} Report`);
-      }
-    );
+    if (record.isDerived) {
+      jsonExport(
+        dataForExport,
+        {
+          headers: headersReports,
+        },
+        (err, csv) => {
+          downloadCSV(csv, `${record.id} S${record.semester} Report`);
+        }
+      );
+    } else {
+      jsonExport(
+        dataForExport,
+        {
+          headers: headersReports,
+        },
+        (err, csv) => {
+          downloadCSV(csv, `${record.id} S${record.batch.semester} Report`);
+        }
+      );
+    }
   };
 
   const ReporterToolBar = () => (
@@ -197,7 +205,7 @@ export const ClassroomShow = () => {
               }
             ></FunctionField>
             {!!record?.isDerived && (
-              <TextField source="subjectName" label="Subject"></TextField>
+              <TextField source="subject.name" label="Subject"></TextField>
             )}
 
             <BooleanField source="isDerived" label="Virtual Class" />
@@ -205,7 +213,7 @@ export const ClassroomShow = () => {
               <ArrayField source="Parent Classes">
                 <ul style={{ padding: 0, margin: 0 }}>
                   {record.parentClasses === undefined
-                    ? null
+                    ? "-"
                     : record.parentClasses.map((e) => (
                         <Chip key={e} sx={{ ml: 0.5, mt: 1 }} label={e} />
                       ))}
@@ -216,7 +224,7 @@ export const ClassroomShow = () => {
               <ArrayField source="Teachers">
                 <ul style={{ padding: 0, margin: 0 }}>
                   {record.teachers === undefined
-                    ? null
+                    ? "-"
                     : record.teachers.map((e) => (
                         <Chip
                           key={e.id}
@@ -228,11 +236,7 @@ export const ClassroomShow = () => {
               </ArrayField>
             )}
             {!!record?.isDerived && (
-              <TextField
-                source="semester"
-                label="Semester"
-                emptyText="-"
-              />
+              <TextField source="semester" label="Semester" emptyText="-" />
             )}
             <FunctionField
               label="Students Count"
@@ -246,7 +250,7 @@ export const ClassroomShow = () => {
             </p>
           </SimpleShowLayout>
 
-          <SimpleShowLayout sx={{ ml: 2,mt:-3}}>
+          <SimpleShowLayout sx={{ ml: 2, mt: -3 }}>
             <TextField source="batch.name" label="Batch Name" />
             <BooleanField source="batch.running" label="Running" />
             <TextField source="batch.schemeId" label="Scheme Id" />
