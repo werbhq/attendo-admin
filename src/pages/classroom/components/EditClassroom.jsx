@@ -59,7 +59,8 @@ export default function EditClassroom({ state }) {
     scheme: record.batch.schemeId,
     branch: record.branch,
     name: record.name,
-    semester: record?.batch.semester,
+
+    semester: isDerived(record.name) ? record.semester : record.batch.semester,
     batch: record.batch.name,
   });
   const [teachers, setTeachers] = useState([]);
@@ -80,7 +81,6 @@ export default function EditClassroom({ state }) {
     });
   }
   const [batch, setBatch] = useState([]);
-  const [batchData, setBatchData] = useState([]);
   const dataProvider2 = useDataProvider();
   if (batch.length === 0) {
     dataProvider2.getList(MAPPING.BATCHES).then((e) => {
@@ -92,13 +92,12 @@ export default function EditClassroom({ state }) {
         };
         batches.push(batch_obj);
       }
-      setBatchData(e.data);
       setBatch(batches);
     });
   }
   const handleSave = async (newRecord) => {
     if (!isDerived(newRecord.name)) {
-      delete newRecord.subjectId;
+      delete newRecord.subject.name;
       delete newRecord.parentClasses;
       delete newRecord.semester;
       delete newRecord.teachers;
@@ -124,7 +123,11 @@ export default function EditClassroom({ state }) {
         data.branch,
         data.semester
       );
-      const subj = data_subjects.find((e) => e.id === newRecord.subjectId);
+
+      const subj =
+        data_subjects === undefined
+          ? null
+          : data_subjects.find((e) => e.id === newRecord.subject.id);
       newRecord.subject = {};
       newRecord.subject.id = subj.id;
       newRecord.subject.code = subj.id.toUpperCase();
@@ -132,7 +135,6 @@ export default function EditClassroom({ state }) {
     }
     delete newRecord.students;
 
-    newRecord.batch = batchData.find((e) => e.name === newRecord.batch.name);
     await dataProvider.update(resource, {
       id: newRecord.id,
       data: newRecord,
@@ -154,17 +156,16 @@ export default function EditClassroom({ state }) {
       }
     };
 
-    customValidator(getSchemes(data.course), "schemeId");
+    //  customValidator(getSchemes(data.course), "batch.schemeId");
     customValidator(getBranches(data.scheme), "branch");
     customValidator(Schemes.classNames, "name");
     if (isDerived(values.name)) {
       customValidator(getSemesters(data.scheme), "semester");
-      customValidator(
-        getSubjects(data.scheme, data.branch, data.semester),
-        "subjectId"
-      );
+      // customValidator(
+      //   getSubjects(data.scheme, data.branch, data.semester),
+      //   "subject.name"
+      // );
     }
-
     return errors;
   };
 
@@ -181,6 +182,7 @@ export default function EditClassroom({ state }) {
         resource={resource}
         onSubmit={handleSave}
         validate={validateClassroom}
+        disabled={true}
       >
         <SelectInput
           label="Course"
@@ -205,6 +207,7 @@ export default function EditClassroom({ state }) {
           choices={batch}
           onChange={(e) => setData({ ...data, batch: e.target.value })}
           required
+          disabled={true}
         />
 
         <SelectInput
@@ -212,11 +215,13 @@ export default function EditClassroom({ state }) {
           choices={getBranches(data.scheme)}
           onChange={(e) => setData({ ...data, branch: e.target.value })}
           required
+          disabled={true}
         />
         <SelectInput
           source="name"
           choices={data.branch ? Schemes.classNames : []}
           onChange={(e) => setData({ ...data, name: e.target.value })}
+          disabled={true}
           required
         />
         {isDerived(data.name) && (
@@ -226,20 +231,23 @@ export default function EditClassroom({ state }) {
               choices={getSemesters(data.scheme)}
               onChange={(e) => setData({ ...data, semester: e.target.value })}
               required
+              disabled={true}
             />
             <SelectInput
-              source="subjectId"
+              source="subject.name"
+              label="Subject"
               choices={
                 data.semester
                   ? getSubjects(data.scheme, data.branch, data.semester)
                   : []
               }
-              disabled={
-                getSubjects(data.scheme, data.branch, data.semester).length ===
-                0
-                  ? true
-                  : false
-              }
+              // disabled={
+              //   getSubjects(data.scheme, data.branch, data.semester).length ===
+              //   0
+              //     ? true
+              //     : false
+              // }
+              disabled={true}
               required
             />
             <ReferenceArrayInput
@@ -253,6 +261,7 @@ export default function EditClassroom({ state }) {
                 source="id"
                 filterToQuery={(searchText) => ({ id: searchText })}
                 isRequired
+                disabled={true}
               />
             </ReferenceArrayInput>
             <AutocompleteArrayInput

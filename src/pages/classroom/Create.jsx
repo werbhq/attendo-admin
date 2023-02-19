@@ -27,12 +27,9 @@ function titleCase(str) {
 }
 
 const CreateClassroom = ({ schemes: schemeData }) => {
-  const {
-    getBranches,
-    getSemesters,
-    getSubjects,
-    isDerived,
-  } = new Schemes(schemeData);
+  const { getBranches, getSemesters, getSubjects, isDerived } = new Schemes(
+    schemeData
+  );
   const [data, setData] = useState({
     course: null,
     scheme: null,
@@ -90,8 +87,6 @@ const CreateClassroom = ({ schemes: schemeData }) => {
         "subjectId"
       );
       customValidator(getSemesters(data.scheme), "semester");
-
-
     }
     return errors;
   };
@@ -199,7 +194,6 @@ const ClassroomsCreate = () => {
   });
   const transformSubmit = (data) => {
     data.batch = batchData.find((e) => e.name === data.batch.name);
-
     if (!new Schemes(null).isDerived(data.name)) {
       delete data.subjectId;
       delete data.parentClasses;
@@ -226,12 +220,9 @@ const ClassroomsCreate = () => {
 
       data.teachers = new_teachers;
       data.subject = {};
-      data.subject.name = sub.name;
-      data.subject.id = data.subjectId;
-      data.subject.code = data.subjectId.toUpperCase();
+      data.subject = sub;
       data.isDerived = true;
     }
-
     return {
       ...data,
       id: getClassroomId(data),
