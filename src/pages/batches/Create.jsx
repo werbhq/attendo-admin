@@ -20,10 +20,11 @@ const url = MAPPING.BATCHES;
 const BatchesCreate = () => {
   const dataProvider = useDataProvider();
   const [schemeData, setSchemeData] = useState([]);
-
-  dataProvider.getList(MAPPING.SUBJECT).then((e) => {
-    setSchemeData(e.data);
-  });
+  if (schemeData.length === 0) {
+    dataProvider.getList(MAPPING.SUBJECT).then((e) => {
+      setSchemeData(e.data);
+    });
+  }
   const { getSchemes, getSemesters } = new Schemes(schemeData);
   const refresh = useRefresh();
   const notify = useNotify();
@@ -39,7 +40,6 @@ const BatchesCreate = () => {
     refresh();
     redirect("list", url);
   };
-
 
   const [data, setData] = useState({
     course: null,
@@ -58,7 +58,7 @@ const BatchesCreate = () => {
   const validateBatches = (values) => {
     const errors = {};
     const id = (e) => e.id;
-    
+
     const customValidator = (data, fieldName) => {
       if (!data.map(id).includes(values[fieldName])) {
         errors[fieldName] = "ra.validation.required";
@@ -66,7 +66,7 @@ const BatchesCreate = () => {
     };
     customValidator(choices, "course");
     customValidator(schemeChoices, "schemeId");
-      customValidator(getSemesters(data.scheme), "semester");
+    customValidator(getSemesters(data.scheme), "semester");
     return errors;
   };
   return (
@@ -84,8 +84,8 @@ const BatchesCreate = () => {
           source="schemeId"
           choices={schemeChoices}
           onChange={(e) => setData({ ...data, scheme: e.target.value })}
-          disabled={schemeChoices.length===0?true:false}
-          filter={{ course: data.course}}
+          disabled={schemeChoices.length === 0 ? true : false}
+          filter={{ course: data.course }}
           required
         />
         <NumberInput
@@ -99,8 +99,7 @@ const BatchesCreate = () => {
           source="semester"
           choices={getSemesters(data.scheme)}
           onChange={(e) => setData({ ...data, semester: e.target.value })}
-          disabled={getSemesters(data.scheme).length===0?true:false}
-
+          disabled={getSemesters(data.scheme).length === 0 ? true : false}
           required
         />
 

@@ -11,7 +11,7 @@ export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
 const options = {};
-const kMode = "prod"; // dev, prod, emulate
+const kMode = "emulate"; // dev, prod, emulate
 
 export const dataProviderLegacy =
   kMode === "prod"
@@ -24,7 +24,7 @@ export const authProvider =
 export const db = dataProviderLegacy.app.firestore();
 export const cloudFunctions = getFunctions();
 
-if (kMode === "emulate") {
+if (kMode === "prod") {
   firebase.firestore().useEmulator("localhost", 8090);
   firebase.auth().useEmulator("http://localhost:9099/");
   //firebase.functions().useEmulator("localhost", 5001);

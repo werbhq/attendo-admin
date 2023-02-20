@@ -111,13 +111,21 @@ export const ClassroomShow = () => {
   }
   const [semester, setSemester] = useState(1);
   const [semesterChoices, setSemesterChoices] = useState([]);
+  console.log("show classroom called");
+
   if (semesterChoices.length === 0) {
-    dataProvider.getOne(MAPPING.SUBJECT, { id: record.batch===[]?"":record.batch.schemeId}).then((e) => {
-      const { totalSemesters } = e.data.semesters.length;
-      const semesters = [];
-      for (let i = 1; i <= totalSemesters; i++) semesters.push(i);
-      setSemesterChoices(semesters);
-    });
+    console.log("getting sub from show classroom", semesterChoices);
+    dataProvider
+      .getOne(MAPPING.SUBJECT, {
+        id: record.batch === [] ? "" : record.batch.schemeId,
+      })
+      .then((e) => {
+        const totalSemesters = e.data.semesters.length;
+        const semesters = [];
+        for (let i = 0; i < totalSemesters; i++)
+          semesters.push(e.data.semesters[i].semester);
+        setSemesterChoices(semesters);
+      });
   }
 
   useEffect(() => {

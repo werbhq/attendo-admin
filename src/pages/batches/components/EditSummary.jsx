@@ -34,9 +34,11 @@ export default function EditSummary({ state }) {
 
   const [schemeData, setSchemeData] = useState([]);
   const { getSemesters } = new Schemes(schemeData);
-  dataProvider.getList(MAPPING.SUBJECT).then((e) => {
-    setSchemeData(e.data);
-  });
+  if (schemeData.length === 0) {
+    dataProvider.getList(MAPPING.SUBJECT).then((e) => {
+      setSchemeData(e.data);
+    });
+  }
 
   const handleSave = async (data) => {
     await dataProvider.update(resource, {

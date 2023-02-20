@@ -19,6 +19,7 @@ const AuthorizedTeacherCreate = () => {
   const notify = useNotify();
   const redirect = useRedirect();
 
+
   const onSubmit = (data) => {
     data = { ...data, id: data.email };
     update(
