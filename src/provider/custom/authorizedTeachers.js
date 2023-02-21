@@ -1,5 +1,7 @@
+import { httpsCallable } from "firebase/functions";
 import { sorter } from "../../Utils/helpers";
 import {
+  cloudFunctions,
   dataProvider,
   dataProviderLegacy,
   db,
@@ -32,8 +34,6 @@ export const AuthTeachersProvider = {
   },
 
   update: async (resource, params) => {
-    //  console.log("not thisssss");
-
     const { id, data } = params;
     console.log(params);
 
@@ -49,18 +49,15 @@ export const AuthTeachersProvider = {
   updateMany: async (resource, params) => {
     const { ids, data } = params;
 
-    // console.log("thisssss");
-    if(data!==undefined  && data.length!==0)
-    {
+    if (data !== undefined && data.length !== 0) {
       let index = 0;
-      for(const id of ids)
-      {
-        console.log(data[index])
-        const dataInstance = (data[index++]);
+      for (const id of ids) {
+        console.log(data[index]);
+        const dataInstance = data[index++];
         console.log(dataInstance);
 
-        dataProvider.update(resource,{id:id, data:dataInstance})
-      } 
+        dataProvider.update(resource, { id: id, data: dataInstance });
+      }
     }
     return { data, status: 200 };
   },
@@ -83,34 +80,9 @@ export const AuthTeachersProvider = {
     return { data: ids, status: 200 };
   },
 
-
-
-  // createEmails: async (resource, params) => {
-  //   const { ids,data } = params;
-
-  //   for (const id of ids) {
-  //     const fieldPath = new FieldPath("teachers", id);
-  //     console.log(id);
-  //     // const x  = await db
-  //     // .collection(MAPPING.DATA)
-  //     // .doc(MAPPING.AUTH_TEACHERS)
-  //     // .update(fieldPath, data);
-    
-  //     // console.log("db.collection("+MAPPING.DATA+").doc("+MAPPING.AUTH_TEACHERS+").update("+fieldPath+", "+data+")");
-  //     // await db
-  //     // .collection(MAPPING.DATA)
-  //     // .doc(MAPPING.AUTH_TEACHERS)
-  //     // .set(fieldPath, data,{merge:true});
-
-  //     const docRef = db.collection('data').doc('auth_teacher')
-  //     docRef.update({'teachers':{ id: {'created':true} }})
-  //       .then(() => {
-  //         console.log("Document successfully updated!");
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error updating document: ", error);
-  //       });
-  //   }
-  //   return { data:ids, status: 200 };
-  // },
+  createEmails: async (selectedIds) => {
+    const createAccountApi = httpsCallable(cloudFunctions, "createAccounts");
+    const response = await (await createAccountApi(selectedIds)).data;
+    return response;
+  },
 };
