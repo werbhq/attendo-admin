@@ -35,7 +35,6 @@ export const AuthTeachersProvider = {
 
   update: async (resource, params) => {
     const { id, data } = params;
-    console.log(params);
 
     const fieldPath = new FieldPath("teachers", id);
     await db
@@ -52,10 +51,7 @@ export const AuthTeachersProvider = {
     if (data !== undefined && data.length !== 0) {
       let index = 0;
       for (const id of ids) {
-        console.log(data[index]);
         const dataInstance = data[index++];
-        console.log(dataInstance);
-
         dataProvider.update(resource, { id: id, data: dataInstance });
       }
     }
