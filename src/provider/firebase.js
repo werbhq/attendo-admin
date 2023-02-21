@@ -6,7 +6,7 @@ import configProd from "./config/prod.json";
 import configDev from "./config/dev.json";
 import CustomProviders from "./customProviders";
 import firebase from "firebase/compat/app";
-import { getFunctions } from "firebase/functions";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
@@ -28,8 +28,8 @@ export const cloudFunctions = getFunctions();
 
 if (kMode === "emulate" && process.env.NODE_ENV !== "production") {
   firebase.firestore().useEmulator("localhost", 8090);
+  connectFunctionsEmulator(cloudFunctions, "localhost", 5001);
   firebase.auth().useEmulator("http://localhost:9099/");
-  //firebase.functions().useEmulator("localhost", 5001);
   //firebase.storage().useEmulator("localhost", 9199);
 }
 
