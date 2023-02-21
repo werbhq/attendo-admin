@@ -24,7 +24,7 @@ export const authProvider =
 export const db = dataProviderLegacy.app.firestore();
 export const cloudFunctions = getFunctions();
 
-if (kMode === "prod") {
+if (kMode === "emulate") {
   firebase.firestore().useEmulator("localhost", 8090);
   firebase.auth().useEmulator("http://localhost:9099/");
   //firebase.functions().useEmulator("localhost", 5001);
