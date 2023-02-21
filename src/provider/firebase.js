@@ -7,26 +7,26 @@ import configDev from "./config/dev.json";
 import CustomProviders from "./customProviders";
 import firebase from "firebase/compat/app";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { MODE } from "../Utils/helpers";
+import { kMode } from "../config";
 export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
 const options = {};
-const kMode = "emulate"; // dev, prod, emulate
+const isProd = kMode === MODE.PROD || process.env.NODE_ENV === "production";
 
-export const dataProviderLegacy =
-  kMode === "prod" || process.env.NODE_ENV === "production"
-    ? FirebaseDataProvider(configProd, options)
-    : FirebaseDataProvider(configDev, options);
+export const dataProviderLegacy = isProd
+  ? FirebaseDataProvider(configProd, options)
+  : FirebaseDataProvider(configDev, options);
 
-export const authProvider =
-  kMode === "prod" || process.env.NODE_ENV === "production"
-    ? FirebaseAuthProvider(configProd, options)
-    : FirebaseAuthProvider(configDev, options);
+export const authProvider = isProd
+  ? FirebaseAuthProvider(configProd, options)
+  : FirebaseAuthProvider(configDev, options);
 
 export const db = dataProviderLegacy.app.firestore();
 export const cloudFunctions = getFunctions();
 
-if (kMode === "emulate" && process.env.NODE_ENV !== "production") {
+if (kMode === MODE.EMULATOR && process.env.NODE_ENV !== "production") {
   firebase.firestore().useEmulator("localhost", 8090);
   connectFunctionsEmulator(cloudFunctions, "localhost", 5001);
   firebase.auth().useEmulator("http://localhost:9099/");

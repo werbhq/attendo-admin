@@ -10,7 +10,12 @@ export const convertSingleValueListToSelectList = (value) => {
 };
 
 export const getClassroomId = (data) => {
-  const dataIdSet = [data.batch.course, data.batch.yearOfJoining, data.branch, data.name];
+  const dataIdSet = [
+    data.batch.course,
+    data.batch.yearOfJoining,
+    data.branch,
+    data.name,
+  ];
   if (data.isDerived) dataIdSet.push(data.subjectId);
   return dataIdSet.join("-").toUpperCase();
 };
@@ -59,4 +64,10 @@ export const sorter = (params, data) => {
   }
 
   return data;
+};
+
+export const MODE = {
+  PROD: "prod",
+  DEV: "dev",
+  EMULATOR: "emulate",
 };
