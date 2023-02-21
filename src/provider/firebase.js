@@ -23,14 +23,15 @@ export const authProvider =
     ? FirebaseAuthProvider(configProd, options)
     : FirebaseAuthProvider(configDev, options);
 
-export const db = dataProviderLegacy.app.firestore();
-export const cloudFunctions = getFunctions();
-
 if (kMode === "emulate" && process.env.NODE_ENV !== "production") {
   firebase.firestore().useEmulator("localhost", 8090);
+  firebase.functions().useEmulator("localhost", 5001);
   firebase.auth().useEmulator("http://localhost:9099/");
   //firebase.storage().useEmulator("localhost", 9199);
 }
+
+export const db = dataProviderLegacy.app.firestore();
+export const cloudFunctions = getFunctions();
 
 const getCustomConvertor = async (resource, params, method) => {
   const provider = CustomProviders.find((e) => e.resource === resource);
