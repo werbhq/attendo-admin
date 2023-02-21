@@ -2,8 +2,8 @@ import {
   FirebaseAuthProvider,
   FirebaseDataProvider,
 } from "react-admin-firebase";
-import config from "./config.json";
-import config2 from "./config2.json";
+import configProd from "./config/prod.json";
+import configDev from "./config/dev.json";
 import CustomProviders from "./customProviders";
 import firebase from "firebase/compat/app";
 import { getFunctions } from "firebase/functions";
@@ -14,17 +14,19 @@ const options = {};
 const kMode = "prod"; // dev, prod, emulate
 
 export const dataProviderLegacy =
-  kMode === "prod"
-    ? FirebaseDataProvider(config, options)
-    : FirebaseDataProvider(config2, options);
+  kMode === "prod" || process.env.NODE_ENV === "production"
+    ? FirebaseDataProvider(configProd, options)
+    : FirebaseDataProvider(configDev, options);
+
 export const authProvider =
-  kMode === "prod"
-    ? FirebaseAuthProvider(config, options)
-    : FirebaseAuthProvider(config2, options);
+  kMode === "prod" || process.env.NODE_ENV === "production"
+    ? FirebaseAuthProvider(configProd, options)
+    : FirebaseAuthProvider(configDev, options);
+
 export const db = dataProviderLegacy.app.firestore();
 export const cloudFunctions = getFunctions();
 
-if (kMode === "prod") {
+if (kMode === "emulate" && process.env.NODE_ENV !== "production") {
   firebase.firestore().useEmulator("localhost", 8090);
   firebase.auth().useEmulator("http://localhost:9099/");
   //firebase.functions().useEmulator("localhost", 5001);
