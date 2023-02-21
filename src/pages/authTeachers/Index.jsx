@@ -6,8 +6,8 @@ import AuthorizedTeacherShow from "./Show";
 import AuthorizedTeacherEdit from "./Edit";
 import AuthorizedTeacherCreate from "./Create";
 
-const Classroom = {
-  name: MAPPING.AUTH_TEACHERS ,
+const AuthTeachers = {
+  name: MAPPING.AUTH_TEACHERS,
   icon,
   options: { label: "Teachers" },
   list: AuthorizedTeacherList,
@@ -16,4 +16,4 @@ const Classroom = {
   create: AuthorizedTeacherCreate,
 };
 
-export default Classroom;
+export default AuthTeachers;

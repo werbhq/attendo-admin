@@ -231,7 +231,7 @@ const ClassroomsCreate = () => {
     const classroomId = new Schemes(null).isDerived(data.name)
       ? getId(data)
       : getClassroomId(data);
-    console.log(classroomId);
+
     return {
       ...data,
       id: classroomId,

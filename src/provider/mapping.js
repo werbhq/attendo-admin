@@ -1,5 +1,6 @@
 export const MAPPING = {
   SUBJECT: "subjects",
+  TEACHERS: "teachers",
   CLASSROOMS: "classrooms",
   STUDENTS: "classrooms/students",
   SEMESTERS: "semesters",

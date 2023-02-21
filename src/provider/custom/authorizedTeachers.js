@@ -1,5 +1,7 @@
+import { httpsCallable } from "firebase/functions";
 import { sorter } from "../../Utils/helpers";
 import {
+  cloudFunctions,
   dataProvider,
   dataProviderLegacy,
   db,
@@ -43,6 +45,19 @@ export const AuthTeachersProvider = {
     return { data, status: 200 };
   },
 
+  updateMany: async (resource, params) => {
+    const { ids, data } = params;
+
+    if (data !== undefined && data.length !== 0) {
+      let index = 0;
+      for (const id of ids) {
+        const dataInstance = data[index++];
+        dataProvider.update(resource, { id: id, data: dataInstance });
+      }
+    }
+    return { data, status: 200 };
+  },
+
   delete: async (resource, params) => {
     const { id } = params;
 
@@ -59,5 +74,11 @@ export const AuthTeachersProvider = {
     const { ids } = params;
     for (const id of ids) await dataProvider.delete(resource, { id });
     return { data: ids, status: 200 };
+  },
+
+  createEmails: async (selectedIds) => {
+    const createAccountApi = httpsCallable(cloudFunctions, "createAccounts");
+    const response = await (await createAccountApi(selectedIds)).data;
+    return response;
   },
 };

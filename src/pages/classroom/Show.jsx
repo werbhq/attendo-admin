@@ -111,10 +111,8 @@ export const ClassroomShow = () => {
   }
   const [semester, setSemester] = useState(1);
   const [semesterChoices, setSemesterChoices] = useState([]);
-  console.log("show classroom called");
 
   if (semesterChoices.length === 0) {
-    console.log("getting sub from show classroom", semesterChoices);
     dataProvider
       .getOne(MAPPING.SUBJECT, {
         id: record.batch === [] ? "" : record.batch.schemeId,
