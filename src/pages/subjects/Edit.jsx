@@ -22,7 +22,6 @@ import {
   DeleteButtonDialouge,
 } from "./components/CustomButtons";
 import { useParams } from "react-router-dom";
-import { convertSingleValueListToSelectList } from "../../Utils/helpers";
 
 const url = MAPPING.SUBJECT;
 
@@ -33,12 +32,11 @@ const SubjectEdit = () => {
   const redirect = useRedirect();
 
   const dataProvider = useDataProvider();
-  const [courses, setCourses] = React.useState([]);
-  if (courses.length === 0) {
-    dataProvider.getList(MAPPING.SEMESTERS).then((e) => {
-      setCourses(e.data.map(({ id }) => id));
-    });
-  }
+  const possibleValues = ["BTECH", "MTECH"];
+  const choices = possibleValues.map((value) => ({
+    id: value,
+    name: value,
+  }));
 
   const deleteAll = async () => {
     await dataProvider.delete(url, {
@@ -78,7 +76,7 @@ const SubjectEdit = () => {
         <TextInput source="organization" required />
         <SelectInput
           source="course"
-          choices={courses.map(convertSingleValueListToSelectList)}
+          choices={choices}
           validate={[required()]}
           label="course"
         />

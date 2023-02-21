@@ -17,6 +17,7 @@ import {
   Show,
   FunctionField,
   ReferenceField,
+  SimpleShowLayout,
   Datagrid,
   Tab,
   TabbedShowLayout,
@@ -24,7 +25,6 @@ import {
   EmailField,
   useDataProvider,
   useUnselectAll,
-  SingleFieldList,
   useShowController,
   ArrayField,
   ListContextProvider,
@@ -109,17 +109,23 @@ export const ClassroomShow = () => {
   if (record?.isDerived) {
     listContext.onUnselectItems = virtualClassEditSaveHandler;
   }
-
   const [semester, setSemester] = useState(1);
   const [semesterChoices, setSemesterChoices] = useState([]);
+  console.log("show classroom called");
 
-  if (semesterChoices.length === 0 && record?.course) {
-    dataProvider.getOne(MAPPING.SEMESTERS, { id: record.course }).then((e) => {
-      const { totalSemesters } = e.data;
-      const semesters = [];
-      for (let i = 1; i <= totalSemesters; i++) semesters.push(i);
-      setSemesterChoices(semesters);
-    });
+  if (semesterChoices.length === 0) {
+    console.log("getting sub from show classroom", semesterChoices);
+    dataProvider
+      .getOne(MAPPING.SUBJECT, {
+        id: record.batch === [] ? "" : record.batch.schemeId,
+      })
+      .then((e) => {
+        const totalSemesters = e.data.semesters.length;
+        const semesters = [];
+        for (let i = 0; i < totalSemesters; i++)
+          semesters.push(e.data.semesters[i].semester);
+        setSemesterChoices(semesters);
+      });
   }
 
   useEffect(() => {
@@ -137,22 +143,33 @@ export const ClassroomShow = () => {
       ({ id, regNo, rollNo, name, attendance }) => {
         const data = { id, regNo, rollNo, name };
         attendance.forEach((e) => {
-          data[`${e.name} [${e.subjectId.toUpperCase()}]`] =
+          data[`${e.name} [${e.subject.id.toUpperCase()}]`] =
             e.percentage === -1 ? "-" : `${e.percentage}%`;
         });
         return data;
       }
     );
-
-    jsonExport(
-      dataForExport,
-      {
-        headers: headersReports,
-      },
-      (err, csv) => {
-        downloadCSV(csv, `${record.id} S${record.semester} Report`);
-      }
-    );
+    if (record.isDerived) {
+      jsonExport(
+        dataForExport,
+        {
+          headers: headersReports,
+        },
+        (err, csv) => {
+          downloadCSV(csv, `${record.id} S${record.semester} Report`);
+        }
+      );
+    } else {
+      jsonExport(
+        dataForExport,
+        {
+          headers: headersReports,
+        },
+        (err, csv) => {
+          downloadCSV(csv, `${record.id} S${record.batch.semester} Report`);
+        }
+      );
+    }
   };
 
   const ReporterToolBar = () => (
@@ -183,65 +200,78 @@ export const ClassroomShow = () => {
       <TabbedShowLayout>
         {/* Summary */}
         <Tab label="summary">
-          <TextField source="id" />
-          <ReferenceField
-            source="schemeId"
-            reference={MAPPING.SUBJECT}
-            link="show"
-          >
+          <SimpleShowLayout>
             <TextField source="id" />
-          </ReferenceField>
-          <ReferenceField
-            source="course"
-            reference={MAPPING.SEMESTERS}
-            link="show"
-          >
-            <TextField source="id" />
-          </ReferenceField>
-          <TextField source="year" />
-          <TextField source="semester" emptyText="-" />
-          <FunctionField
-            label="Branch"
-            render={(record) => record.branch.toUpperCase()}
-          ></FunctionField>
-          <FunctionField
-            label="Name"
-            render={(record) =>
-              Schemes.classNames.find(({ id }) => record.name === id).name
-            }
-          ></FunctionField>
-          {!!record?.isDerived && (
-            <TextField source="subjectName" label="Subject"></TextField>
-          )}
+            <FunctionField
+              label="Branch"
+              render={(record) => record.branch.toUpperCase()}
+            ></FunctionField>
+            <FunctionField
+              label="Name"
+              render={(record) =>
+                Schemes.classNames.find(({ id }) => record.name === id).name
+              }
+            ></FunctionField>
+            {!!record?.isDerived && (
+              <TextField source="subject.name" label="Subject"></TextField>
+            )}
 
-          <BooleanField source="isDerived" label="Virtual Class" />
-          {!!record?.isDerived && (
-            <ArrayField source="Parent Classes">
-              <ul style={{ padding: 0, margin: 0 }}>
-                {record.parentClasses === undefined
-                  ? null
-                  : record.parentClasses.map((e) => (
-                      <Chip key={e} sx={{ ml: 0.5, mt: 1 }} label={e} />
-                    ))}
-              </ul>
-            </ArrayField>
-          )}
-          {!!record?.isDerived && (
-            <ArrayField source="Teachers">
-              <ul style={{ padding: 0, margin: 0 }}>
-                {record.teachers === undefined
-                  ? null
-                  : record.teachers.map((e) => (
-                      <Chip key={e.id} sx={{ ml: 0.5, mt: 1 }} label={e.name} />
-                    ))}
-              </ul>
-            </ArrayField>
-          )}
-          <FunctionField
-            label="Students Count"
-            render={(record) => record.students.length}
-          ></FunctionField>
+            <BooleanField source="isDerived" label="Virtual Class" />
+            {!!record?.isDerived && (
+              <ArrayField source="Parent Classes">
+                <ul style={{ padding: 0, margin: 0 }}>
+                  {record.parentClasses === undefined
+                    ? "-"
+                    : record.parentClasses.map((e) => (
+                        <Chip key={e} sx={{ ml: 0.5, mt: 1 }} label={e} />
+                      ))}
+                </ul>
+              </ArrayField>
+            )}
+            {!!record?.isDerived && (
+              <ArrayField source="Teachers">
+                <ul style={{ padding: 0, margin: 0 }}>
+                  {record.teachers === undefined
+                    ? "-"
+                    : record.teachers.map((e) => (
+                        <Chip
+                          key={e.id}
+                          sx={{ ml: 0.5, mt: 1 }}
+                          label={e.name}
+                        />
+                      ))}
+                </ul>
+              </ArrayField>
+            )}
+            {!!record?.isDerived && (
+              <TextField source="semester" label="Semester" emptyText="-" />
+            )}
+            <FunctionField
+              label="Students Count"
+              render={(record) => record.students.length}
+            ></FunctionField>
+            <p
+              class="MuiTypography-root MuiTypography-body1 RaLabeled-label css-mes6ti-MuiTypography-root"
+              sx={{ fontSize: 2 }}
+            >
+              <span>Batch</span>
+            </p>
+          </SimpleShowLayout>
 
+          <SimpleShowLayout sx={{ ml: 2, mt: -3 }}>
+            <TextField source="batch.name" label="Batch Name" />
+            <BooleanField source="batch.running" label="Running" />
+            <TextField source="batch.schemeId" label="Scheme Id" />
+            <TextField source="batch.course" label="Course" />
+            <TextField source="batch.yearOfJoining" label="Year Of Joining" />
+            {!record?.isDerived && (
+              <TextField
+                source="batch.semester"
+                label="Semester"
+                emptyText="-"
+              />
+            )}{" "}
+          </SimpleShowLayout>
           <div style={{ margin: "20px 0px" }}>
             <Stack direction="row" spacing={2}>
               <Button
@@ -271,7 +301,7 @@ export const ClassroomShow = () => {
             direction="row"
             justifyContent={"space-between"}
           >
-            {record?.isDerived ? (
+            {!!record?.isDerived ? (
               <Button
                 size="medium"
                 variant="contained"

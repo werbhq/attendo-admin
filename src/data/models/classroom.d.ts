@@ -1,4 +1,5 @@
 import type { Student } from './student';
+import type { BatchShort } from './batch';
 
 export interface ClassroomNonVirtual {
     id: string;
@@ -7,6 +8,7 @@ export interface ClassroomNonVirtual {
     course: string;
     year: number;
     schemeId: string;
+    batch: BatchShort;
 }
 
 export interface ClassroomShort extends ClassroomNonVirtual {
@@ -18,12 +20,9 @@ export interface ClassroomShort extends ClassroomNonVirtual {
     semester?: number;
 }
 
-export interface ClassroomShortTeacher extends ClassroomShort {
-    semester: number;
-}
-
 export interface Classroom extends ClassroomShort {
     students: Student[];
+    batch: Batch;
 }
 
 export interface ClassroomIndex {

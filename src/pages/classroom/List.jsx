@@ -14,7 +14,7 @@ import { Schemes } from "../../Utils/Schemes";
 
 const filters = [
   <SearchInput source="id" placeholder="Enter Id" alwaysOn resettable />,
-  <TextInput source="course" resettable />,
+  <TextInput source="batch" resettable />,
   <TextInput source="branch" resettable />,
   <TextInput source="name" resettable />,
   <QuickFilter source="isDerived" label="Virtual" defaultValue={true} />,
@@ -25,21 +25,16 @@ const ClassroomsList = () => {
     <List exporter={false} filters={filters}>
       <Datagrid rowClick="show">
         <TextField source="id" />
-        <ReferenceField
-          source="course"
-          reference={MAPPING.SEMESTERS}
-          link="show"
-        >
-          <TextField source="id" />
-        </ReferenceField>
+        <TextField source="batch.name" label="Batch"/>
+
         <TextField
-          source="subjectName"
+          source="subject.name"
           label="Subject"
           emptyText="-"
           sortable={false}
         />
-        <TextField source="year" />
-        <TextField source="semester" emptyText="-" sortable={false} />
+        <TextField source="batch.yearOfJoining" label="Year"/>
+        <TextField source="batch.semester" label="Semester" />
         <FunctionField
           label="Branch"
           render={(record) => record.branch.toUpperCase()}
@@ -56,7 +51,7 @@ const ClassroomsList = () => {
           render={(record) => record.students.length}
         ></FunctionField>
         <ReferenceField
-          source="schemeId"
+          source="batch.schemeId"
           reference={MAPPING.SUBJECT}
           link="show"
         >

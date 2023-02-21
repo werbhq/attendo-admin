@@ -5,6 +5,7 @@ import { SemestersProvider } from "./custom/semesters";
 import { AuthTeachersProvider } from "./custom/authorizedTeachers";
 import { ReportsProvider } from "./custom/reports";
 import { TeachersProvider } from "./custom/teachers";
+import { BatchesProvider } from "./custom/batches";
 
 // ADD YOUR PROVIDERS HERE
 const CustomProviders = [
@@ -15,6 +16,7 @@ const CustomProviders = [
   TeachersProvider,
   AuthTeachersProvider,
   ReportsProvider,
+  BatchesProvider,
 ];
 
 export default CustomProviders;

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Create,
   SimpleForm,
@@ -13,18 +12,16 @@ import {
   NumberInput,
 } from "react-admin";
 import { MAPPING } from "../../provider/mapping";
-import { convertSingleValueListToSelectList } from "../../Utils/helpers";
 import { noSpaceValidation } from "../../Utils/validations";
 const url = MAPPING.SUBJECT;
 
 const SubjectCreate = () => {
   const dataProvider = useDataProvider();
-  const [courses, setCourses] = useState([]);
-  if (courses.length === 0) {
-    dataProvider.getList(MAPPING.SEMESTERS).then((e) => {
-      setCourses(e.data.map(({ id }) => id));
-    });
-  }
+  const possibleValues = ["BTECH", "MTECH"];
+  const choices = possibleValues.map((value) => ({
+    id: value,
+    name: value,
+  }));
 
   const refresh = useRefresh();
   const notify = useNotify();
@@ -63,7 +60,7 @@ const SubjectCreate = () => {
         />
         <SelectInput
           source="course"
-          choices={courses.map(convertSingleValueListToSelectList)}
+          choices={choices}
           validate={[required(), noSpaceValidation]}
           label="Course"
         />

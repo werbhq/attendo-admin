@@ -9,7 +9,7 @@ import AuthorizedTeacherCreate from "./Create";
 const AuthTeachers = {
   name: MAPPING.AUTH_TEACHERS,
   icon,
-  options: { label: "Authorized Teachers" },
+  options: { label: "Teachers" },
   list: AuthorizedTeacherList,
   show: AuthorizedTeacherShow,
   edit: AuthorizedTeacherEdit,

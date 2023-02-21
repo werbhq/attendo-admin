@@ -10,7 +10,7 @@ export const convertSingleValueListToSelectList = (value) => {
 };
 
 export const getClassroomId = (data) => {
-  const dataIdSet = [data.course, data.year, data.branch, data.name];
+  const dataIdSet = [data.batch.course, data.batch.yearOfJoining, data.branch, data.name];
   if (data.isDerived) dataIdSet.push(data.subjectId);
   return dataIdSet.join("-").toUpperCase();
 };
@@ -25,7 +25,6 @@ export const sorter = (params, data) => {
   const filters = params?.filter;
 
   if (filters && filters["subjectName"]) {
-    console.log(data);
   }
 
   if (sort) {
