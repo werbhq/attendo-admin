@@ -5,12 +5,14 @@ import {
   TextField,
   BooleanField,
   useShowController,
+  useNotify,
 } from "react-admin";
 import { AuthTeachersProvider } from "../../provider/custom/authorizedTeachers";
 import { Button } from "@mui/material";
 
 const AuthorizedTeacherShow = () => {
   const { record } = useShowController();
+  const notify = useNotify();
 
   return (
     <Show>
@@ -25,7 +27,11 @@ const AuthorizedTeacherShow = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => AuthTeachersProvider.createEmails(record.id)}
+            onClick={() =>
+              AuthTeachersProvider.createEmails([record.id]).then((e) => {
+                notify(e.message, { type: "success" });
+              })
+            }
           >
             Create Account
           </Button>

@@ -9,6 +9,7 @@ import {
   useTranslate,
   BulkDeleteButton,
   BulkUpdateButton,
+  useNotify,
 } from "react-admin";
 
 import { Chip } from "@mui/material";
@@ -27,12 +28,18 @@ const filters = [
 ];
 
 const AuthorizedTeacherList = () => {
+  const notify = useNotify();
+
   const PostBulkActionButtons = (data) => {
     return (
       <>
         <BulkUpdateButton
           label="Update Status"
-          onClick={() => AuthTeachersProvider.createEmails(data.selectedIds)}
+          onClick={() =>
+            AuthTeachersProvider.createEmails(data.selectedIds).then((e) => {
+              notify(e.message, { type: "success" });
+            })
+          }
         />
         <BulkDeleteButton />
       </>
