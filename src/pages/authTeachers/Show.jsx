@@ -21,7 +21,7 @@ const AuthorizedTeacherShow = () => {
         <BooleanField source="created" looseValue />
         <TextField source="branch" />
 
-        {record.created && (
+        {!record.created && (
           <Button
             variant="contained"
             color="primary"
