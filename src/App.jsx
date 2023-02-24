@@ -10,6 +10,7 @@ import Batches from "./pages/batches/Index";
 import AuthTeachers from "./pages/authTeachers/Index";
 import { authProvider, dataProvider } from "./provider/firebase";
 import { CustomLayout } from "./components/ui/Layout";
+import { customQueryClient } from "./provider/queryClient";
 
 const myTheme = {
   ...defaultTheme,
@@ -35,6 +36,7 @@ const App = () => (
     theme={myTheme}
     dataProvider={dataProvider}
     authProvider={authProvider}
+    queryClient={customQueryClient}
     dashboard={DashBoard}
     layout={CustomLayout}
   >
