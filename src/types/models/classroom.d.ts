@@ -1,7 +1,7 @@
 import type { Batch, BatchShort } from './batch';
 import type { Student } from './student';
 import type { Subject } from './subject';
-import { TeacherShort } from './teacher';
+import type { TeacherShort } from './teacher';
 
 export interface ClassroomSubject {
     id: string;
@@ -15,15 +15,6 @@ interface _Base {
     id: string;
     branch: string;
     name: string; // class name
-}
-
-export interface ClassroomTeacher extends _Base {
-    batch: BatchShort;
-    isDerived: boolean;
-    parentClasses?: {
-        [id: string]: ClassroomNonVirtual;
-    };
-    subject?: Subject;
 }
 
 // Classroom
@@ -61,6 +52,16 @@ export interface ClassroomIndex {
     classrooms: {
         [id: string]: ClassroomNonVirtual & ClassroomVirtual;
     };
+}
+
+// ClassroomShort
+export interface ClassroomShort extends _Base {
+    batch: BatchShort;
+    isDerived: boolean;
+    parentClasses?: {
+        [id: string]: ClassroomNonVirtualShort;
+    };
+    subject?: Subject;
 }
 
 export interface Classroom extends ClassroomNonVirtual, ClassroomVirtual {

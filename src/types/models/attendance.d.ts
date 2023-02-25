@@ -1,23 +1,45 @@
-import type { ClassroomTeacher } from './classroom';
-import { SemSubject } from './semAttendance';
+import type { ClassroomShort } from './classroom';
+import type { SemSubject } from './semAttendance';
 import type { Student } from './student';
 import type { Subject } from './subject';
 import type { TeacherShort } from './teacher';
-
+import type { Meta } from './meta';
 export interface Attendance {
     id: string;
     date: string;
     dateTime: number;
     hour: number;
-    classroom: ClassroomTeacher;
+    classroom: ClassroomShort;
     teacher: TeacherShort;
     subject: Subject;
+    semester: number;
     absentees?: string[];
     unrecognisedNames?: string[];
     lateComers?: string[];
-    semester: number;
+    leaves?: string[];
 }
 
+export interface AttendanceMini {
+    id: string;
+    date: string;
+    dateTime: number;
+    hour: number;
+    teacherId: string;
+    absentees?: string[];
+    unrecognisedNames?: string[];
+    lateComers?: string[];
+    leaves?: string[];
+}
+
+export interface SubjectAttendance {
+    id: string;
+    classroom: ClassroomShort;
+    teachers: TeacherShort[];
+    subject: Subject;
+    semester: number;
+    attendances: { [id: string]: AttendanceMini };
+    meta?: Meta;
+}
 export interface AutoAttendance extends Attendance {
     meetLookup: string;
     userName: string;
@@ -45,7 +67,7 @@ interface CustomSubject extends SemSubject {
     classId: string;
 }
 
-interface AttendanceReportResponse {
+export interface AttendanceReportResponse {
     semester: number;
     classroomId: string;
     subjects: CustomSubject[];
@@ -63,7 +85,7 @@ interface AttendanceReportResponse {
     }[];
 }
 
-interface AttendanceReportResponseFrontEnd {
+export interface AttendanceReportResponseFrontEnd {
     id: string;
     email: string;
     regNo: string;

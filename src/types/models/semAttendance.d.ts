@@ -1,6 +1,6 @@
-import type { ClassroomTeacher } from './classroom';
+import type { ClassroomShort } from './classroom';
 
-type ClassroomSem = Omit<ClassroomTeacher, 'parentClasses'>;
+type ClassroomSem = Omit<ClassroomShort, 'parentClasses'>;
 export interface ClassroomSemAttendance extends ClassroomSem {
     parentClasses?: string[];
 }

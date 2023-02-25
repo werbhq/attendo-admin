@@ -1,5 +1,5 @@
-import { ClassroomShort } from './classroom';
-import { Subject } from './subject';
+import type { ClassroomShort } from './classroom';
+import type { Subject } from './subject';
 
 interface Period {
     day: number;
@@ -24,6 +24,7 @@ export interface TeacherShort {
     id: string;
     name: string;
     emailId: string;
+    profilePic?: string;
 }
 
 export interface Teacher extends TeacherShort {
