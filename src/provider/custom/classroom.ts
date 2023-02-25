@@ -1,0 +1,174 @@
+import { sorter } from '../../Utils/helpers';
+import { DataProviderCustom } from '../../types/DataProvider';
+import { Classroom, ClassroomNonVirtualShort } from '../../types/models/classroom';
+
+import {
+    dataProvider,
+    dataProviderLegacy,
+    db,
+    defaultParams,
+    FieldPath,
+    FieldValue,
+} from '../firebase';
+import { MAPPING } from '../mapping';
+
+/**
+ * Don't call this directly
+ * Use dataProvider
+ */
+export const ClassroomProvider: DataProviderCustom<Classroom> = {
+    resource: MAPPING.CLASSROOMS,
+
+    // TODO: Enable after complete migration of master_classrooms
+    // getList: async (resource, params) => {
+    //     const { classrooms } = (
+    //         await db.collection(MAPPING.DATA).doc(MAPPING.MASTER_CLASSROOMS).get()
+    //     ).data() as ClassroomIndex;
+    //     const data = sorter(params, Object.values(classrooms));
+
+    //     return { data, total: data.length };
+    // },
+
+    // getOne: async (resource, params) => {
+    //     const { id } = params;
+    //     const { classrooms } = (
+    //         await db.collection(MAPPING.DATA).doc(MAPPING.MASTER_CLASSROOMS).get()
+    //     ).data() as ClassroomIndex;
+    //     return { data: classrooms[id] };
+    // },
+
+    getList: async (resource, params) => {
+        const { data: classrooms } = await dataProviderLegacy.getList<Classroom>(resource, params);
+        const data = sorter(params, Object.values(classrooms));
+        return { data, total: data.length };
+    },
+
+    getOne: async (resource, params) => {
+        const { data } = await dataProviderLegacy.getOne<Classroom>(resource, params);
+        return { data };
+    },
+
+    getMany: async (resource, params) => {
+        const { ids } = params;
+        const { data } = await dataProviderLegacy.getList<Classroom>(resource, defaultParams);
+        const finalData = data.filter((e) => ids.includes(e.id));
+        return { data: finalData, status: 200 };
+    },
+
+    getManyReference: async (resource, params) => {
+        const { ids } = params;
+        const { data } = await dataProviderLegacy.getList<Classroom>(resource, defaultParams);
+        const finalData = data.filter((e) => ids.includes(e.id));
+        return { data: finalData, status: 200 };
+    },
+
+    update: async (resource, params) => {
+        const { id, data } = params;
+
+        if (data.isDerived) {
+            const parentClasses: { [classId: string]: ClassroomNonVirtualShort } = {};
+            await Promise.all(
+                Array.isArray(data.parentClasses)
+                    ? data.parentClasses.map(async (e) => {
+                          const { data } = await dataProvider.getOne<Classroom>(resource, {
+                              id: e,
+                          });
+
+                          parentClasses[data.id] = {
+                              id: data.id,
+                              branch: data.branch,
+                              name: data.name,
+                              batch: {
+                                  course: data.batch.course,
+                                  yearOfJoining: data.batch.yearOfJoining,
+                                  id: data.batch.id,
+                                  name: data.batch.name,
+                                  schemeId: data.batch.schemeId,
+                              },
+                          };
+                      })
+                    : []
+            );
+
+            data.parentClasses = parentClasses;
+        }
+
+        await db
+            .collection(MAPPING.CLASSROOMS)
+            .doc(id as string)
+            .update({ ...data });
+
+        const fieldPath = new FieldPath('classrooms', id as string);
+        await db.collection(MAPPING.DATA).doc(MAPPING.MASTER_CLASSROOMS).update(fieldPath, data);
+
+        return { data: { ...data, id }, status: 200 };
+    },
+
+    create: async (resource, params) => {
+        const { data } = params;
+
+        const { exists: documentExists } = await db
+            .collection(MAPPING.CLASSROOMS)
+            .doc(data.id)
+            .get();
+
+        if (documentExists) throw new Error(`${data.id} classroom already exists`);
+
+        if (data.isDerived) {
+            const parentClasses: { [classId: string]: ClassroomNonVirtualShort } = {};
+
+            await Promise.all(
+                Array.isArray(data.parentClasses)
+                    ? data.parentClasses.map(async (e) => {
+                          const { data } = await dataProvider.getOne<Classroom>(resource, {
+                              id: e,
+                          });
+
+                          parentClasses[data.id] = {
+                              id: data.id,
+                              branch: data.branch,
+                              name: data.name,
+                              batch: {
+                                  course: data.batch.course,
+                                  yearOfJoining: data.batch.yearOfJoining,
+                                  id: data.batch.id,
+                                  name: data.batch.name,
+                                  schemeId: data.batch.schemeId,
+                              },
+                          };
+                      })
+                    : []
+            );
+
+            data.parentClasses = parentClasses;
+        }
+
+        await db.collection(MAPPING.CLASSROOMS).doc(data.id).set(data);
+
+        const fieldPath = new FieldPath('classrooms', data.id);
+        await db.collection(MAPPING.DATA).doc(MAPPING.MASTER_CLASSROOMS).update(fieldPath, data);
+
+        const record = data;
+
+        return { data: record, status: 200 };
+    },
+
+    delete: async (resource, params) => {
+        const { id } = params;
+        await db.collection(MAPPING.CLASSROOMS).doc(id).delete();
+
+        const fieldPath = new FieldPath('classrooms', id);
+        await db
+            .collection(MAPPING.DATA)
+            .doc(MAPPING.MASTER_CLASSROOMS)
+            .update(fieldPath, FieldValue.delete());
+
+        return { data: { id }, status: 200 };
+    },
+
+    deleteMany: async (resource, params) => {
+        const { ids } = params;
+        for (const id of ids) await dataProvider.delete(resource, { id });
+        return { data: ids, status: 200 };
+    },
+};
