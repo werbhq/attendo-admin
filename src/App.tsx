@@ -1,6 +1,5 @@
 import { Admin, defaultTheme, RaThemeOptions, Resource } from 'react-admin';
 import red from '@mui/material/colors/red';
-
 import Classroom from './pages/classroom/Index';
 import DashBoard from './pages/dashboard/Dashboard';
 import Subject from './pages/subjects';
