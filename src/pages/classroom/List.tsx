@@ -15,7 +15,8 @@ import QuickFilter from '../../components/ui/QuickFilter';
 
 const filters = [
     <SearchInput source="id" placeholder="Enter Id" alwaysOn resettable />,
-    <TextInput source="batch" resettable />,
+    <QuickFilter source="batch.running" label="Running" defaultValue={true} resettable />,
+    <TextInput source="batch.name" resettable />,
     <TextInput source="branch" resettable />,
     <TextInput source="name" resettable />,
     <QuickFilter source="isDerived" label="Virtual" defaultValue={true} />,
@@ -28,6 +29,7 @@ const ClassroomsList = () => {
                 <TextField source="id" />
                 <TextField source="batch.name" label="Batch" emptyText="-" />
                 <TextField source="subject.name" label="Subject" emptyText="-" sortable={false} />
+                <BooleanField source="batch.running" label="Running" />
                 <TextField source="batch.yearOfJoining" label="Year" emptyText="-" />
                 <TextField source="batch.semester" label="Semester" emptyText="-" />
                 <FunctionField
