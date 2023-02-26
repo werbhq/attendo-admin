@@ -23,8 +23,8 @@ const BatchesList = () => {
         <List exporter={false} filters={filters}>
             <Datagrid rowClick="show">
                 <TextField source="name" label="Batch Name" />
-                <ReferenceField source="course" reference={MAPPING.COURSES} />
-                <ReferenceField source="schemeId" reference={MAPPING.SUBJECT} />
+                <ReferenceField source="course" reference={MAPPING.COURSES} link="show" />
+                <ReferenceField source="schemeId" reference={MAPPING.SUBJECT} link="show" />
                 <TextField source="yearOfJoining" />
                 <BooleanField source="running" label="Running" />
                 <TextField source="semester" emptyText="-" sortable={false} />

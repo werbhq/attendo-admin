@@ -13,9 +13,9 @@ const BatchesShow = () => {
             <TabbedShowLayout>
                 <Tab label="summary">
                     <TextField source="id" />
-                    <ReferenceField source="course" reference={MAPPING.COURSES} />
+                    <ReferenceField source="course" reference={MAPPING.COURSES} link="show" />
                     <TextField source="name" label="Batch Name" />
-                    <ReferenceField source="schemeId" reference={MAPPING.SUBJECT} />
+                    <ReferenceField source="schemeId" reference={MAPPING.SUBJECT} link="show" />
                     <BooleanField source="running" />
                     <TextField source="semester" label="Semester" />
                     <TextField source="yearOfJoining" label="Year Of Joining" />
