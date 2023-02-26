@@ -1,4 +1,4 @@
-import icon from '@mui/icons-material/Article';
+import icon from '@mui/icons-material/CalendarMonth';
 import { MAPPING } from '../../provider/mapping';
 import BatchesCreate from './Create';
 import BatchesList from './List';
