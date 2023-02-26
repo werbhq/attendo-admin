@@ -14,6 +14,7 @@ const Batches: ResourceProps = {
     show: CourseShow,
     create: CourseCreate,
     edit: CourseEdit,
+    recordRepresentation: 'id',
 };
 
 export default Batches;

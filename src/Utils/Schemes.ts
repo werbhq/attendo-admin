@@ -16,8 +16,6 @@ export class Schemes {
         { id: 'e', name: 'Elective' },
     ];
 
-    static courses = ['BTECH', 'MTECH'];
-
     derivedClasses = ['h', 'm', 'e'];
 
     isDerived = (className: string | null) => this.derivedClasses.includes(className ?? '');

@@ -1,9 +1,9 @@
 import { Button, Stack } from '@mui/material';
-import { Show, Tab, TabbedShowLayout, TextField, FunctionField, BooleanField } from 'react-admin';
+import { Show, Tab, TabbedShowLayout, TextField, BooleanField, ReferenceField } from 'react-admin';
 import EditIcon from '@mui/icons-material/Edit';
 import { useState } from 'react';
 import EditSummary from './components/EditSummary';
-import { Batch } from '../../types/models/batch';
+import { MAPPING } from '../../provider/mapping';
 
 const BatchesShow = () => {
     const [summaryDialog, setSummaryDialog] = useState({ enable: false });
@@ -13,11 +13,7 @@ const BatchesShow = () => {
             <TabbedShowLayout>
                 <Tab label="summary">
                     <TextField source="id" />
-                    <FunctionField
-                        source="course"
-                        label="Course"
-                        render={(record: Batch) => record.course.toUpperCase()}
-                    />
+                    <ReferenceField source="course" reference={MAPPING.COURSES} />
                     <TextField source="name" label="Batch Name" />
                     <TextField source="schemeId" label="Scheme Id" />
                     <BooleanField source="running" />

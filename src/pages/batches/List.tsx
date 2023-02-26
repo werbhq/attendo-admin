@@ -1,5 +1,14 @@
-import { Datagrid, List, TextField, BooleanField, SearchInput, TextInput } from 'react-admin';
+import {
+    Datagrid,
+    List,
+    TextField,
+    BooleanField,
+    SearchInput,
+    TextInput,
+    ReferenceField,
+} from 'react-admin';
 import QuickFilter from '../../components/ui/QuickFilter';
+import { MAPPING } from '../../provider/mapping';
 
 const filters = [
     <SearchInput source="name" placeholder="Enter Batch Name" alwaysOn resettable />,
@@ -14,7 +23,7 @@ const BatchesList = () => {
         <List exporter={false} filters={filters}>
             <Datagrid rowClick="show">
                 <TextField source="name" label="Batch Name" />
-                <TextField source="course" />
+                <ReferenceField source="course" reference={MAPPING.COURSES} />
                 <TextField source="schemeId" />
                 <TextField source="yearOfJoining" />
                 <BooleanField source="running" label="Running" />

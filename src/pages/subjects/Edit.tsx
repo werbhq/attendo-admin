@@ -19,7 +19,10 @@ import { MAPPING } from '../../provider/mapping';
 import { CustomAdd, CustomDelete, DeleteButtonDialog } from './components/CustomButtons';
 import { useParams } from 'react-router-dom';
 import { SubjectDoc } from '../../types/models/subject';
-import { Schemes } from '../../Utils/Schemes';
+import { useState, useEffect } from 'react';
+import { Course } from '../../types/models/courses';
+import { defaultParams } from '../../provider/firebase';
+import { convertSingleValueListToSelectList } from '../../Utils/helpers';
 
 const url = MAPPING.SUBJECT;
 
@@ -28,13 +31,9 @@ const SubjectEdit = () => {
     const refresh = useRefresh();
     const notify = useNotify();
     const redirect = useRedirect();
-
     const dataProvider = useDataProvider();
-    const possibleValues = Schemes.courses;
-    const choices = possibleValues.map((value) => ({
-        id: value,
-        name: value,
-    }));
+
+    const [courseChoices, setCourseChoices] = useState<{ id: string; name: string }[]>([]);
 
     const deleteAll = async () => {
         await dataProvider.delete(url, {
@@ -68,6 +67,13 @@ const SubjectEdit = () => {
         redirect('show', url, data.id);
     };
 
+    useEffect(() => {
+        dataProvider.getList<Course>(MAPPING.COURSES, defaultParams).then((e) => {
+            setCourseChoices(e.data.map((e) => e.id).map(convertSingleValueListToSelectList));
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <Edit>
             <SimpleForm onSubmit={handleSubmit} toolbar={false}>
@@ -75,7 +81,7 @@ const SubjectEdit = () => {
                 <TextInput source="organization" required />
                 <SelectInput
                     source="course"
-                    choices={choices}
+                    choices={courseChoices}
                     validate={[required()]}
                     label="course"
                 />

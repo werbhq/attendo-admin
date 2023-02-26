@@ -28,7 +28,7 @@ const CourseCreate = () => {
             { data: { ...e, id: e.id.toUpperCase() } },
             {
                 onSuccess: () => {
-                    notify(`Added ${data.id}`, {
+                    notify(`Added ${data.id.toUpperCase()}`, {
                         type: 'success',
                     });
                     refresh();
