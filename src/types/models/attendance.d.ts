@@ -9,10 +9,10 @@ export interface Attendance {
     date: string;
     dateTime: number;
     hour: number;
+    semester: number;
     classroom: ClassroomShort;
     teacher: TeacherShort;
     subject: Subject;
-    semester: number;
     absentees?: string[];
     unrecognisedNames?: string[];
     lateComers?: string[];
@@ -45,7 +45,7 @@ export interface AutoAttendance extends Attendance {
     userName: string;
 }
 
-interface StudentAttendance extends Student {
+interface _StudentAttendance extends Student {
     attendance: {
         subjectId: string;
         percentage: number;
@@ -60,17 +60,17 @@ export interface AttendanceReport {
     semester?: number;
     classroomId: string;
     subjects: Subject[];
-    attendances: StudentAttendance[];
+    attendances: _StudentAttendance[];
 }
 
-interface CustomSubject extends SemSubject {
+interface _CustomSubject extends SemSubject {
     classId: string;
 }
 
 export interface AttendanceReportResponse {
     semester: number;
     classroomId: string;
-    subjects: CustomSubject[];
+    subjects: _CustomSubject[];
     attendances: {
         id: string;
         email: string;
