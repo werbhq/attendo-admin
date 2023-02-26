@@ -1,6 +1,6 @@
 import { sorter } from '../../Utils/helpers';
 import { DataProviderCustom } from '../../types/DataProvider';
-import { Semester } from '../../types/models/semester';
+import { Course } from '../../types/models/courses';
 import { dataProvider, dataProviderLegacy, db, FieldValue, FieldPath } from '../firebase';
 import { MAPPING } from '../mapping';
 
@@ -8,20 +8,20 @@ import { MAPPING } from '../mapping';
  * Don't call this directly
  * Use dataProvider
  */
-const SemestersProvider: DataProviderCustom<Semester> = {
-    resource: MAPPING.SEMESTERS,
+const CoursesProvider: DataProviderCustom<Course> = {
+    resource: MAPPING.COURSES,
 
     getList: async (resource, params) => {
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
-            id: MAPPING.SEMESTERS,
+            id: MAPPING.COURSES,
         });
-        const values = Object.values(data.courses) as Semester[];
+        const values = Object.values(data.courses) as Course[];
         return { data: sorter(params, values), total: values.length };
     },
 
     getOne: async (resource, params) => {
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
-            id: MAPPING.SEMESTERS,
+            id: MAPPING.COURSES,
         });
         return { data: data.courses[params.id], status: 200 };
     },
@@ -29,7 +29,7 @@ const SemestersProvider: DataProviderCustom<Semester> = {
     getMany: async (resource, params) => {
         const { ids } = params;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
-            id: MAPPING.SEMESTERS,
+            id: MAPPING.COURSES,
         });
 
         const dataResult = ids.map((e) => data.courses[e]);
@@ -38,19 +38,19 @@ const SemestersProvider: DataProviderCustom<Semester> = {
     },
 
     create: async (resource, params) => {
-        const { data, meta } = params;
+        const { data } = params;
 
-        const fieldPath = new FieldPath('courses', meta.id);
-        await db.collection(MAPPING.DATA).doc(MAPPING.SEMESTERS).update(fieldPath, data);
+        const fieldPath = new FieldPath('courses', data.id);
+        await db.collection(MAPPING.DATA).doc(MAPPING.COURSES).update(fieldPath, data);
 
-        return { data: { ...data, id: meta.id }, status: 200 };
+        return { data: data, status: 200 };
     },
 
     update: async (resource, params) => {
         const { id, data } = params;
 
         const fieldPath = new FieldPath('courses', id as string);
-        await db.collection(MAPPING.DATA).doc(MAPPING.SEMESTERS).update(fieldPath, data);
+        await db.collection(MAPPING.DATA).doc(MAPPING.COURSES).update(fieldPath, data);
 
         return { data, status: 200 };
     },
@@ -61,7 +61,7 @@ const SemestersProvider: DataProviderCustom<Semester> = {
         const fieldPath = new FieldPath('courses', id);
         await db
             .collection(MAPPING.DATA)
-            .doc(MAPPING.SEMESTERS)
+            .doc(MAPPING.COURSES)
             .update(fieldPath, FieldValue.delete());
 
         return { data: { id }, status: 200 };
@@ -74,4 +74,4 @@ const SemestersProvider: DataProviderCustom<Semester> = {
     },
 };
 
-export default SemestersProvider;
+export default CoursesProvider;

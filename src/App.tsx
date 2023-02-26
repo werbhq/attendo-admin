@@ -4,6 +4,7 @@ import Classroom from './pages/classroom/Index';
 import DashBoard from './pages/dashboard/Dashboard';
 import Subject from './pages/subjects';
 import Batches from './pages/batches';
+import Courses from './pages/courses';
 import AuthTeachers from './pages/authTeachers';
 import { authProvider, dataProvider } from './provider/firebase';
 import { CustomLayout } from './components/ui/Layout';
@@ -38,6 +39,7 @@ const App = () => (
         layout={CustomLayout}
     >
         <Resource {...AuthTeachers} />
+        <Resource {...Courses} />
         <Resource {...Subject} />
         <Resource {...Batches} />
         <Resource {...Classroom} />

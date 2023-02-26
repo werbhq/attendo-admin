@@ -3,7 +3,7 @@ export const MAPPING = {
     TEACHERS: 'teachers',
     CLASSROOMS: 'classrooms',
     STUDENTS: 'classrooms/students',
-    SEMESTERS: 'semesters',
+    COURSES: 'courses',
     DATA: 'data',
     AUTH_TEACHERS: 'authorized_teachers',
     MASTER_CLASSROOMS: 'master_classrooms',

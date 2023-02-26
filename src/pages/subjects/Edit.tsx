@@ -19,6 +19,7 @@ import { MAPPING } from '../../provider/mapping';
 import { CustomAdd, CustomDelete, DeleteButtonDialog } from './components/CustomButtons';
 import { useParams } from 'react-router-dom';
 import { SubjectDoc } from '../../types/models/subject';
+import { Schemes } from '../../Utils/Schemes';
 
 const url = MAPPING.SUBJECT;
 
@@ -29,7 +30,7 @@ const SubjectEdit = () => {
     const redirect = useRedirect();
 
     const dataProvider = useDataProvider();
-    const possibleValues = ['BTECH', 'MTECH'];
+    const possibleValues = Schemes.courses;
     const choices = possibleValues.map((value) => ({
         id: value,
         name: value,
