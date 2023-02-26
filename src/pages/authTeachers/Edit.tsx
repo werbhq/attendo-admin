@@ -5,7 +5,7 @@ const AuthorizedTeacherEdit = () => (
         <SimpleForm style={{ alignItems: 'stretch' }}>
             <TextInput disabled source="id" />
             <TextInput source="email" validate={required()} />
-            <TextInput source="userName" validate={required()} />
+            <TextInput source="userName" label="name" validate={required()} />
             <TextInput source="branch" validate={required()} />
         </SimpleForm>
     </Edit>

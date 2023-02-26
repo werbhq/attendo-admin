@@ -6,6 +6,7 @@ import {
     BooleanField,
     useShowController,
     useNotify,
+    useRefresh,
 } from 'react-admin';
 import { AuthTeachersProviderExtended } from '../../provider/custom/authorizedTeachers';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -14,6 +15,7 @@ import { useState } from 'react';
 const AuthorizedTeacherShow = () => {
     const { record } = useShowController();
     const notify = useNotify();
+    const refresh = useRefresh();
     const [loading, setLoading] = useState(false);
 
     return (
@@ -21,7 +23,7 @@ const AuthorizedTeacherShow = () => {
             <SimpleShowLayout>
                 <TextField source="id" />
                 <EmailField source="email" />
-                <TextField source="userName" />
+                <TextField source="userName" label="Name" />
                 <BooleanField source="created" looseValue />
                 <TextField source="branch" />
 
@@ -36,6 +38,7 @@ const AuthorizedTeacherShow = () => {
                                 setLoading(false);
                                 notify(e.message, { type: e.success ? 'success' : 'error' });
                             });
+                            refresh();
                         }}
                     >
                         Create Account

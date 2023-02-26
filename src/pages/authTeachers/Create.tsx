@@ -40,7 +40,7 @@ const AuthorizedTeacherCreate = () => {
         <Create>
             <SimpleForm style={{ alignItems: 'stretch' }} onSubmit={onSubmit}>
                 <TextInput source="email" validate={[required(), email()]} />
-                <TextInput source="userName" validate={required()} />
+                <TextInput source="userName" label="name" validate={required()} />
                 <TextInput source="branch" validate={required()} />
             </SimpleForm>
         </Create>

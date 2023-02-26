@@ -11,6 +11,7 @@ import {
     BulkUpdateButton,
     useNotify,
     BulkActionProps,
+    useRefresh,
 } from 'react-admin';
 
 import { Chip } from '@mui/material';
@@ -30,6 +31,7 @@ const filters = [
 
 const AuthorizedTeacherList = () => {
     const notify = useNotify();
+    const refresh = useRefresh();
 
     const PostBulkActionButtons = (data: BulkActionProps) => {
         return (
@@ -41,6 +43,7 @@ const AuthorizedTeacherList = () => {
                             data.selectedIds as string[]
                         ).then((e) => {
                             notify(e.message, { type: e.success ? 'success' : 'error' });
+                            refresh();
                         })
                     }
                 />
@@ -53,7 +56,7 @@ const AuthorizedTeacherList = () => {
         <List exporter={false} filters={filters}>
             <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons />}>
                 <EmailField source="email" />
-                <TextField source="userName" />
+                <TextField source="userName" label="Name" />
                 <BooleanField source="created" looseValue sortable={false} />
                 <TextField source="branch" />
             </Datagrid>
