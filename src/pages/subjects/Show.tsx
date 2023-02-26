@@ -1,8 +1,9 @@
-import { TextField, Show, Tab, TabbedShowLayout, FunctionField } from 'react-admin';
+import { TextField, Show, Tab, TabbedShowLayout, FunctionField, ReferenceField } from 'react-admin';
 import SubjectTable from './components/show/SubjectTable';
 import SemesterTable from './components/show/SemesterTable';
 import { CustomSemesterField } from './components/CustomFields';
 import { SubjectDoc } from '../../types/models/subject';
+import { MAPPING } from '../../provider/mapping';
 
 const SubjectShow = () => {
     return (
@@ -11,7 +12,7 @@ const SubjectShow = () => {
                 <Tab label="summary">
                     <TextField source="id" />
                     <TextField source="organization" />
-                    <TextField source="course" />
+                    <ReferenceField source="course" reference={MAPPING.COURSES} link="show" />
                     <TextField source="year" />
                     <FunctionField
                         label="Semester"

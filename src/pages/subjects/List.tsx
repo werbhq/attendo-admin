@@ -6,9 +6,11 @@ import {
     FunctionField,
     SearchInput,
     TextInput,
+    ReferenceField,
 } from 'react-admin';
 import { CustomSemesterField } from './components/CustomFields';
 import { SubjectDoc } from '../../types/models/subject';
+import { MAPPING } from '../../provider/mapping';
 
 const filters = [
     <SearchInput source="id" alwaysOn resettable />,
@@ -22,7 +24,7 @@ const SubjectList = () => (
         <Datagrid rowClick="show">
             <TextField source="id" />
             <TextField source="organization" />
-            <TextField source="course" />
+            <ReferenceField source="course" reference={MAPPING.COURSES} link="show" />
             <TextField source="year" />
             <FunctionField
                 label="Semester"
