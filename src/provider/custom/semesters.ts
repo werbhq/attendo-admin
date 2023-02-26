@@ -8,7 +8,7 @@ import { MAPPING } from '../mapping';
  * Don't call this directly
  * Use dataProvider
  */
-export const SemestersProvider: DataProviderCustom<Semester> = {
+const SemestersProvider: DataProviderCustom<Semester> = {
     resource: MAPPING.SEMESTERS,
 
     getList: async (resource, params) => {
@@ -73,3 +73,5 @@ export const SemestersProvider: DataProviderCustom<Semester> = {
         return { data: ids, status: 200 };
     },
 };
+
+export default SemestersProvider;

@@ -16,7 +16,7 @@ import { AuthorizedTeacher } from '../../types/models/teacher';
  * Don't call this directly
  * Use dataProvider
  */
-export const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
+const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
     resource: MAPPING.AUTH_TEACHERS,
 
     getList: async (resource, params) => {
@@ -101,3 +101,5 @@ export const AuthTeachersProviderExtended = {
         return response as { message: string; success: boolean };
     },
 };
+
+export default AuthTeachersProvider;

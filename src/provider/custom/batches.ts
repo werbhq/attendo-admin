@@ -8,7 +8,7 @@ import { MAPPING } from '../mapping';
  * Don't call this directly
  * Use dataProvider
  */
-export const BatchesProvider: DataProviderCustom<Batch> = {
+const BatchesProvider: DataProviderCustom<Batch> = {
     resource: MAPPING.BATCHES,
 
     getList: async (resource, params) => {
@@ -77,3 +77,5 @@ export const BatchesProvider: DataProviderCustom<Batch> = {
         return { data: ids, status: 200 };
     },
 };
+
+export default BatchesProvider;

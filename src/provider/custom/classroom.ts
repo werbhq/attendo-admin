@@ -12,30 +12,27 @@ import {
 } from '../firebase';
 import { MAPPING } from '../mapping';
 
+const getClassroomShort = (data: Classroom) => {
+    return {
+        id: data.id,
+        branch: data.branch,
+        name: data.name,
+        batch: {
+            course: data.batch.course,
+            yearOfJoining: data.batch.yearOfJoining,
+            id: data.batch.id,
+            name: data.batch.name,
+            schemeId: data.batch.schemeId,
+        },
+    };
+};
+
 /**
  * Don't call this directly
  * Use dataProvider
  */
-export const ClassroomProvider: DataProviderCustom<Classroom> = {
+const ClassroomProvider: DataProviderCustom<Classroom> = {
     resource: MAPPING.CLASSROOMS,
-
-    // TODO: Enable after complete migration of master_classrooms
-    // getList: async (resource, params) => {
-    //     const { classrooms } = (
-    //         await db.collection(MAPPING.DATA).doc(MAPPING.MASTER_CLASSROOMS).get()
-    //     ).data() as ClassroomIndex;
-    //     const data = sorter(params, Object.values(classrooms));
-
-    //     return { data, total: data.length };
-    // },
-
-    // getOne: async (resource, params) => {
-    //     const { id } = params;
-    //     const { classrooms } = (
-    //         await db.collection(MAPPING.DATA).doc(MAPPING.MASTER_CLASSROOMS).get()
-    //     ).data() as ClassroomIndex;
-    //     return { data: classrooms[id] };
-    // },
 
     getList: async (resource, params) => {
         const { data: classrooms } = await dataProviderLegacy.getList<Classroom>(resource, params);
@@ -73,19 +70,7 @@ export const ClassroomProvider: DataProviderCustom<Classroom> = {
                           const { data } = await dataProvider.getOne<Classroom>(resource, {
                               id: e,
                           });
-
-                          parentClasses[data.id] = {
-                              id: data.id,
-                              branch: data.branch,
-                              name: data.name,
-                              batch: {
-                                  course: data.batch.course,
-                                  yearOfJoining: data.batch.yearOfJoining,
-                                  id: data.batch.id,
-                                  name: data.batch.name,
-                                  schemeId: data.batch.schemeId,
-                              },
-                          };
+                          parentClasses[data.id] = getClassroomShort(data);
                       })
                     : []
             );
@@ -117,28 +102,17 @@ export const ClassroomProvider: DataProviderCustom<Classroom> = {
         if (data.isDerived) {
             const parentClasses: { [classId: string]: ClassroomNonVirtualShort } = {};
 
-            await Promise.all(
-                Array.isArray(data.parentClasses)
-                    ? data.parentClasses.map(async (e) => {
-                          const { data } = await dataProvider.getOne<Classroom>(resource, {
-                              id: e,
-                          });
+            if (Array.isArray(data.parentClasses)) {
+                Promise.all(
+                    data.parentClasses.map(async (e) => {
+                        const { data } = await dataProvider.getOne<Classroom>(resource, {
+                            id: e,
+                        });
 
-                          parentClasses[data.id] = {
-                              id: data.id,
-                              branch: data.branch,
-                              name: data.name,
-                              batch: {
-                                  course: data.batch.course,
-                                  yearOfJoining: data.batch.yearOfJoining,
-                                  id: data.batch.id,
-                                  name: data.batch.name,
-                                  schemeId: data.batch.schemeId,
-                              },
-                          };
-                      })
-                    : []
-            );
+                        parentClasses[data.id] = parentClasses[data.id] = getClassroomShort(data);
+                    })
+                );
+            }
 
             data.parentClasses = parentClasses;
         }
@@ -172,3 +146,5 @@ export const ClassroomProvider: DataProviderCustom<Classroom> = {
         return { data: ids, status: 200 };
     },
 };
+
+export default ClassroomProvider;

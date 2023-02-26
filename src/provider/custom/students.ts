@@ -7,7 +7,7 @@ import { MAPPING } from '../mapping';
  * Don't call this directly
  * Use dataProvider
  */
-export const StudentsProvider: DataProviderCustom<Student[]> = {
+const StudentsProvider: DataProviderCustom<Student[]> = {
     resource: MAPPING.STUDENTS,
 
     update: async (resource, params) => {
@@ -42,3 +42,5 @@ export const StudentsProvider: DataProviderCustom<Student[]> = {
         return { data, status: 200 };
     },
 };
+
+export default StudentsProvider;

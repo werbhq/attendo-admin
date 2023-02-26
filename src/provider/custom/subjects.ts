@@ -10,7 +10,7 @@ type SubjectIndexCustom = SubjectIndex & { id: string };
  * Don't call this directly
  * Use dataProvider
  */
-export const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
+const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
     resource: MAPPING.SUBJECT,
 
     getList: async (resource, params) => {
@@ -82,3 +82,5 @@ export const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
         return { data: ids, status: 200 };
     },
 };
+
+export default SubjectsProvider;

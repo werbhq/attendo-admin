@@ -11,7 +11,7 @@ import {
  * Don't call this directly
  * Use dataProvider
  */
-export const ReportsProvider: DataProviderCustom<AttendanceReportResponseFrontEnd> = {
+const ReportsProvider: DataProviderCustom<AttendanceReportResponseFrontEnd> = {
     resource: MAPPING.REPORTS,
 
     getList: async (resource, params) => {
@@ -46,3 +46,5 @@ export const ReportsProvider: DataProviderCustom<AttendanceReportResponseFrontEn
         };
     },
 };
+
+export default ReportsProvider;
