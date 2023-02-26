@@ -15,7 +15,7 @@ const BatchesShow = () => {
                     <TextField source="id" />
                     <ReferenceField source="course" reference={MAPPING.COURSES} />
                     <TextField source="name" label="Batch Name" />
-                    <TextField source="schemeId" label="Scheme Id" />
+                    <ReferenceField source="schemeId" reference={MAPPING.SUBJECT} />
                     <BooleanField source="running" />
                     <TextField source="semester" label="Semester" />
                     <TextField source="yearOfJoining" label="Year Of Joining" />

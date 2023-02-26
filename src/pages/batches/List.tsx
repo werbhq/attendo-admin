@@ -24,7 +24,7 @@ const BatchesList = () => {
             <Datagrid rowClick="show">
                 <TextField source="name" label="Batch Name" />
                 <ReferenceField source="course" reference={MAPPING.COURSES} />
-                <TextField source="schemeId" />
+                <ReferenceField source="schemeId" reference={MAPPING.SUBJECT} />
                 <TextField source="yearOfJoining" />
                 <BooleanField source="running" label="Running" />
                 <TextField source="semester" emptyText="-" sortable={false} />

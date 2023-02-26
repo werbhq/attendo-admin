@@ -14,7 +14,6 @@ import {
 } from 'react-admin';
 import { useState, useMemo, useEffect } from 'react';
 import { MAPPING } from '../../provider/mapping';
-
 import { Schemes } from '../../Utils/Schemes';
 import { defaultParams } from '../../provider/firebase';
 import { Batch } from '../../types/models/batch';

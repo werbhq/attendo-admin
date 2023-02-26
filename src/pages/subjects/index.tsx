@@ -14,6 +14,7 @@ const Subject: ResourceProps = {
     show: SubjectShow,
     edit: SubjectEdit,
     create: SubjectCreate,
+    recordRepresentation: 'id',
 };
 
 export default Subject;
