@@ -4,7 +4,7 @@ import { Classroom } from '../../../../types/models/classroom';
 
 const TeacherField = () => {
     const record = useRecordContext() as Classroom;
-    if (!record) return null;
+    if (!record?.teachers) return null;
     return (
         <ul style={{ padding: 0, margin: 0 }}>
             {record.teachers.map((e) => (

@@ -15,7 +15,7 @@ import { Subject, SubjectDoc } from '../../types/models/subject';
 import { Batch } from '../../types/models/batch';
 import { defaultParams } from '../../provider/firebase';
 import { Classroom, ClassroomNonVirtual, ClassroomVirtual } from '../../types/models/classroom';
-import { AuthorizedTeacher } from '../../types/models/teacher';
+import { AuthorizedTeacher, TeacherShort } from '../../types/models/teacher';
 
 const CreateClassroom = ({
     schemes: schemeData,
@@ -24,7 +24,7 @@ const CreateClassroom = ({
 }: {
     schemes: SubjectDoc[];
     batchData: Batch[];
-    teacherData: Classroom['teachers'];
+    teacherData: TeacherShort[];
 }) => {
     const { getBranches, getSemesters, getSubjects, isDerived } = new Schemes(schemeData);
     const [data, setData] = useState<{
@@ -87,7 +87,7 @@ const CreateClassroom = ({
     }
 
     const transformSubmit = (props: any) => {
-        const record = props as Classroom & { parentClasses: string[] };
+        const record = props as Classroom;
         const batch = batchData.find((e) => e.id === record.batch?.id) as Batch;
         record.batch = batch;
 
@@ -111,22 +111,22 @@ const CreateClassroom = ({
             };
             finalData = nonVirtualClassroom;
         } else {
-            const selectedTeachers = record.teachers.map((e) => e.id);
-            const newTeachers: Classroom['teachers'] = teacherData.filter((e) =>
-                selectedTeachers.includes(e.id)
-            );
+            const recordVirtual = record as ClassroomVirtual; // type casting
+
+            const selectedTeachers = recordVirtual.teachers.map((e) => e.id) ?? [];
+            const newTeachers = teacherData.filter((e) => selectedTeachers.includes(e.id));
 
             const virtualClassroom: ClassroomVirtual = {
                 ...common,
                 isDerived: true,
                 students: [],
-                parentClasses: record.parentClasses,
+                parentClasses: recordVirtual.parentClasses,
                 subject: getSubjects(data.scheme, data.branch, data.semester).find(
                     (e) => e.id === record.subjectId
                 ) as Subject,
-                subjectId: record.subjectId,
+                subjectId: recordVirtual.subjectId,
                 teachers: newTeachers,
-                semester: record.semester,
+                semester: recordVirtual.semester,
             };
             finalData = virtualClassroom;
         }
@@ -218,7 +218,7 @@ const CreateClassroom = ({
 const ClassroomsCreate = () => {
     const dataProvider = useDataProvider();
     const [schemeData, setData] = useState<SubjectDoc[]>([]);
-    const [teachers, setTeachers] = useState<Classroom['teachers']>([]);
+    const [teachers, setTeachers] = useState<TeacherShort[]>([]);
     const [batchData, setBatchData] = useState<Batch[]>([]);
 
     const [loading, setLoading] = useState(true);

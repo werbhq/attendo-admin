@@ -60,10 +60,12 @@ export default function EditClassroom({ state }: Props) {
         scheme: record.batch.schemeId,
         branch: record.branch,
         name: record.name,
-        semester: isDerived(record.name) ? record.semester : record.batch.semester,
+        semester: isDerived(record.name)
+            ? (record.semester as number)
+            : (record.batch.semester as number),
         batch: record.batch.name,
     });
-    const [teachersData, setTeachersData] = useState<Classroom['teachers']>([]);
+    const [teachersData, setTeachersData] = useState<NonNullable<Classroom['teachers']>>([]);
     const [batches, setBatch] = useState<Classroom['batch'][]>([]);
 
     const fetchData = () => {
@@ -113,7 +115,7 @@ export default function EditClassroom({ state }: Props) {
         let finalData: Omit<ClassroomNonVirtual | ClassroomVirtual, OmittedParams>;
 
         if (!isDerived(record.name)) {
-            const nonVirtualClassroom: Omit<ClassroomNonVirtual, OmittedParams> = {
+            const nonVirtualClassroom = {
                 ...common,
                 isDerived: false,
                 subjects: record.subjects,
@@ -121,15 +123,17 @@ export default function EditClassroom({ state }: Props) {
 
             finalData = nonVirtualClassroom;
         } else {
-            const selectedTeachers = record.teachers.map((e) => e.id);
+            const recordVirtual = record as ClassroomVirtual; //type casting
+
+            const selectedTeachers = recordVirtual.teachers.map((e) => e.id);
             const newTeachers: Classroom['teachers'] = teachersData.filter((e) =>
                 selectedTeachers.includes(e.id)
             );
 
             const dataSubjects = getSubjects(data.scheme, data.branch, data.semester);
-            const subject = dataSubjects.find((e) => e.id === record.subject.id) as Subject;
+            const subject = dataSubjects.find((e) => e.id === recordVirtual.subject.id) as Subject;
 
-            record.subject = {
+            recordVirtual.subject = {
                 id: subject.id,
                 code: subject.id.toUpperCase(),
                 name: subject.name,
@@ -138,11 +142,11 @@ export default function EditClassroom({ state }: Props) {
             const virtualClassroom: Omit<ClassroomVirtual, OmittedParams> = {
                 ...common,
                 isDerived: true,
-                parentClasses: record.parentClasses,
-                subject: record.subject,
-                subjectId: record.subject.id,
+                parentClasses: recordVirtual.parentClasses,
+                subject: recordVirtual.subject,
+                subjectId: recordVirtual.subject.id,
                 teachers: newTeachers,
-                semester: record.semester,
+                semester: recordVirtual.semester,
             };
 
             finalData = virtualClassroom;

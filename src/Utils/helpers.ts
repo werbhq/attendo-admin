@@ -1,5 +1,5 @@
 import { GetListParams, RaRecord } from 'react-admin';
-import { Classroom } from '../types/models/classroom';
+import { Classroom, ClassroomVirtual } from '../types/models/classroom';
 import { Student } from '../types/models/student';
 
 export const sortByRoll = (a: Student, b: Student) => {
@@ -27,7 +27,10 @@ export const convertSingleValueListToSelectList = (value: string) => {
 
 export const getClassroomId = (data: Classroom) => {
     const dataIdSet = [data.batch.course, data.batch.yearOfJoining, data.branch, data.name];
-    if (data.isDerived) dataIdSet.push(data.subjectId);
+    if (data.isDerived) {
+        const dataVirtual = data as ClassroomVirtual;
+        dataIdSet.push(dataVirtual.subjectId);
+    }
     return dataIdSet.join('-').toUpperCase();
 };
 

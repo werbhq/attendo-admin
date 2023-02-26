@@ -56,7 +56,7 @@ const SubjectTab = ({
     const [semester, setSemester] = useState<number>(record.batch.semester);
     const [semesterChoices, setSemesterChoices] = useState<SubjectSemester[]>([]);
     const [branchData, setBranchData] = useState<SubjectBranchSubs | undefined>(undefined);
-    const [teachersData, setTeachersData] = useState<TeacherShort[]>(record.teachers);
+    const [teachersData, setTeachersData] = useState<TeacherShort[]>(record?.teachers ?? []);
 
     const [dialog, setDialog] = useState({
         open: false, //opening/closing the dialogue
