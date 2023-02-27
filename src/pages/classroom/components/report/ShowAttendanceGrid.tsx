@@ -58,7 +58,13 @@ const DatagridHeader = (props: { children?: any[]; data?: AttendanceReportRespon
             : [];
 
     return (
-        <TableHead>
+        <TableHead
+            sx={{
+                position: 'sticky',
+                top: 1,
+                backgroundColor: 'white',
+            }}
+        >
             <TableRow>
                 {children?.map((field) => (
                     <TableCell key={field.props.source}>{titleCase(field.props.source)}</TableCell>
@@ -83,13 +89,25 @@ const DatagridHeader = (props: { children?: any[]; data?: AttendanceReportRespon
     );
 };
 
-const MyDatagridBody = (props: any) => <DatagridBody {...props} row={<MyDatagridRow />} />;
+const MyDatagridBody = (props: any) => {
+    return <DatagridBody {...props} sx={{ top: 20 }} row={<MyDatagridRow />} />;
+};
 const MyDatagrid = (props: any) => (
-    <Datagrid {...props} body={<MyDatagridBody />} header={<DatagridHeader />} />
+    <Datagrid
+        {...props}
+        sx={{
+            '& .RaDatagrid-tableWrapper': {
+                maxHeight: '70vh',
+                overflow: 'scroll',
+            },
+        }}
+        header={<DatagridHeader />}
+        body={<MyDatagridBody />}
+    />
 );
 
-const AttendanceDataGrid = () => (
-    <MyDatagrid optimized>
+const AttendanceDataGrid = (props: any) => (
+    <MyDatagrid optimized {...props}>
         <NumberField source="rollNo" />
         <TextField source="name" />
     </MyDatagrid>
