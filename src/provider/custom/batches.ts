@@ -1,7 +1,7 @@
-import { sorter } from '../../Utils/helpers';
 import { DataProviderCustom } from '../../types/DataProvider';
 import { Batch } from '../../types/models/batch';
 import { dataProvider, dataProviderLegacy, db, FieldValue, FieldPath } from '../firebase';
+import { paginateSingleDoc } from '../helpers/pagination';
 import { MAPPING } from '../mapping';
 
 /**
@@ -16,7 +16,7 @@ const BatchesProvider: DataProviderCustom<Batch> = {
             id: MAPPING.BATCHES,
         });
         const values = Object.values(data.batches) as Batch[];
-        return { data: sorter(params, values), total: values.length };
+        return { data: paginateSingleDoc(params, values), total: values.length };
     },
 
     getOne: async (resource, params) => {
