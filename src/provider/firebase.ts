@@ -1,4 +1,8 @@
-import { FirebaseAuthProvider, FirebaseDataProvider } from 'react-admin-firebase';
+import {
+    FirebaseAuthProvider,
+    FirebaseDataProvider,
+    RAFirebaseOptions,
+} from 'react-admin-firebase';
 import configProd from './config/prod.json';
 import configDev from './config/dev.json';
 import CustomProviders from './customProviders';
@@ -10,8 +14,12 @@ import { DataProvider } from 'react-admin';
 export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
-const options = {};
 const isProd = kMode === MODE.PROD || process.env.NODE_ENV === 'production';
+
+const options: RAFirebaseOptions = {
+    lazyLoading: { enabled: true },
+    firestoreCostsLogger: { enabled: isProd ? false : true },
+};
 
 export const dataProviderLegacy = isProd
     ? FirebaseDataProvider(configProd, options)
@@ -35,7 +43,7 @@ const getCustomConvertor = async (resource: string, params: any, method: keyof D
     const provider = CustomProviders.find((e) => e.resource === resource);
     if (provider) {
         if (provider[method] !== undefined) return provider[method](resource, params);
-        else console.error(`${method}() Not Implemented For ${resource}`);
+        else console.warn(`${method}() Not Implemented For ${resource}. Using legacy call`);
     }
     return dataProviderLegacy[method](resource, params);
 };

@@ -34,31 +34,6 @@ const getClassroomShort = (data: Classroom) => {
 const ClassroomProvider: DataProviderCustom<Classroom> = {
     resource: MAPPING.CLASSROOMS,
 
-    getList: async (resource, params) => {
-        const { data: classrooms } = await dataProviderLegacy.getList<Classroom>(resource, params);
-        const data = sorter(params, Object.values(classrooms));
-        return { data, total: data.length };
-    },
-
-    getOne: async (resource, params) => {
-        const { data } = await dataProviderLegacy.getOne<Classroom>(resource, params);
-        return { data };
-    },
-
-    getMany: async (resource, params) => {
-        const { ids } = params;
-        const { data } = await dataProviderLegacy.getList<Classroom>(resource, defaultParams);
-        const finalData = data.filter((e) => ids.includes(e.id));
-        return { data: finalData, status: 200 };
-    },
-
-    getManyReference: async (resource, params) => {
-        const { ids } = params;
-        const { data } = await dataProviderLegacy.getList<Classroom>(resource, defaultParams);
-        const finalData = data.filter((e) => ids.includes(e.id));
-        return { data: finalData, status: 200 };
-    },
-
     update: async (resource, params) => {
         const { id, data } = params;
 
