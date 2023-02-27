@@ -32,6 +32,7 @@ import {
     CustomVirtualStudentDeleteButton,
     CustomVirtualStudentSaveButton,
 } from '../components/student/Buttons';
+import { LoadingButton } from '@mui/lab';
 
 const resource = MAPPING.STUDENTS;
 
@@ -58,6 +59,8 @@ const StudentTab = ({
     const unselectAll = useUnselectAll(resource);
     const dataProvider = useDataProvider();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [studentVirtualDialogOpen, setStudentVirtualDialogOpen] = useState(false);
     const [studentDialog, setStudentDialog] = useState<studentDialog>({
         enable: false,
@@ -75,13 +78,14 @@ const StudentTab = ({
     const disableEdit = () => {
         unselectAll();
         setStudentVirtualDialogOpen(false);
-        setListData([]);
+        setListData(record?.students);
     };
 
     const virtualClassEditHandler = async (e: any) => {
         const students = (e as Student[]) ?? record?.students;
 
         if (!studentVirtualDialogOpen) {
+            setIsLoading(true);
             const { data: classes } = await dataProvider.getMany<Classroom>(MAPPING.CLASSROOMS, {
                 ids: Object.keys(record?.parentClasses ?? {}),
             });
@@ -98,6 +102,7 @@ const StudentTab = ({
             setListData(fullStudents);
             select(record?.students.map((e) => e.id) ?? []);
             setStudentVirtualDialogOpen(true);
+            setIsLoading(false);
         } else {
             unselectAll();
             setStudentVirtualDialogOpen(false);
@@ -155,15 +160,16 @@ const StudentTab = ({
         <Tab label={label} path={path} {...props}>
             <Stack spacing={'10px'} sx={{ margin: '20px 0px' }} direction="row">
                 {!!record?.isDerived ? (
-                    <Button
+                    <LoadingButton
                         size="medium"
                         variant="contained"
                         startIcon={<EditIcon />}
                         disabled={studentVirtualDialogOpen}
+                        loading={isLoading}
                         onClick={virtualClassEditHandler}
                     >
                         Edit Students
-                    </Button>
+                    </LoadingButton>
                 ) : (
                     <Button
                         size="medium"
