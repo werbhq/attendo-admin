@@ -52,7 +52,9 @@ const StudentTab = ({
     path: string;
     props?: any;
 }) => {
-    const csvExportHeaders = ['id', 'email', 'regNo', 'rollNo', 'name', 'userName'];
+    const csvExportHeaders = record.isDerived
+        ? ['classId', 'id', 'email', 'regNo', 'rollNo', 'name', 'userName']
+        : ['id', 'email', 'regNo', 'rollNo', 'name', 'userName'];
     const notify = useNotify();
     const [, { select }] = useRecordSelection(resource);
     const unselectAll = useUnselectAll(resource);
@@ -129,9 +131,13 @@ const StudentTab = ({
                     inputId="csv-reader"
                     inputStyle={{ display: 'none' }}
                     onFileLoaded={async (data) => {
-                        const invalidHeader = data.some(
-                            (e) => Object.keys(e).sort() === csvExportHeaders.sort()
-                        );
+                        const invalidHeader = data.some((e) => {
+                            const keys = Object.keys(e).sort();
+                            const containsAllHeaders = csvExportHeaders.every((header) =>
+                                keys.includes(header)
+                            );
+                            return !containsAllHeaders;
+                        });
                         if (invalidHeader) {
                             const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(
                                 ','
@@ -162,7 +168,12 @@ const StudentTab = ({
     );
     return (
         <Tab label={label} path={path} {...props}>
-            <Stack spacing={'10px'} sx={{ margin: '20px 0px' }} direction="row">
+            <Stack
+                spacing={'10px'}
+                sx={{ margin: '20px 0px' }}
+                justifyContent="space-between"
+                direction="row"
+            >
                 {!!record?.isDerived ? (
                     <Button
                         size="medium"
@@ -203,23 +214,21 @@ const StudentTab = ({
                     </Button>
                 )}
 
-                {!record.isDerived && (
-                    <Stack spacing={'10px'} direction="row">
-                        <Button
-                            size="medium"
-                            variant="outlined"
-                            startIcon={<DownloadIcon />}
-                            onClick={() => {
-                                jsonExport(listData, { headers: csvExportHeaders }, (err, csv) => {
-                                    downloadCSV(csv, `${record.id}`);
-                                });
-                            }}
-                        >
-                            Export
-                        </Button>
-                        <CSVStudentReader />
-                    </Stack>
-                )}
+                <Stack spacing={'10px'} direction="row">
+                    <Button
+                        size="medium"
+                        variant="outlined"
+                        startIcon={<DownloadIcon />}
+                        onClick={() => {
+                            jsonExport(listData, { headers: csvExportHeaders }, (err, csv) => {
+                                downloadCSV(csv, `${record.id}`);
+                            });
+                        }}
+                    >
+                        Export
+                    </Button>
+                    <CSVStudentReader />
+                </Stack>
             </Stack>
 
             <ListContextProvider value={listContext}>
