@@ -112,45 +112,54 @@ const StudentTab = ({
     }
 
     const CSVStudentReader = () => (
-        <CSVReader
-            parserOptions={{
-                header: true,
-                dynamicTyping: true,
-                skipEmptyLines: true,
-            }}
-            label="Import"
-            inputStyle={{ display: 'none' }}
-            onFileLoaded={async (data) => {
-                const invalidHeader = data.some(
-                    (e) => Object.keys(e).sort() === csvExportHeaders.sort()
-                );
-                if (invalidHeader) {
-                    const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(
-                        ','
-                    )}`;
-                    return notify(message, { type: 'error' });
-                }
+        <div className="css-1hanliz-MuiStack-root">
+            {' '}
+            <label
+                className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-rqjjym-MuiButtonBase-root-MuiButton-root"
+                htmlFor="csv-reader"
+            >
+                <UploadIcon fontSize="small"></UploadIcon>
+                <span style={{ paddingLeft: '5px' }}> Import</span>
+                <CSVReader
+                    parserOptions={{
+                        header: true,
+                        dynamicTyping: true,
+                        skipEmptyLines: true,
+                    }}
+                    inputId="csv-reader"
+                    inputStyle={{ display: 'none' }}
+                    onFileLoaded={async (data) => {
+                        const invalidHeader = data.some(
+                            (e) => Object.keys(e).sort() === csvExportHeaders.sort()
+                        );
+                        if (invalidHeader) {
+                            const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(
+                                ','
+                            )}`;
+                            return notify(message, { type: 'error' });
+                        }
 
-                await dataProvider.update(MAPPING.CLASSROOMS, {
-                    id: record.id,
-                    data: {
-                        ...record,
-                        students: data,
-                    },
-                    previousData: {},
-                });
+                        await dataProvider.update(MAPPING.CLASSROOMS, {
+                            id: record.id,
+                            data: {
+                                ...record,
+                                students: data,
+                            },
+                            previousData: {},
+                        });
 
-                notify(`Updated ${data.length} Students of ${record.id}`, {
-                    type: 'success',
-                });
-                setListData(data);
-            }}
-            onError={() => {
-                notify(`Error Importing CSV`, { type: 'error' });
-            }}
-        />
+                        notify(`Updated ${data.length} Students of ${record.id}`, {
+                            type: 'success',
+                        });
+                        setListData(data);
+                    }}
+                    onError={() => {
+                        notify(`Error Importing CSV`, { type: 'error' });
+                    }}
+                />
+            </label>
+        </div>
     );
-
     return (
         <Tab label={label} path={path} {...props}>
             <Stack spacing={'10px'} sx={{ margin: '20px 0px' }} direction="row">
@@ -208,9 +217,7 @@ const StudentTab = ({
                         >
                             Export
                         </Button>
-                        <Button size="medium" variant="outlined" startIcon={<UploadIcon />}>
-                            <CSVStudentReader />
-                        </Button>
+                        <CSVStudentReader />
                     </Stack>
                 )}
             </Stack>
