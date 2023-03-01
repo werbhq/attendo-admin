@@ -144,7 +144,19 @@ const StudentTab = ({
                             )}`;
                             return notify(message, { type: 'error' });
                         }
-
+                        if (record.isDerived) {
+                            // console.log(Object.keys);
+                            const parentClasses = record.parentClasses!;
+                            const keys = Object.keys(parentClasses).map((e) => parentClasses[e].id);
+                            const containParentClass = data.map((e) => keys.includes(e.classId));
+                            const invalidClassId = !containParentClass.every((e) => e);
+                            if (invalidClassId) {
+                                const message = `ClassIds don't match the Parent Classes Proper classIds are ${keys.join(
+                                    ','
+                                )}`;
+                                return notify(message, { type: 'error' });
+                            }
+                        }
                         await dataProvider.update(MAPPING.CLASSROOMS, {
                             id: record.id,
                             data: {
