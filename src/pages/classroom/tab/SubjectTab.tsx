@@ -99,7 +99,7 @@ const SubjectTab = ({
         // Subject Not Present
         if (subjectIndex === -1) {
             subjects.push({
-                id: `${subject.code}-${teachers[0]?.id}-${semester}`,
+                id: `${subject.code}-${semester}`,
                 subject,
                 teachers,
                 semester,
