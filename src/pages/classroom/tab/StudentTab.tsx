@@ -148,14 +148,27 @@ const StudentTab = ({
                             // console.log(Object.keys);
                             const parentClasses = record.parentClasses!;
                             const keys = Object.keys(parentClasses).map((e) => parentClasses[e].id);
-                            const containParentClass = data.map((e) => keys.includes(e.classId));
-                            const invalidClassId = !containParentClass.every((e) => e);
+                            const containedParentClass = data.filter((e) =>
+                                keys.includes(e.classId)
+                            );
+                            const invalidClassId = !containedParentClass.some((e) => e);
+                            data = containedParentClass;
                             if (invalidClassId) {
                                 const message = `ClassIds don't match the Parent Classes Proper classIds are ${keys.join(
                                     ','
                                 )}`;
                                 return notify(message, { type: 'error' });
                             }
+                        }
+                        if (!record.isDerived) {
+                            const classId = record.id;
+                            let containedclassId;
+                            if (data.some((e) => e.hasOwnProperty('classId')))
+                                containedclassId = data.filter((e) => e.classId === classId);
+                            else containedclassId = data;
+                            
+                            console.log(containedclassId);
+                             data = containedclassId;
                         }
                         await dataProvider.update(MAPPING.CLASSROOMS, {
                             id: record.id,
