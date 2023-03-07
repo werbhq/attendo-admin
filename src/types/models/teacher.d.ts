@@ -31,7 +31,9 @@ export interface Teacher extends TeacherShort {
     userName: string;
     status: string;
     phone?: number | null;
-    classrooms: TeacherClassroom[];
+    classrooms: {
+        [id: string]: TeacherClassroom;
+    };
 }
 
 export interface AuthorizedTeacher {
