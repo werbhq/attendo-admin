@@ -15,7 +15,7 @@ import {
 } from 'react-admin';
 
 import { Chip } from '@mui/material';
-import { AuthTeachersProviderExtended } from '../../provider/custom/authorizedTeachers';
+import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 
 const QuickFilter = ({ label, source }: { label: string; source: string }) => {
     const translate = useTranslate();

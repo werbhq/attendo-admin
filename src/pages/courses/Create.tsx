@@ -10,8 +10,8 @@ import {
     useNotify,
     useRedirect,
 } from 'react-admin';
-import { Course } from '../../types/models/courses';
-import { MAPPING } from '../../provider/mapping';
+import { Course } from 'types/models/courses';
+import { MAPPING } from 'provider/mapping';
 
 const url = MAPPING.COURSES;
 

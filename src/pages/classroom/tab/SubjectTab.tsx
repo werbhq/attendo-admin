@@ -21,22 +21,14 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { Dialog } from '@mui/material';
-import { MAPPING } from '../../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import { CustomSubjectBulkDeleteButton } from '../components/subject/Button';
 import Button from '@mui/material/Button';
-import {
-    Classroom,
-    ClassroomSubject as ClassroomSubjectType,
-} from '../../../types/models/classroom';
-import {
-    Subject,
-    SubjectBranchSubs,
-    SubjectDoc,
-    SubjectSemester,
-} from '../../../types/models/subject';
-import { titleCase } from '../../../Utils/helpers';
-import { AuthorizedTeacher, TeacherShort } from '../../../types/models/teacher';
-import { defaultParams } from '../../../provider/firebase';
+import { Classroom, ClassroomSubject as ClassroomSubjectType } from 'types/models/classroom';
+import { Subject, SubjectBranchSubs, SubjectDoc, SubjectSemester } from 'types/models/subject';
+import { titleCase } from 'Utils/helpers';
+import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
+import { defaultParams } from 'provider/firebase';
 import EditIcon from '@mui/icons-material/Edit';
 
 const SubjectTab = ({
@@ -151,18 +143,17 @@ const SubjectTab = ({
                 name: teacher?.name,
             };
         }) as TeacherShort[];
-        let tchrs_list: TeacherShort[]=[];
-        const presentTeachers = new Set(teachers.map((e) => e.id));    
+        let tchrs_list: TeacherShort[] = [];
+        const presentTeachers = new Set(teachers.map((e) => e.id));
         teachers.forEach((e) => {
             if (presentTeachers.has(e.id)) {
-                   tchrs_list.push(e);
-                
+                tchrs_list.push(e);
             } else {
                 tchrs_list = [];
             }
         });
         sub[currentSubjIndex].teachers = tchrs_list;
-              await dataProvider.update(MAPPING.CLASSROOMS, {
+        await dataProvider.update(MAPPING.CLASSROOMS, {
             id: record.id,
             data: record,
             previousData: oldData,

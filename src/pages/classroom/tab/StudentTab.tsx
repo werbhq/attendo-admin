@@ -14,7 +14,7 @@ import {
     useUnselectAll,
     TextField,
 } from 'react-admin';
-import { Classroom } from '../../../types/models/classroom';
+import { Classroom } from 'types/models/classroom';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -23,8 +23,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CSVReader from 'react-csv-reader';
 import jsonExport from 'jsonexport/dist';
 import { useState } from 'react';
-import { Student } from '../../../types/models/student';
-import { MAPPING } from '../../../provider/mapping';
+import { Student } from 'types/models/student';
+import { MAPPING } from 'provider/mapping';
 import EditStudent from '../components/student/Edit';
 import {
     CustomStudentBulkDeleteButton,

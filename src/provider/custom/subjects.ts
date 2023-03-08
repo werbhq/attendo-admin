@@ -1,5 +1,5 @@
-import { SubjectDoc, SubjectIndex } from '../../types/models/subject';
-import { DataProviderCustom } from '../../types/DataProvider';
+import { SubjectDoc, SubjectIndex } from 'types/models/subject';
+import { DataProviderCustom } from 'types/DataProvider';
 import { dataProvider, dataProviderLegacy, db, FieldPath, FieldValue } from '../firebase';
 import { MAPPING } from '../mapping';
 import { paginateSingleDoc } from '../helpers/pagination';

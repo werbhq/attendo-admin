@@ -1,5 +1,5 @@
-import { DataProviderCustom } from '../../types/DataProvider';
-import { Classroom, ClassroomNonVirtualShort } from '../../types/models/classroom';
+import { DataProviderCustom } from 'types/DataProvider';
+import { Classroom, ClassroomNonVirtualShort } from 'types/models/classroom';
 import { dataProvider, db, FieldPath, FieldValue } from '../firebase';
 import { MAPPING } from '../mapping';
 

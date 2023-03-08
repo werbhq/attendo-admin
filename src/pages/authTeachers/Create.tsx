@@ -9,7 +9,7 @@ import {
     useRefresh,
     useUpdate,
 } from 'react-admin';
-import { MAPPING } from '../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 
 const url = MAPPING.AUTH_TEACHERS;
 

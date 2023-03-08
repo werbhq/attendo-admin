@@ -13,13 +13,13 @@ import {
     useDataProvider,
 } from 'react-admin';
 import { useState, useMemo, useEffect } from 'react';
-import { MAPPING } from '../../provider/mapping';
-import { Schemes } from '../../Utils/Schemes';
-import { defaultParams } from '../../provider/firebase';
-import { Batch } from '../../types/models/batch';
-import { SubjectDoc } from '../../types/models/subject';
-import { Course } from '../../types/models/courses';
-import { convertSingleValueListToSelectList } from '../../Utils/helpers';
+import { MAPPING } from 'provider/mapping';
+import { Schemes } from 'Utils/Schemes';
+import { defaultParams } from 'provider/firebase';
+import { Batch } from 'types/models/batch';
+import { SubjectDoc } from 'types/models/subject';
+import { Course } from 'types/models/courses';
+import { convertSingleValueListToSelectList } from 'Utils/helpers';
 
 const url = MAPPING.BATCHES;
 

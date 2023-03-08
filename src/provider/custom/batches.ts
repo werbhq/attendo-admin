@@ -1,5 +1,5 @@
-import { DataProviderCustom } from '../../types/DataProvider';
-import { Batch } from '../../types/models/batch';
+import { DataProviderCustom } from 'types/DataProvider';
+import { Batch } from 'types/models/batch';
 import { dataProvider, dataProviderLegacy, db, FieldValue, FieldPath } from '../firebase';
 import { paginateSingleDoc } from '../helpers/pagination';
 import { MAPPING } from '../mapping';

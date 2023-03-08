@@ -2,8 +2,8 @@ import { Datagrid, DatagridBody, TextField, RecordContextProvider, NumberField }
 import { TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 
-import { titleCase } from '../../../../Utils/helpers';
-import { AttendanceReportResponseFrontEnd } from '../../../../types/models/attendance';
+import { titleCase } from 'Utils/helpers';
+import { AttendanceReportResponseFrontEnd } from 'types/models/attendance';
 import React from 'react';
 
 const MyDatagridRow = ({

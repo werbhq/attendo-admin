@@ -20,10 +20,10 @@ import {
     FunctionField,
 } from 'react-admin';
 import { useState } from 'react';
-import { MAPPING } from '../../../../provider/mapping';
-import { sortByRoll } from '../../../../Utils/helpers';
-import { Student } from '../../../../types/models/student';
-import { Classroom } from '../../../../types/models/classroom';
+import { MAPPING } from 'provider/mapping';
+import { sortByRoll } from 'Utils/helpers';
+import { Student } from 'types/models/student';
+import { Classroom } from 'types/models/classroom';
 
 const resource = MAPPING.STUDENTS;
 

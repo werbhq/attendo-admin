@@ -18,11 +18,11 @@ import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import { Button, Dialog } from '@mui/material';
 import { CustomAdd, CustomDelete } from '../CustomButtons';
-import { dataProvider } from '../../../../provider/firebase';
-import { MAPPING } from '../../../../provider/mapping';
+import { dataProvider } from 'provider/firebase';
+import { MAPPING } from 'provider/mapping';
 import { CustomBranchField } from '../CustomFields';
-import { noSpaceValidation } from '../../../../Utils/validations';
-import { SubjectSemester, SubjectDoc } from '../../../../types/models/subject';
+import { noSpaceValidation } from 'Utils/validations';
+import { SubjectSemester, SubjectDoc } from 'types/models/subject';
 
 const url = MAPPING.SUBJECT;
 

@@ -8,7 +8,7 @@ import {
     useNotify,
     useRefresh,
 } from 'react-admin';
-import { AuthTeachersProviderExtended } from '../../provider/custom/authorizedTeachers';
+import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useState } from 'react';
 

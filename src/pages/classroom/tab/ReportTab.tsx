@@ -1,12 +1,12 @@
 import { List, Tab, TopToolbar, ExportButton, downloadCSV, useDataProvider } from 'react-admin';
-import { MAPPING } from '../../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import { Box, MenuItem, Select, Stack, Typography } from '@mui/material';
-import { AttendanceReportResponseFrontEnd } from '../../../types/models/attendance';
+import { AttendanceReportResponseFrontEnd } from 'types/models/attendance';
 import jsonExport from 'jsonexport/dist';
 import AttendanceDataGrid from '../components/report/ShowAttendanceGrid';
-import { Classroom } from '../../../types/models/classroom';
+import { Classroom } from 'types/models/classroom';
 import { useEffect, useState } from 'react';
-import { SubjectDoc } from '../../../types/models/subject';
+import { SubjectDoc } from 'types/models/subject';
 
 const ReportTab = ({
     record,

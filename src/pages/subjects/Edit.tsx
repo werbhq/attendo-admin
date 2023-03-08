@@ -15,14 +15,14 @@ import {
     required,
     NumberInput,
 } from 'react-admin';
-import { MAPPING } from '../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import { CustomAdd, CustomDelete, DeleteButtonDialog } from './components/CustomButtons';
 import { useParams } from 'react-router-dom';
-import { SubjectDoc } from '../../types/models/subject';
+import { SubjectDoc } from 'types/models/subject';
 import { useState, useEffect } from 'react';
-import { Course } from '../../types/models/courses';
-import { defaultParams } from '../../provider/firebase';
-import { convertSingleValueListToSelectList } from '../../Utils/helpers';
+import { Course } from 'types/models/courses';
+import { defaultParams } from 'provider/firebase';
+import { convertSingleValueListToSelectList } from 'Utils/helpers';
 
 const url = MAPPING.SUBJECT;
 

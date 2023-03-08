@@ -21,12 +21,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { useState } from 'react';
 import { Dialog } from '@mui/material';
-import { MAPPING } from '../../../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import { CustomSubjectBulkDeleteButton } from '../CustomButtons';
-import { noSpaceValidation } from '../../../../Utils/validations';
+import { noSpaceValidation } from 'Utils/validations';
 import Button from '@mui/material/Button';
-import { titleCase } from '../../../../Utils/helpers';
-import { Subject, SubjectDoc, SubjectSemester } from '../../../../types/models/subject';
+import { titleCase } from 'Utils/helpers';
+import { Subject, SubjectDoc, SubjectSemester } from 'types/models/subject';
 import { DeleteButtonDialog } from '../SubjectButtons';
 
 const url = MAPPING.SUBJECT;

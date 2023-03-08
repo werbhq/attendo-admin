@@ -8,10 +8,10 @@ import {
     SearchInput,
     TextInput,
 } from 'react-admin';
-import { MAPPING } from '../../provider/mapping';
-import { Schemes } from '../../Utils/Schemes';
-import { Classroom } from '../../types/models/classroom';
-import QuickFilter from '../../components/ui/QuickFilter';
+import { MAPPING } from 'provider/mapping';
+import { Schemes } from 'Utils/Schemes';
+import { Classroom } from 'types/models/classroom';
+import QuickFilter from 'components/ui/QuickFilter';
 
 const filters = [
     <SearchInput source="id" placeholder="Enter Id" alwaysOn resettable />,

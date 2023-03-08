@@ -7,8 +7,8 @@ import {
     TextInput,
     ReferenceField,
 } from 'react-admin';
-import QuickFilter from '../../components/ui/QuickFilter';
-import { MAPPING } from '../../provider/mapping';
+import QuickFilter from 'components/ui/QuickFilter';
+import { MAPPING } from 'provider/mapping';
 
 const filters = [
     <SearchInput source="name" placeholder="Enter Batch Name" alwaysOn resettable />,

@@ -18,8 +18,8 @@ import {
     useRedirect,
 } from 'react-admin';
 import { useState } from 'react';
-import { MAPPING } from '../../../provider/mapping';
-import { SubjectDoc } from '../../../types/models/subject';
+import { MAPPING } from 'provider/mapping';
+import { SubjectDoc } from 'types/models/subject';
 
 const resource = MAPPING.SUBJECT;
 

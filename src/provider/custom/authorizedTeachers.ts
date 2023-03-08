@@ -8,8 +8,8 @@ import {
     FieldValue,
 } from '../firebase';
 import { MAPPING } from '../mapping';
-import { DataProviderCustom } from '../../types/DataProvider';
-import { AuthorizedTeacher } from '../../types/models/teacher';
+import { DataProviderCustom } from 'types/DataProvider';
+import { AuthorizedTeacher } from 'types/models/teacher';
 import { paginateSingleDoc } from '../helpers/pagination';
 
 /**

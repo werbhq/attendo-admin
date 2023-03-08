@@ -16,8 +16,8 @@ import {
     useUnselectAll,
 } from 'react-admin';
 import { useState } from 'react';
-import { MAPPING } from '../../../../provider/mapping';
-import { Classroom } from '../../../../types/models/classroom';
+import { MAPPING } from 'provider/mapping';
+import { Classroom } from 'types/models/classroom';
 
 const resource = MAPPING.CLASSROOMS;
 

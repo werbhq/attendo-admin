@@ -1,5 +1,5 @@
-import { DataProviderCustom } from '../../types/DataProvider';
-import { Course } from '../../types/models/courses';
+import { DataProviderCustom } from 'types/DataProvider';
+import { Course } from 'types/models/courses';
 import { dataProvider, dataProviderLegacy, db, FieldValue, FieldPath } from '../firebase';
 import { paginateSingleDoc } from '../helpers/pagination';
 import { MAPPING } from '../mapping';

@@ -11,12 +11,12 @@ import {
     useNotify,
     SaveButton,
 } from 'react-admin';
-import { MAPPING } from '../../../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import { DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
-import { autoCapitalize, sortByRoll } from '../../../../Utils/helpers';
+import { autoCapitalize, sortByRoll } from 'Utils/helpers';
 import { useState } from 'react';
-import { Student } from '../../../../types/models/student';
-import { Classroom } from '../../../../types/models/classroom';
+import { Student } from 'types/models/student';
+import { Classroom } from 'types/models/classroom';
 
 const CustomDeleteButton = ({
     handleDelete,
