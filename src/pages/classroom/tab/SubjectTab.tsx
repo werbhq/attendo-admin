@@ -24,7 +24,7 @@ import { Dialog } from '@mui/material';
 import { MAPPING } from 'provider/mapping';
 import { CustomSubjectBulkDeleteButton } from '../components/subject/Button';
 import Button from '@mui/material/Button';
-import { Classroom, ClassroomSubject, ClassroomSubject as ClassroomSubjectType } from 'types/models/classroom';
+import { Classroom, ClassroomSubject } from 'types/models/classroom';
 import { Subject, SubjectBranchSubs, SubjectDoc, SubjectSemester } from 'types/models/subject';
 import { titleCase } from 'Utils/helpers';
 import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
@@ -57,7 +57,7 @@ const SubjectTab = ({
         record: {}, //record regarding the current inputted data
     });
     const sem_record =
-        record.subjects == undefined
+        record.subjects === undefined
             ? ([] as ClassroomSubject[])
             : (Object.values(record.subjects).filter(
                   (val) => val.semester === semester
