@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Subject, SubjectDoc } from 'types/models/subject';
 import { Batch } from 'types/models/batch';
 import { defaultParams } from 'provider/firebase';
-import { Classroom, ClassroomNonVirtual, ClassroomVirtual } from 'types/models/classroom';
+import { Classroom, ClassroomNonVirtual, ClassroomSubject, ClassroomVirtual } from 'types/models/classroom';
 import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
 
 const CreateClassroom = ({
@@ -107,7 +107,7 @@ const CreateClassroom = ({
             const nonVirtualClassroom: ClassroomNonVirtual = {
                 ...common,
                 isDerived: false,
-                subjects: [],
+                subjects: new Map<String, ClassroomSubject>(),
             };
             finalData = nonVirtualClassroom;
         } else {

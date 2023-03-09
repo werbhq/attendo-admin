@@ -36,7 +36,9 @@ export const CustomSubjectBulkDeleteButton = () => {
     const handleDelete = async () => {
         const data = record;
 
-        const subjects_new = data.subjects?.filter((e) => !selectedIds.includes(e.id));
+        const subjects_new = Object.values(data.subjects!).filter(
+            (e) => !selectedIds.includes(e.id)
+        );
 
         await dataProvider.update<Classroom>(resource, {
             id: record.id,

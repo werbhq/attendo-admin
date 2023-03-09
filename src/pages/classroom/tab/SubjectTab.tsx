@@ -79,6 +79,7 @@ const SubjectTab = ({
         setSubjectDialogue({ ...subjectDialogue, open: false });
     };
     const handleSubmit = async (e: any) => {
+        const oldData = record;
         const { SubjectId, TeacherIds } = e as {
             SubjectId: string;
             TeacherIds: { id: string }[];
@@ -96,11 +97,10 @@ const SubjectTab = ({
 
         const subjects = record.subjects === undefined ? [] : Object.values(record.subjects);
         const subjectIndex = subjects.findIndex((e) => e.subject.id === SubjectId);
-
         // Subject Not Present
         if (subjectIndex === -1) {
             subjects.push({
-                id: `${subject.code}-${semester}`,
+                id: `${subject.id}-${record.id}-${semester}`,
                 subject,
                 teachers,
                 semester,
@@ -121,11 +121,21 @@ const SubjectTab = ({
             }
             subjects[subjectIndex].teachers = final;
         }
+        console.log(subjects);
+
+        const subjectsMap = subjects.reduce((map, object) => {
+            map.set(object.id, object);
+            return map;
+        }, new Map<String, ClassroomSubject>());
+        console.log(subjectsMap);
+
+        record.subjects = subjectsMap;
+        console.log(typeof record.subjects);
 
         await dataProvider.update<Classroom>(MAPPING.CLASSROOMS, {
             id: record.id,
-            data: { subjects, id: record.id },
-            previousData: record,
+            data: {subjects:subjectsMap,id:record.id},
+            previousData: oldData,
         });
 
         refresh();
@@ -134,8 +144,8 @@ const SubjectTab = ({
     };
     const handleEdit = async (e: any) => {
         const oldData = record;
-        const sub = record.subjects === undefined ? [] : record.subjects;
-        const currentSubjIndex = sub.findIndex((f) => f.id === e.id);
+        const subjects = record.subjects === undefined ? [] : Object.values(record.subjects);
+        const currentSubjIndex = subjects.findIndex((f) => f.id === e.id);
         const teachers = e.teachers.map((o: { id: string }) => {
             const teacher = teachersData.find((_e) => _e.id === o.id);
             return {
@@ -153,10 +163,16 @@ const SubjectTab = ({
                 tchrs_list = [];
             }
         });
-        sub[currentSubjIndex].teachers = tchrs_list;
+        subjects[currentSubjIndex].teachers = tchrs_list;
+        const subjectsMap = subjects.reduce((map, object) => {
+            map.set(object.id, object);
+            return map;
+        }, new Map<String, ClassroomSubject>());
+        console.log(subjects);
+        record.subjects = subjectsMap;
         await dataProvider.update(MAPPING.CLASSROOMS, {
             id: record.id,
-            data: record,
+            data: {subjects:subjectsMap,id:record.id},
             previousData: oldData,
         });
         refresh();
