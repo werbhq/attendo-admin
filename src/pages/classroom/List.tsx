@@ -44,7 +44,7 @@ const ClassroomsList = () => {
                 ></FunctionField>
                 <FunctionField
                     label="Students"
-                    render={(record: Classroom) => Object.values(record.students)?.length}
+                    render={(record: Classroom) => record.students?.length}
                 ></FunctionField>
                 <ReferenceField source="batch.schemeId" reference={MAPPING.SUBJECT} link="show">
                     <TextField source="id" />

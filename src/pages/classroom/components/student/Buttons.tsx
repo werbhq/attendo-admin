@@ -81,7 +81,7 @@ export const CustomStudentBulkDeleteButton = ({
     const { selectedIds } = useListContext();
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-    const students = Object.values(record.students).filter((e) => !selectedIds.includes(e.id));
+    const students = record.students.filter((e) => !selectedIds.includes(e.id));
     const count = selectedIds.length;
 
     const handleClose = () => setShowDeleteDialog(!showDeleteDialog);
