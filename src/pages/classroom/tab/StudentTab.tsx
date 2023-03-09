@@ -53,7 +53,9 @@ const StudentTab = ({
     path: string;
     props?: any;
 }) => {
-    const csvExportHeaders = ['id', 'email', 'regNo', 'rollNo', 'name', 'userName'];
+    const csvExportHeaders = record.isDerived
+        ? ['classId', 'id', 'email', 'regNo', 'rollNo', 'name', 'userName']
+        : ['id', 'email', 'regNo', 'rollNo', 'name', 'userName'];
     const notify = useNotify();
     const [, { select }] = useRecordSelection(resource);
     const unselectAll = useUnselectAll(resource);
@@ -68,11 +70,12 @@ const StudentTab = ({
         record: undefined,
     });
 
-    const [listData, setListData] = useState<Classroom['students']>(record.students);
+    const [listData, setListData] = useState<Classroom['students']>(Object.values(record.students).sort((a, b) => a.rollNo - b.rollNo));
+    const sort=record.isDerived?{ field: 'classId', order: 'ASC' }:{ field: '', order: '' };
     const listContext = useList({
         data: listData,
         resource,
-        sort: { field: 'classId', order: 'ASC' },
+        sort:sort,
     });
 
     const disableEdit = () => {
@@ -117,48 +120,91 @@ const StudentTab = ({
     }
 
     const CSVStudentReader = () => (
-        <CSVReader
-            parserOptions={{
-                header: true,
-                dynamicTyping: true,
-                skipEmptyLines: true,
-            }}
-            label="Import"
-            inputStyle={{ display: 'none' }}
-            onFileLoaded={async (data) => {
-                const invalidHeader = data.some(
-                    (e) => Object.keys(e).sort() === csvExportHeaders.sort()
-                );
-                if (invalidHeader) {
-                    const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(
-                        ','
-                    )}`;
-                    return notify(message, { type: 'error' });
-                }
+        <div className="css-1hanliz-MuiStack-root">
+            {' '}
+            <label
+                className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-rqjjym-MuiButtonBase-root-MuiButton-root"
+                htmlFor="csv-reader"
+            >
+                <UploadIcon fontSize="small"></UploadIcon>
+                <span style={{ paddingLeft: '5px' }}> Import</span>
+                <CSVReader
+                    parserOptions={{
+                        header: true,
+                        dynamicTyping: true,
+                        skipEmptyLines: true,
+                    }}
+                    inputId="csv-reader"
+                    inputStyle={{ display: 'none' }}
+                    onFileLoaded={async (data) => {
+                        const invalidHeader = data.some((e) => {
+                            const keys = Object.keys(e).sort();
+                            const containsAllHeaders = csvExportHeaders.every((header) =>
+                                keys.includes(header)
+                            );
+                            return !containsAllHeaders;
+                        });
+                        if (invalidHeader) {
+                            const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(
+                                ','
+                            )}`;
+                            return notify(message, { type: 'error' });
+                        }
+                        if (record.isDerived) {
+                            // console.log(Object.keys);
+                            const parentClasses = record.parentClasses!;
+                            const keys = Object.keys(parentClasses).map((e) => parentClasses[e].id);
+                            const containedParentClass = data.filter((e) =>
+                                keys.includes(e.classId)
+                            );
+                            const invalidClassId = !containedParentClass.some((e) => e);
+                            data = containedParentClass;
+                            if (invalidClassId) {
+                                const message = `ClassIds don't match the Parent Classes Proper classIds are ${keys.join(
+                                    ','
+                                )}`;
+                                return notify(message, { type: 'error' });
+                            }
+                        }
+                        if (!record.isDerived) {
+                            const classId = record.id;
+                            let containedclassId;
+                            if (data.some((e) => e.hasOwnProperty('classId')))
+                                containedclassId = data.filter((e) => e.classId === classId);
+                            else containedclassId = data;
+                            
+                            console.log(containedclassId);
+                             data = containedclassId;
+                        }
+                        await dataProvider.update(MAPPING.CLASSROOMS, {
+                            id: record.id,
+                            data: {
+                                ...record,
+                                students: data,
+                            },
+                            previousData: {},
+                        });
 
-                await dataProvider.update(MAPPING.CLASSROOMS, {
-                    id: record.id,
-                    data: {
-                        ...record,
-                        students: data,
-                    },
-                    previousData: {},
-                });
-
-                notify(`Updated ${data.length} Students of ${record.id}`, {
-                    type: 'success',
-                });
-                setListData(data);
-            }}
-            onError={() => {
-                notify(`Error Importing CSV`, { type: 'error' });
-            }}
-        />
+                        notify(`Updated ${data.length} Students of ${record.id}`, {
+                            type: 'success',
+                        });
+                        setListData(data);
+                    }}
+                    onError={() => {
+                        notify(`Error Importing CSV`, { type: 'error' });
+                    }}
+                />
+            </label>
+        </div>
     );
-
     return (
         <Tab label={label} path={path} {...props}>
-            <Stack spacing={'10px'} sx={{ margin: '20px 0px' }} direction="row">
+            <Stack
+                spacing={'10px'}
+                sx={{ margin: '20px 0px' }}
+                justifyContent="space-between"
+                direction="row"
+            >
                 {!!record?.isDerived ? (
                     <LoadingButton
                         size="medium"
@@ -200,25 +246,21 @@ const StudentTab = ({
                     </Button>
                 )}
 
-                {!record.isDerived && (
-                    <Stack spacing={'10px'} direction="row">
-                        <Button
-                            size="medium"
-                            variant="outlined"
-                            startIcon={<DownloadIcon />}
-                            onClick={() => {
-                                jsonExport(listData, { headers: csvExportHeaders }, (err, csv) => {
-                                    downloadCSV(csv, `${record.id}`);
-                                });
-                            }}
-                        >
-                            Export
-                        </Button>
-                        <Button size="medium" variant="outlined" startIcon={<UploadIcon />}>
-                            <CSVStudentReader />
-                        </Button>
-                    </Stack>
-                )}
+                <Stack spacing={'10px'} direction="row">
+                    <Button
+                        size="medium"
+                        variant="outlined"
+                        startIcon={<DownloadIcon />}
+                        onClick={() => {
+                            jsonExport(listData, { headers: csvExportHeaders }, (err, csv) => {
+                                downloadCSV(csv, `${record.id}`);
+                            });
+                        }}
+                    >
+                        Export
+                    </Button>
+                    <CSVStudentReader />
+                </Stack>
             </Stack>
 
             <ListContextProvider value={listContext}>

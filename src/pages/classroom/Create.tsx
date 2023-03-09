@@ -190,24 +190,17 @@ const CreateClassroom = ({
                                 isRequired
                             />
                         </ReferenceArrayInput>
-                        <ReferenceArrayInput
+                        <AutocompleteArrayInput
                             source="teachers"
-                            reference={MAPPING.AUTH_TEACHERS}
-                            filter={{ isDerived: false }}
-                        >
-                            <AutocompleteArrayInput
-                                parse={(value: AuthorizedTeacher[]) =>
-                                    value && value.map((v) => ({ id: v }))
-                                }
-                                format={(value: AuthorizedTeacher[]) =>
-                                    value && value.map((v) => v.id)
-                                }
-                                optionText={(choice) => `${titleCase(choice.userName)}`}
-                                source="id"
-                                filterToQuery={(searchText) => ({ id: searchText })}
-                                isRequired
-                            />
-                        </ReferenceArrayInput>
+                            parse={(value) => value && value.map((v: TeacherShort) => ({ id: v }))}
+                            format={(value) => value && value.map((v: TeacherShort) => v.id)}
+                            choices={teacherData.map((e) => ({ id: e.id, name: e.name }))}
+                            optionText={(choice) => `${titleCase(choice.name)}`}
+                            filterToQuery={(searchText) => ({ id: searchText })}
+                            emptyText="No Option"
+                            sx={{ minWidth: 300 }}
+                            isRequired
+                        />
                     </>
                 )}
             </SimpleForm>
