@@ -67,8 +67,8 @@ const StudentTab = ({
         record: undefined,
     });
 
-    const [listData, setListData] = useState<Classroom['students']>(Object.values(record.students));
-    const sort=record.isDerived?{ field: 'classId', order: 'ASC' }:{ field: 'rollNo', order: 'ASC' };
+    const [listData, setListData] = useState<Classroom['students']>(Object.values(record.students).sort((a, b) => a.rollNo - b.rollNo));
+    const sort=record.isDerived?{ field: 'classId', order: 'ASC' }:{ field: '', order: '' };
     const listContext = useList({
         data: listData,
         resource,
