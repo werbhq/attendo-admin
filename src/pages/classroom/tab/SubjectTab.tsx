@@ -24,7 +24,7 @@ import { Dialog } from '@mui/material';
 import { MAPPING } from 'provider/mapping';
 import { CustomSubjectBulkDeleteButton } from '../components/subject/Button';
 import Button from '@mui/material/Button';
-import { Classroom, ClassroomSubject as ClassroomSubjectType } from 'types/models/classroom';
+import { Classroom, ClassroomSubject, ClassroomSubject as ClassroomSubjectType } from 'types/models/classroom';
 import { Subject, SubjectBranchSubs, SubjectDoc, SubjectSemester } from 'types/models/subject';
 import { titleCase } from 'Utils/helpers';
 import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
@@ -56,18 +56,19 @@ const SubjectTab = ({
         open: false, //opening/closing the dialogue
         record: {}, //record regarding the current inputted data
     });
+    const sem_record =
+        record.subjects == undefined
+            ? ([] as ClassroomSubject[])
+            : (Object.values(record.subjects).filter(
+                  (val) => val.semester === semester
+              ) as ClassroomSubject[]);
     const [subjectDialogue, setSubjectDialogue] = useState({
         open: false, //opening/closing the dialogue
         record: {}, //record regarding the current inputted data
     });
     const tableData = useList({
-        data: record.subjects === undefined ? [] : record.subjects?.filter(subjectFind),
+        data: sem_record,
     });
-
-    //subjects of the current semester..changes acc to semesters
-    function subjectFind(value: ClassroomSubjectType) {
-        return value.semester === semester;
-    }
 
     //closes dialogue
     const handleClose = () => {
@@ -93,13 +94,13 @@ const SubjectTab = ({
             };
         }) as TeacherShort[];
 
-        const subjects = record.subjects === undefined ? [] : record.subjects;
+        const subjects = record.subjects === undefined ? [] : Object.values(record.subjects);
         const subjectIndex = subjects.findIndex((e) => e.subject.id === SubjectId);
 
         // Subject Not Present
         if (subjectIndex === -1) {
             subjects.push({
-                id: `${subject.code}-${teachers[0]?.id}-${semester}`,
+                id: `${subject.code}-${semester}`,
                 subject,
                 teachers,
                 semester,
