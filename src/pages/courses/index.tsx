@@ -1,5 +1,5 @@
 import icon from '@mui/icons-material/MenuBook';
-import { MAPPING } from '../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import { ResourceProps } from 'react-admin';
 import CourseCreate from './Create';
 import CoursesList from './List';

@@ -17,8 +17,9 @@ export const FieldPath = firebase.firestore.FieldPath;
 const isProd = kMode === MODE.PROD || process.env.NODE_ENV === 'production';
 
 const options: RAFirebaseOptions = {
-    lazyLoading: { enabled: true },
-    firestoreCostsLogger: { enabled: isProd ? false : true },
+    // TODO: Enable when lazyLoading supports filtering
+    // lazyLoading: { enabled: true },
+    // firestoreCostsLogger: { enabled: isProd ? false : true },
 };
 
 export const dataProviderLegacy = isProd

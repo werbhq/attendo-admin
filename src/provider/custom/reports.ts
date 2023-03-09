@@ -1,11 +1,11 @@
 import { MAPPING } from '../mapping';
 import { httpsCallable } from 'firebase/functions';
 import { cloudFunctions } from '../firebase';
-import { DataProviderCustom } from '../../types/DataProvider';
+import { DataProviderCustom } from 'types/DataProvider';
 import {
     AttendanceReportResponse,
     AttendanceReportResponseFrontEnd,
-} from '../../types/models/attendance';
+} from 'types/models/attendance';
 
 /**
  * Don't call this directly

@@ -14,7 +14,7 @@ import {
     useUnselectAll,
     TextField,
 } from 'react-admin';
-import { Classroom } from '../../../types/models/classroom';
+import { Classroom } from 'types/models/classroom';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -23,8 +23,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CSVReader from 'react-csv-reader';
 import jsonExport from 'jsonexport/dist';
 import { useState } from 'react';
-import { Student } from '../../../types/models/student';
-import { MAPPING } from '../../../provider/mapping';
+import { Student } from 'types/models/student';
+import { MAPPING } from 'provider/mapping';
 import EditStudent from '../components/student/Edit';
 import {
     CustomStudentBulkDeleteButton,
@@ -32,6 +32,7 @@ import {
     CustomVirtualStudentDeleteButton,
     CustomVirtualStudentSaveButton,
 } from '../components/student/Buttons';
+import { LoadingButton } from '@mui/lab';
 
 const resource = MAPPING.STUDENTS;
 
@@ -60,6 +61,8 @@ const StudentTab = ({
     const unselectAll = useUnselectAll(resource);
     const dataProvider = useDataProvider();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [studentVirtualDialogOpen, setStudentVirtualDialogOpen] = useState(false);
     const [studentDialog, setStudentDialog] = useState<studentDialog>({
         enable: false,
@@ -78,13 +81,14 @@ const StudentTab = ({
     const disableEdit = () => {
         unselectAll();
         setStudentVirtualDialogOpen(false);
-        setListData([]);
+        setListData(record?.students);
     };
 
     const virtualClassEditHandler = async (e: any) => {
         const students = (e as Student[]) ?? record?.students;
 
         if (!studentVirtualDialogOpen) {
+            setIsLoading(true);
             const { data: classes } = await dataProvider.getMany<Classroom>(MAPPING.CLASSROOMS, {
                 ids: Object.keys(record?.parentClasses ?? {}),
             });
@@ -101,6 +105,7 @@ const StudentTab = ({
             setListData(fullStudents);
             select(record?.students.map((e) => e.id) ?? []);
             setStudentVirtualDialogOpen(true);
+            setIsLoading(false);
         } else {
             unselectAll();
             setStudentVirtualDialogOpen(false);
@@ -201,15 +206,16 @@ const StudentTab = ({
                 direction="row"
             >
                 {!!record?.isDerived ? (
-                    <Button
+                    <LoadingButton
                         size="medium"
                         variant="contained"
                         startIcon={<EditIcon />}
                         disabled={studentVirtualDialogOpen}
+                        loading={isLoading}
                         onClick={virtualClassEditHandler}
                     >
                         Edit Students
-                    </Button>
+                    </LoadingButton>
                 ) : (
                     <Button
                         size="medium"

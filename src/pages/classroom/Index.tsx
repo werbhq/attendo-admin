@@ -1,7 +1,7 @@
 import ClassroomsList from './List';
 import ClassroomShow from './Show';
 import icon from '@mui/icons-material/School';
-import { MAPPING } from '../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import ClassroomsCreate from './Create';
 import { ResourceProps } from 'react-admin';
 

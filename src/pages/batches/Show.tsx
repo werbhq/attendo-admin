@@ -3,7 +3,7 @@ import { Show, Tab, TabbedShowLayout, TextField, BooleanField, ReferenceField } 
 import EditIcon from '@mui/icons-material/Edit';
 import { useState } from 'react';
 import EditSummary from './components/EditSummary';
-import { MAPPING } from '../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 
 const BatchesShow = () => {
     const [summaryDialog, setSummaryDialog] = useState({ enable: false });

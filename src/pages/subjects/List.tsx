@@ -9,8 +9,8 @@ import {
     ReferenceField,
 } from 'react-admin';
 import { CustomSemesterField } from './components/CustomFields';
-import { SubjectDoc } from '../../types/models/subject';
-import { MAPPING } from '../../provider/mapping';
+import { SubjectDoc } from 'types/models/subject';
+import { MAPPING } from 'provider/mapping';
 
 const filters = [
     <SearchInput source="id" alwaysOn resettable />,

@@ -11,13 +11,13 @@ import {
     useDataProvider,
     NumberInput,
 } from 'react-admin';
-import { MAPPING } from '../../provider/mapping';
-import { noSpaceValidation } from '../../Utils/validations';
-import { SubjectDoc } from '../../types/models/subject';
-import { Course } from '../../types/models/courses';
-import { defaultParams } from '../../provider/firebase';
+import { MAPPING } from 'provider/mapping';
+import { noSpaceValidation } from 'Utils/validations';
+import { SubjectDoc } from 'types/models/subject';
+import { Course } from 'types/models/courses';
+import { defaultParams } from 'provider/firebase';
 import { useEffect, useState } from 'react';
-import { convertSingleValueListToSelectList } from '../../Utils/helpers';
+import { convertSingleValueListToSelectList } from 'Utils/helpers';
 
 const url = MAPPING.SUBJECT;
 

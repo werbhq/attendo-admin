@@ -7,15 +7,15 @@ import {
     ReferenceArrayInput,
     AutocompleteArrayInput,
 } from 'react-admin';
-import { MAPPING } from '../../provider/mapping';
-import { getClassroomId, titleCase } from '../../Utils/helpers';
-import { Schemes } from '../../Utils/Schemes';
+import { MAPPING } from 'provider/mapping';
+import { getClassroomId, titleCase } from 'Utils/helpers';
+import { Schemes } from 'Utils/Schemes';
 import { v4 as uuidv4 } from 'uuid';
-import { Subject, SubjectDoc } from '../../types/models/subject';
-import { Batch } from '../../types/models/batch';
-import { defaultParams } from '../../provider/firebase';
-import { Classroom, ClassroomNonVirtual, ClassroomVirtual } from '../../types/models/classroom';
-import { AuthorizedTeacher, TeacherShort } from '../../types/models/teacher';
+import { Subject, SubjectDoc } from 'types/models/subject';
+import { Batch } from 'types/models/batch';
+import { defaultParams } from 'provider/firebase';
+import { Classroom, ClassroomNonVirtual, ClassroomVirtual } from 'types/models/classroom';
+import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
 
 const CreateClassroom = ({
     schemes: schemeData,

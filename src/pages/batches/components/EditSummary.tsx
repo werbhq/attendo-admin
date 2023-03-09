@@ -16,11 +16,11 @@ import {
     BooleanInput,
 } from 'react-admin';
 import { Box, Stack } from '@mui/material';
-import { MAPPING } from '../../../provider/mapping';
-import { autoCapitalize } from '../../../Utils/helpers';
-import { Schemes } from '../../../Utils/Schemes';
-import { SubjectDoc } from '../../../types/models/subject';
-import { defaultParams } from '../../../provider/firebase';
+import { MAPPING } from 'provider/mapping';
+import { autoCapitalize } from 'Utils/helpers';
+import { Schemes } from 'Utils/Schemes';
+import { SubjectDoc } from 'types/models/subject';
+import { defaultParams } from 'provider/firebase';
 
 const resource = MAPPING.BATCHES;
 

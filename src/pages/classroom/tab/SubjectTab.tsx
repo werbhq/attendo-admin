@@ -21,19 +21,15 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { Dialog } from '@mui/material';
-import { MAPPING } from '../../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import { CustomSubjectBulkDeleteButton } from '../components/subject/Button';
 import Button from '@mui/material/Button';
-import { Classroom, ClassroomSubject } from '../../../types/models/classroom';
-import {
-    Subject,
-    SubjectBranchSubs,
-    SubjectDoc,
-    SubjectSemester,
-} from '../../../types/models/subject';
-import { titleCase } from '../../../Utils/helpers';
-import { AuthorizedTeacher, TeacherShort } from '../../../types/models/teacher';
-import { defaultParams } from '../../../provider/firebase';
+import { Classroom, ClassroomSubject as ClassroomSubjectType } from 'types/models/classroom';
+import { Subject, SubjectBranchSubs, SubjectDoc, SubjectSemester } from 'types/models/subject';
+import { titleCase } from 'Utils/helpers';
+import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
+import { defaultParams } from 'provider/firebase';
+import EditIcon from '@mui/icons-material/Edit';
 
 const SubjectTab = ({
     label,
@@ -66,6 +62,10 @@ const SubjectTab = ({
             : (Object.values(record.subjects).filter(
                   (val) => val.semester === semester
               ) as ClassroomSubject[]);
+    const [subjectDialogue, setSubjectDialogue] = useState({
+        open: false, //opening/closing the dialogue
+        record: {}, //record regarding the current inputted data
+    });
     const tableData = useList({
         data: sem_record,
     });
@@ -74,7 +74,10 @@ const SubjectTab = ({
     const handleClose = () => {
         setDialog({ ...dialog, open: false });
     };
-
+    //closes dialogue
+    const handleEditClose = () => {
+        setSubjectDialogue({ ...subjectDialogue, open: false });
+    };
     const handleSubmit = async (e: any) => {
         const { SubjectId, TeacherIds } = e as {
             SubjectId: string;
@@ -129,7 +132,37 @@ const SubjectTab = ({
         notify(`Classroom Subject ${SubjectId} Updated`, { type: 'success' });
         handleClose();
     };
-
+    const handleEdit = async (e: any) => {
+        const oldData = record;
+        const sub = record.subjects === undefined ? [] : record.subjects;
+        const currentSubjIndex = sub.findIndex((f) => f.id === e.id);
+        const teachers = e.teachers.map((o: { id: string }) => {
+            const teacher = teachersData.find((_e) => _e.id === o.id);
+            return {
+                id: teacher?.id,
+                emailId: teacher?.emailId,
+                name: teacher?.name,
+            };
+        }) as TeacherShort[];
+        let tchrs_list: TeacherShort[] = [];
+        const presentTeachers = new Set(teachers.map((e) => e.id));
+        teachers.forEach((e) => {
+            if (presentTeachers.has(e.id)) {
+                tchrs_list.push(e);
+            } else {
+                tchrs_list = [];
+            }
+        });
+        sub[currentSubjIndex].teachers = tchrs_list;
+        await dataProvider.update(MAPPING.CLASSROOMS, {
+            id: record.id,
+            data: record,
+            previousData: oldData,
+        });
+        refresh();
+        notify('Classroom Subject Updated');
+        handleEditClose();
+    };
     //for disabling of add subject button where there is no data
     function shouldEnableSubject() {
         let a = false;
@@ -193,7 +226,25 @@ const SubjectTab = ({
         setLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
+    const MyEditButton = () => {
+        const record1 = useRecordContext();
+        return (
+            <Button
+                size="small"
+                variant="outlined"
+                startIcon={<EditIcon />}
+                onClick={async () => {
+                    setSubjectDialogue({
+                        ...subjectDialogue,
+                        open: true,
+                        record: record1,
+                    });
+                }}
+            >
+                Edit
+            </Button>
+        );
+    };
     return (
         <Tab label={label} path={path} {...props}>
             {loading ? (
@@ -254,9 +305,41 @@ const SubjectTab = ({
                             <WrapperField label="Teacher">
                                 <TeacherField />
                             </WrapperField>
+                            <MyEditButton></MyEditButton>
                         </Datagrid>
                     </ListContextProvider>
-
+                    <Dialog open={subjectDialogue.open} onClose={handleEditClose} fullWidth={true}>
+                        <SimpleForm
+                            record={subjectDialogue.record}
+                            defaultValues={subjectDialogue.record}
+                            onSubmit={handleEdit}
+                            toolbar={false}
+                        >
+                            <SelectInput
+                                source="subject.id"
+                                choices={branchData?.subjects}
+                                optionText={(choice) => `${choice.code} - ${choice.name}`}
+                                // filterToQuery={(searchText: any) => ({ id: searchText })}
+                                emptyText="No Option"
+                                disabled
+                                isRequired
+                            />
+                            <AutocompleteArrayInput
+                                source="teachers"
+                                parse={(value) => value && value.map((v: any) => ({ id: v }))}
+                                format={(value) => value && value.map((v: { id: any }) => v.id)}
+                                choices={teachersData}
+                                optionText={(choice) => `${titleCase(choice.name)}`}
+                                filterToQuery={(searchText) => ({ id: searchText })}
+                                emptyText="No Option"
+                                sx={{ minWidth: 300 }}
+                                isRequired
+                            />
+                            <Stack direction="row" spacing={3}>
+                                <SaveButton label="Save" />
+                            </Stack>
+                        </SimpleForm>
+                    </Dialog>
                     <Dialog open={dialog.open} onClose={handleClose} fullWidth={true}>
                         <SimpleForm record={dialog.record} onSubmit={handleSubmit} toolbar={false}>
                             <SelectInput

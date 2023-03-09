@@ -1,6 +1,6 @@
 import { Chip } from '@mui/material';
 import { useRecordContext } from 'react-admin';
-import { Classroom } from '../../../../types/models/classroom';
+import { Classroom } from 'types/models/classroom';
 
 const TeacherField = () => {
     const record = useRecordContext() as Classroom;

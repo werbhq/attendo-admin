@@ -1,5 +1,5 @@
 import icon from '@mui/icons-material/CalendarMonth';
-import { MAPPING } from '../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import BatchesCreate from './Create';
 import BatchesList from './List';
 import BatchesShow from './Show';

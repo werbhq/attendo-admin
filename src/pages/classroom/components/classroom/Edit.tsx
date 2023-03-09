@@ -12,20 +12,16 @@ import {
     ReferenceArrayInput,
     GetListResult,
 } from 'react-admin';
-import { MAPPING } from '../../../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import { Stack, Dialog } from '@mui/material';
-import { Schemes } from '../../../../Utils/Schemes';
+import { Schemes } from 'Utils/Schemes';
 import { useEffect, useState } from 'react';
-import { titleCase } from '../../../../Utils/helpers';
-import { defaultParams } from '../../../../provider/firebase';
-import { AuthorizedTeacher, TeacherShort } from '../../../../types/models/teacher';
-import {
-    Classroom,
-    ClassroomNonVirtual,
-    ClassroomVirtual,
-} from '../../../../types/models/classroom';
-import { Batch } from '../../../../types/models/batch';
-import { Subject, SubjectDoc } from '../../../../types/models/subject';
+import { titleCase } from 'Utils/helpers';
+import { defaultParams } from 'provider/firebase';
+import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
+import { Classroom, ClassroomNonVirtual, ClassroomVirtual } from 'types/models/classroom';
+import { Batch } from 'types/models/batch';
+import { Subject, SubjectDoc } from 'types/models/subject';
 
 const resource = MAPPING.CLASSROOMS;
 

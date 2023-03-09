@@ -17,15 +17,15 @@ import {
 } from 'react-admin';
 import { useMemo, useState } from 'react';
 
-import { Schemes } from '../../Utils/Schemes';
-import { MAPPING } from '../../provider/mapping';
+import { Schemes } from 'Utils/Schemes';
+import { MAPPING } from 'provider/mapping';
 import EditClassroom from './components/classroom/Edit';
 
 import SubjectTab from './tab/SubjectTab';
 
-import { SubjectDoc } from '../../types/models/subject';
-import { defaultParams } from '../../provider/firebase';
-import { Classroom } from '../../types/models/classroom';
+import { SubjectDoc } from 'types/models/subject';
+import { defaultParams } from 'provider/firebase';
+import { Classroom } from 'types/models/classroom';
 
 import ReportTab from './tab/ReportTab';
 import StudentTab from './tab/StudentTab';

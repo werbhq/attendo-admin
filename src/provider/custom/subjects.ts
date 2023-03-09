@@ -1,8 +1,8 @@
-import { sorter } from '../../Utils/helpers';
-import { SubjectDoc, SubjectIndex } from '../../types/models/subject';
-import { DataProviderCustom } from '../../types/DataProvider';
+import { SubjectDoc, SubjectIndex } from 'types/models/subject';
+import { DataProviderCustom } from 'types/DataProvider';
 import { dataProvider, dataProviderLegacy, db, FieldPath, FieldValue } from '../firebase';
 import { MAPPING } from '../mapping';
+import { paginateSingleDoc } from '../helpers/pagination';
 
 type SubjectIndexCustom = SubjectIndex & { id: string };
 
@@ -18,7 +18,7 @@ const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
             id: MAPPING.SUBJECT,
         });
         const values = Object.values(data.schemes) as SubjectDoc[];
-        return { data: sorter(params, values), total: values.length, status: 200 };
+        return { data: paginateSingleDoc(params, values), total: values.length, status: 200 };
     },
 
     getOne: async (resource, params) => {

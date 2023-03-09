@@ -1,5 +1,4 @@
 import { httpsCallable } from 'firebase/functions';
-import { sorter } from '../../Utils/helpers';
 import {
     cloudFunctions,
     dataProvider,
@@ -9,8 +8,9 @@ import {
     FieldValue,
 } from '../firebase';
 import { MAPPING } from '../mapping';
-import { DataProviderCustom } from '../../types/DataProvider';
-import { AuthorizedTeacher } from '../../types/models/teacher';
+import { DataProviderCustom } from 'types/DataProvider';
+import { AuthorizedTeacher } from 'types/models/teacher';
+import { paginateSingleDoc } from '../helpers/pagination';
 
 /**
  * Don't call this directly
@@ -23,10 +23,8 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
         const { data } = await dataProvider.getOne(MAPPING.DATA, {
             id: MAPPING.AUTH_TEACHERS,
         });
-
         const values = Object.values(data.teachers) as AuthorizedTeacher[];
-
-        return { data: sorter(params, values), total: values.length, status: 200 };
+        return { data: paginateSingleDoc(params, values), total: values.length, status: 200 };
     },
 
     getOne: async (resource, params) => {

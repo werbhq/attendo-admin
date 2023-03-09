@@ -3,7 +3,7 @@ import SubjectList from './List';
 import SubjectShow from './Show';
 import SubjectEdit from './Edit';
 import SubjectCreate from './Create';
-import { MAPPING } from '../../provider/mapping';
+import { MAPPING } from 'provider/mapping';
 import { ResourceProps } from 'react-admin';
 
 const Subject: ResourceProps = {

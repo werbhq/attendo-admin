@@ -1,5 +1,5 @@
 import { Chip } from '@mui/material';
-import { SubjectDoc, SubjectSemester } from '../../../types/models/subject';
+import { SubjectDoc, SubjectSemester } from 'types/models/subject';
 
 export const CustomSemesterField = ({ record }: { record: SubjectDoc }) => {
     if (!record.semesters || record.semesters?.length === 0) {
