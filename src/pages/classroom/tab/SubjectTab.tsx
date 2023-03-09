@@ -24,7 +24,7 @@ import { Dialog } from '@mui/material';
 import { MAPPING } from 'provider/mapping';
 import { CustomSubjectBulkDeleteButton } from '../components/subject/Button';
 import Button from '@mui/material/Button';
-import { Classroom, ClassroomSubject as ClassroomSubjectType } from 'types/models/classroom';
+import { Classroom, ClassroomSubject, ClassroomSubject as ClassroomSubjectType } from 'types/models/classroom';
 import { Subject, SubjectBranchSubs, SubjectDoc, SubjectSemester } from 'types/models/subject';
 import { titleCase } from 'Utils/helpers';
 import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
