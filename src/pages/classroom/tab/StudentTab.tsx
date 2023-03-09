@@ -67,11 +67,12 @@ const StudentTab = ({
         record: undefined,
     });
 
-    const [listData, setListData] = useState<Classroom['students']>(record.students);
+    const [listData, setListData] = useState<Classroom['students']>(Object.values(record.students));
+    const sort=record.isDerived?{ field: 'classId', order: 'ASC' }:{ field: 'rollNo', order: 'ASC' };
     const listContext = useList({
         data: listData,
         resource,
-        sort: { field: 'classId', order: 'ASC' },
+        sort:sort,
     });
 
     const disableEdit = () => {
