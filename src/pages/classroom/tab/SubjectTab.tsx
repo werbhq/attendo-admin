@@ -94,10 +94,8 @@ const SubjectTab = ({
                 name: teacher?.name,
             };
         }) as TeacherShort[];
-
         const subjects = record.subjects === undefined ? [] : Object.values(record.subjects);
         const subjectIndex = subjects.findIndex((e) => e.subject.id === SubjectId);
-        // Subject Not Present
         if (subjectIndex === -1) {
             subjects.push({
                 id: `${subject.id}-${record.id}-${semester}`,
@@ -108,33 +106,39 @@ const SubjectTab = ({
         } else {
             const alreadyPresent: string[] = []; // Names
             const final: TeacherShort[] = subjects[subjectIndex].teachers;
-            const presentTeachers = new Set(...TeacherIds.map((e) => e.id));
+            console.log(final);
+            console.log(teachers);
             teachers.forEach((e) => {
-                if (presentTeachers.has(e.id)) alreadyPresent.push(e.name);
+                console.log(e);
+
+                if (
+                    final.some((f) => {
+                        return f.id === e.id;
+                    })
+                )
+                    alreadyPresent.push(e.name);
                 else {
                     final.push(e);
-                    presentTeachers.add(e.id);
                 }
             });
+            console.log(alreadyPresent.length);
             if (alreadyPresent.length !== 0) {
                 notify(`${alreadyPresent.join(',')} were already present`, { type: 'info' });
+                handleClose();
             }
             subjects[subjectIndex].teachers = final;
         }
         console.log(subjects);
+        const subjectsMap = {} as { [id: string]: ClassroomSubject };
 
-        const subjectsMap = subjects.reduce((map, object) => {
-            map.set(object.id, object);
-            return map;
-        }, new Map<String, ClassroomSubject>());
-        console.log(subjectsMap);
-
+        subjects.forEach((obj) => {
+            subjectsMap[obj.id] = obj;
+        });
         record.subjects = subjectsMap;
-        console.log(typeof record.subjects);
 
         await dataProvider.update<Classroom>(MAPPING.CLASSROOMS, {
             id: record.id,
-            data: {subjects:subjectsMap,id:record.id},
+            data: record,
             previousData: oldData,
         });
 
@@ -154,25 +158,26 @@ const SubjectTab = ({
                 name: teacher?.name,
             };
         }) as TeacherShort[];
-        let tchrs_list: TeacherShort[] = [];
+        let tchrsList: TeacherShort[] = [];
         const presentTeachers = new Set(teachers.map((e) => e.id));
         teachers.forEach((e) => {
             if (presentTeachers.has(e.id)) {
-                tchrs_list.push(e);
+                tchrsList.push(e);
             } else {
-                tchrs_list = [];
+                tchrsList = [];
             }
         });
-        subjects[currentSubjIndex].teachers = tchrs_list;
-        const subjectsMap = subjects.reduce((map, object) => {
-            map.set(object.id, object);
-            return map;
-        }, new Map<String, ClassroomSubject>());
-        console.log(subjects);
+        console.log(presentTeachers);
+        subjects[currentSubjIndex].teachers = tchrsList;
+        const subjectsMap = {} as { [id: string]: ClassroomSubject };
+
+        subjects.forEach((obj) => {
+            subjectsMap[obj.id] = obj;
+        });
         record.subjects = subjectsMap;
         await dataProvider.update(MAPPING.CLASSROOMS, {
             id: record.id,
-            data: {subjects:subjectsMap,id:record.id},
+            data: record,
             previousData: oldData,
         });
         refresh();

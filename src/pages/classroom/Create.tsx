@@ -107,7 +107,7 @@ const CreateClassroom = ({
             const nonVirtualClassroom: ClassroomNonVirtual = {
                 ...common,
                 isDerived: false,
-                subjects: new Map<String, ClassroomSubject>(),
+                subjects: {} as { [id: string]: ClassroomSubject },
             };
             finalData = nonVirtualClassroom;
         } else {

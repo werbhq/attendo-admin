@@ -27,6 +27,7 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
 
     update: async (resource, params) => {
         const { id, data } = params;
+        console.log(data);
 
         if (data.isDerived) {
             const parentClasses: { [classId: string]: ClassroomNonVirtualShort } = {};

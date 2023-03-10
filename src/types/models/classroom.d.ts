@@ -35,7 +35,9 @@ export interface ClassroomNonVirtualShort extends _BaseClassroomShort {
 
 export interface ClassroomNonVirtual extends _BaseClassroom {
     isDerived: false;
-    subjects: Map<String, ClassroomSubject>;
+    subjects: {
+        [id: string]: ClassroomSubject;
+    };
 }
 
 export interface ClassroomVirtual extends _BaseClassroom {
