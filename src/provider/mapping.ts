@@ -9,5 +9,6 @@ export const MAPPING = {
     MASTER_CLASSROOMS: 'master_classrooms',
     REPORTS: 'reports',
     BATCHES: 'batches',
+    ATTENDANCES:'attendance'
 };
 //subjectsV2

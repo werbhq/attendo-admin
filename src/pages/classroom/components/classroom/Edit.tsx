@@ -18,7 +18,7 @@ import { Schemes } from 'Utils/Schemes';
 import { useEffect, useState } from 'react';
 import { titleCase } from 'Utils/helpers';
 import { defaultParams } from 'provider/firebase';
-import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
+import { AuthorizedTeacher } from 'types/models/teacher';
 import { Classroom, ClassroomNonVirtual, ClassroomVirtual } from 'types/models/classroom';
 import { Batch } from 'types/models/batch';
 import { Subject, SubjectDoc } from 'types/models/subject';
@@ -266,7 +266,6 @@ export default function EditClassroom({ state }: Props) {
                                 </ReferenceArrayInput>
                                 <AutocompleteArrayInput
                                     source="teachers"
-                                    
                                     choices={teachersData.map((e) => ({ id: e.id, name: e.name }))}
                                     optionText={(choice) => `${titleCase(choice.name)}`}
                                     filterToQuery={(searchText) => ({ id: searchText })}

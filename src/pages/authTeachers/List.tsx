@@ -37,7 +37,7 @@ const AuthorizedTeacherList = () => {
         return (
             <>
                 <BulkUpdateButton
-                    label="Update Status"
+                    label="Create Account"
                     onClick={() =>
                         AuthTeachersProviderExtended.createEmails(
                             data.selectedIds as string[]
