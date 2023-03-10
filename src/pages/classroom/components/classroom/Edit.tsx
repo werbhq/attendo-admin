@@ -175,7 +175,7 @@ export default function EditClassroom({ state }: Props) {
         }
         return errors;
     };
-
+    console.log(record);
     return (
         <>
             {!loading && (
@@ -266,12 +266,7 @@ export default function EditClassroom({ state }: Props) {
                                 </ReferenceArrayInput>
                                 <AutocompleteArrayInput
                                     source="teachers"
-                                    parse={(value) =>
-                                        value && value.map((v: TeacherShort) => ({ id: v }))
-                                    }
-                                    format={(value) =>
-                                        value && value.map((v: TeacherShort) => v.id)
-                                    }
+                                    
                                     choices={teachersData.map((e) => ({ id: e.id, name: e.name }))}
                                     optionText={(choice) => `${titleCase(choice.name)}`}
                                     filterToQuery={(searchText) => ({ id: searchText })}

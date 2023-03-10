@@ -106,7 +106,7 @@ export const ClassroomShow = () => {
 
                             <FunctionField
                                 label="Students Count"
-                                render={(record: Classroom) => record?.students?.length}
+                                render={(record: Classroom) => Object.values(record?.students).length}
                             ></FunctionField>
                             <Typography sx={{ fontSize: '0.75em', color: 'rgba(0, 0, 0, 0.6)' }}>
                                 Batch
