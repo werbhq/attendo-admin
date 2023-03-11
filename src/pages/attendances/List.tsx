@@ -3,26 +3,35 @@ import { MAPPING } from 'provider/mapping';
 import {
     List,
     Datagrid,
-    EmailField,
     TextField,
-    BooleanField,
     useRecordContext,
-    useList,
-    useListContext,
     FunctionField,
     ReferenceField,
 } from 'react-admin';
-import { Attendance, AttendanceMini, SubjectAttendance } from 'types/models/attendance';
+import { AttendanceMini, SubjectAttendance } from 'types/models/attendance';
 
 const AttendanceList = () => {
     const record = useRecordContext();
     return (
         <List exporter={false}>
             <Datagrid rowClick="show">
-                <TextField source="id" />
-                <TextField source="date" />
-                <TextField source="hour" />
-                <ReferenceField source="teacherId" reference={MAPPING.AUTH_TEACHERS} link="show" />
+                <TextField source="classroom.id" label="Classroom Id" />
+                <TextField source="attendance.date" label="Date" />
+                <TextField source="semester" />
+                <TextField source="attendance.hour" label="Hour" />
+                <ReferenceField
+                    source="attendance.teacherId"
+                    label="Teacher"
+                    reference={MAPPING.AUTH_TEACHERS}
+                    link="show"
+                />
+                <FunctionField
+                    label="Absentees Count"
+                    source="attendance.absentees"
+                    render={(record: { attendance: { absentees: string[] | any[] } }) =>
+                    record.attendance.absentees.length
+                }
+                />
             </Datagrid>
         </List>
     );

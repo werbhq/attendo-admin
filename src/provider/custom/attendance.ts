@@ -19,22 +19,29 @@ const AttendanceProvider: DataProviderCustom<SubjectAttendance> = {
     resource: MAPPING.ATTENDANCES,
 
     getList: async (resource, params) => {
-        // const colRef = db.collection(MAPPING.ATTENDANCES);
-        // console.log(colRef);
-        // const doc = (await colRef.doc().get());
-        // console.log(doc);
 
+        const { id } = params;
         const { data } = await dataProviderLegacy.getList<SubjectAttendance>(
             resource,
             defaultParams
         );
-        const values = data.map((e) => e.attendances);
-        const attendanceValues = Array.from(values.values());
-        const attendanceData: AttendanceMini[] = [];
-        for (let val of attendanceValues) {
-            const a = Object.entries(val);
-            a.map((e) => attendanceData.push(e[1]));
+        let attendanceMap = {};
+        const attendanceData = [];
+        const attendanceValues = data.flatMap(({ attendances }) => Object.values(attendances));
+
+        for (let val of attendanceValues){
+            attendanceMap={attendance:val,id:val.id}
+            for (let v in data) {
+                attendanceMap = {
+                    ...attendanceMap,
+                    classroom: data[v].classroom,
+                    semester:data[v].semester,
+                    subject:data[v].subject
+                };
+            }
+            attendanceData.push(attendanceMap);
         }
+        
         console.log(attendanceData);
         return { data: paginateSingleDoc(params, attendanceData), total: attendanceData.length };
     },
