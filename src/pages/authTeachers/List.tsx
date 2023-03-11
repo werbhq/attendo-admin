@@ -16,7 +16,6 @@ import {
 
 import { Chip } from '@mui/material';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
-import { datagridStyle, listStyle } from 'components/ui/CustomTableStyling';
 
 const QuickFilter = ({ label, source }: { label: string; source: string }) => {
     const translate = useTranslate();
@@ -54,12 +53,8 @@ const AuthorizedTeacherList = () => {
     };
 
     return (
-        <List exporter={false} filters={filters} sx={listStyle}>
-            <Datagrid
-                rowClick="show"
-                bulkActionButtons={<PostBulkActionButtons />}
-                sx={datagridStyle}
-            >
+        <List exporter={false} filters={filters}>
+            <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons />}>
                 <EmailField source="email" />
                 <TextField source="userName" label="Name" />
                 <BooleanField source="created" looseValue sortable={false} />

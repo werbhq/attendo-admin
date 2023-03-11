@@ -9,8 +9,6 @@ import {
 } from 'react-admin';
 import QuickFilter from 'components/ui/QuickFilter';
 import { MAPPING } from 'provider/mapping';
-import { blue } from '@mui/material/colors';
-import { datagridStyle, listStyle } from 'components/ui/CustomTableStyling';
 
 const filters = [
     <SearchInput source="name" placeholder="Enter Batch Name" alwaysOn resettable />,
@@ -22,8 +20,8 @@ const filters = [
 ];
 const BatchesList = () => {
     return (
-        <List exporter={false} filters={filters} sx={listStyle}>
-            <Datagrid rowClick="show" sx={datagridStyle}>
+        <List exporter={false} filters={filters}>
+            <Datagrid rowClick="show">
                 <TextField source="name" label="Batch Name" />
                 <ReferenceField source="course" reference={MAPPING.COURSES} link="show" />
                 <ReferenceField source="schemeId" reference={MAPPING.SUBJECT} link="show" />

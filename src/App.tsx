@@ -1,4 +1,4 @@
-import { Admin, defaultTheme, RaThemeOptions, Resource } from 'react-admin';
+import { Admin, defaultTheme, Resource } from 'react-admin';
 import red from '@mui/material/colors/red';
 import Classroom from './pages/classroom/Index';
 import DashBoard from './pages/dashboard/Dashboard';
@@ -6,14 +6,15 @@ import Subject from './pages/subjects';
 import Batches from './pages/batches';
 import Courses from './pages/courses';
 import Attendance from './pages/attendances/Index';
-
+import { RaDatagrid, RaList } from 'components/ui/style';
 import AuthTeachers from './pages/authTeachers';
 import { authProvider, dataProvider } from './provider/firebase';
 import { CustomLayout } from './components/ui/Layout';
 import { customQueryClient } from './provider/queryClient';
 import { kMode } from 'config';
 import { MODE } from 'Utils/helpers';
-const myTheme: RaThemeOptions = {
+
+const myTheme = {
     ...defaultTheme,
     palette: {
         primary: {
@@ -28,6 +29,11 @@ const myTheme: RaThemeOptions = {
     },
     typography: {
         fontFamily: ['Poppins', 'sans-serif'].join(','),
+    },
+    components: {
+        ...defaultTheme.components,
+        RaDatagrid,
+        RaList,
     },
 };
 

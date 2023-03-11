@@ -11,7 +11,6 @@ import {
 import { CustomSemesterField } from './components/CustomFields';
 import { SubjectDoc } from 'types/models/subject';
 import { MAPPING } from 'provider/mapping';
-import { datagridStyle, listStyle } from 'components/ui/CustomTableStyling';
 
 const filters = [
     <SearchInput source="id" alwaysOn resettable />,
@@ -21,8 +20,8 @@ const filters = [
 ];
 
 const SubjectList = () => (
-    <List exporter={false} filters={filters} sx={listStyle}>
-        <Datagrid rowClick="show" sx={datagridStyle}>
+    <List exporter={false} filters={filters}>
+        <Datagrid rowClick="show">
             <TextField source="id" />
             <TextField source="organization" />
             <ReferenceField source="course" reference={MAPPING.COURSES} link="show" />

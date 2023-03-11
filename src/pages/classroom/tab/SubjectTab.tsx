@@ -14,7 +14,6 @@ import {
     SelectInput,
     Tab,
     useRecordContext,
-    useListContext,
     ReferenceField,
 } from 'react-admin';
 import TeacherField from '../components/classroom/CustomTeacherField';
@@ -53,7 +52,7 @@ const SubjectTab = ({
     const [semesterChoices, setSemesterChoices] = useState<SubjectSemester[]>([]);
     const [branchData, setBranchData] = useState<SubjectBranchSubs | undefined>(undefined);
     const [teachersData, setTeachersData] = useState<TeacherShort[]>(record?.teachers ?? []);
-    const { selectedIds } = useListContext();
+
     const [dialog, setDialog] = useState({
         open: false, //opening/closing the dialogue
         record: {}, //record regarding the current inputted data
