@@ -11,17 +11,15 @@ import AuthTeachers from './pages/authTeachers';
 import { authProvider, dataProvider } from './provider/firebase';
 import { CustomLayout } from './components/ui/Layout';
 import { customQueryClient } from './provider/queryClient';
-import { kMode } from 'config';
-import { MODE } from 'Utils/helpers';
 
 const myTheme = {
     ...defaultTheme,
     palette: {
         primary: {
-            main: kMode === MODE.DEV ? '#000' : '#179F97',
+            main: '#000',
         },
         secondary: {
-            main: kMode === MODE.DEV ? '#000' : '#179F97',
+            main: '#000',
         },
         error: red,
         contrastThreshold: 3,
