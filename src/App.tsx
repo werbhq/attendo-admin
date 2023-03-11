@@ -11,14 +11,16 @@ import AuthTeachers from './pages/authTeachers';
 import { authProvider, dataProvider } from './provider/firebase';
 import { CustomLayout } from './components/ui/Layout';
 import { customQueryClient } from './provider/queryClient';
+import { kMode } from 'config';
+import { MODE } from 'Utils/helpers';
 const myTheme: RaThemeOptions = {
     ...defaultTheme,
     palette: {
         primary: {
-            main: '#7B61FF',
+            main: kMode === MODE.DEV ? '#000' : '#179F97',
         },
         secondary: {
-            main: '#179F97',
+            main: kMode === MODE.DEV ? '#000' : '#179F97',
         },
         error: red,
         contrastThreshold: 3,
@@ -45,7 +47,6 @@ const App = () => (
         <Resource {...Batches} />
         <Resource {...Classroom} />
         <Resource {...Attendance} />
-
     </Admin>
 );
 

@@ -12,6 +12,7 @@ import { MAPPING } from 'provider/mapping';
 import { Schemes } from 'Utils/Schemes';
 import { Classroom } from 'types/models/classroom';
 import QuickFilter from 'components/ui/QuickFilter';
+import { datagridStyle, listStyle } from 'components/ui/CustomTableStyling';
 
 const filters = [
     <SearchInput source="id" placeholder="Enter Id" alwaysOn resettable />,
@@ -24,8 +25,8 @@ const filters = [
 
 const ClassroomsList = () => {
     return (
-        <List exporter={false} filters={filters} emptyWhileLoading>
-            <Datagrid rowClick="show">
+        <List exporter={false} filters={filters} emptyWhileLoading sx={listStyle}>
+            <Datagrid rowClick="show" sx={datagridStyle}>
                 <TextField source="id" />
                 <TextField source="batch.name" label="Batch" emptyText="-" />
                 <TextField source="subject.name" label="Subject" emptyText="-" sortable={false} />
