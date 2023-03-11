@@ -13,9 +13,9 @@ import {
 } from 'react-admin';
 import { MAPPING } from 'provider/mapping';
 import { DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
-import { autoCapitalize, sortByRoll } from 'Utils/helpers';
+import { autoCapitalize } from 'Utils/helpers';
 import { useState } from 'react';
-import { Student } from 'types/models/student';
+import { StudentShort as Student } from 'types/models/student';
 import { Classroom } from 'types/models/classroom';
 
 const CustomDeleteButton = ({
@@ -82,7 +82,8 @@ export default function EditStudent({
     const notify = useNotify();
     const refresh = useRefresh();
     const dataProvider = useDataProvider();
-    const { id, students } = useRecordContext<Classroom>();
+    const { id, students: studentIndex } = useRecordContext<Classroom>();
+    const students = Object.values(studentIndex);
 
     const { setDialog, dialog } = state;
     const { record } = dialog;
@@ -104,12 +105,13 @@ export default function EditStudent({
         if (index !== -1) newStudents[index] = newRecord;
         else newStudents.push({ ...newRecord, id: newRecord.email });
 
-        await dataProvider.update(url, {
+        await dataProvider.update<Student>(url, {
             id,
-            data: newStudents.sort(sortByRoll),
-            previousData: students.sort(sortByRoll),
+            data: newStudents,
+            previousData: students,
             meta: { record: newRecord },
         });
+
         refresh();
         notify(`${index === -1 ? 'Added' : 'Edited'} Student ${newRecord.email}`, {
             type: 'success',
@@ -123,10 +125,10 @@ export default function EditStudent({
             1
         );
 
-        await dataProvider.update(url, {
+        await dataProvider.update<Student>(url, {
             id,
-            data: newStudents.sort(sortByRoll),
-            previousData: students.sort(sortByRoll),
+            data: newStudents,
+            previousData: students,
             meta: {
                 record: newRecord,
             },

@@ -9,7 +9,6 @@ import {
     downloadCSV,
     useDataProvider,
     useList,
-    useNotify,
     useRecordSelection,
     useUnselectAll,
     TextField,
@@ -18,12 +17,10 @@ import { Classroom } from 'types/models/classroom';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
-import UploadIcon from '@mui/icons-material/Upload';
 import CancelIcon from '@mui/icons-material/Cancel';
-import CSVReader from 'react-csv-reader';
 import jsonExport from 'jsonexport/dist';
 import { useState } from 'react';
-import { Student } from 'types/models/student';
+import { StudentShort as Student } from 'types/models/student';
 import { MAPPING } from 'provider/mapping';
 import EditStudent from '../components/student/Edit';
 import {
@@ -31,8 +28,10 @@ import {
     CustomStudentEditButton,
     CustomVirtualStudentDeleteButton,
     CustomVirtualStudentSaveButton,
+    ImportButton,
 } from '../components/student/Buttons';
 import { LoadingButton } from '@mui/lab';
+import { sortByRoll } from 'Utils/helpers';
 
 const resource = MAPPING.STUDENTS;
 
@@ -53,15 +52,17 @@ const StudentTab = ({
     path: string;
     props?: any;
 }) => {
+    const dataProvider = useDataProvider();
+
     const csvExportHeaders = record.isDerived
         ? ['classId', 'id', 'email', 'regNo', 'rollNo', 'name', 'userName']
         : ['id', 'email', 'regNo', 'rollNo', 'name', 'userName'];
-    const notify = useNotify();
+
     const [, { select }] = useRecordSelection(resource);
     const unselectAll = useUnselectAll(resource);
-    const dataProvider = useDataProvider();
 
     const [isLoading, setIsLoading] = useState(false);
+    const classroomStudents = Object.values(record.students).sort(sortByRoll);
 
     const [studentVirtualDialogOpen, setStudentVirtualDialogOpen] = useState(false);
     const [studentDialog, setStudentDialog] = useState<studentDialog>({
@@ -70,40 +71,41 @@ const StudentTab = ({
         record: undefined,
     });
 
-    const [listData, setListData] = useState<Classroom['students']>(Object.values(record.students).sort((a, b) => a.rollNo - b.rollNo));
-    const sort=record.isDerived?{ field: 'classId', order: 'ASC' }:{ field: '', order: '' };
+    const [listData, setListData] = useState<Student[]>(classroomStudents.sort(sortByRoll));
+    const sort = record.isDerived ? { field: 'classId', order: 'ASC' } : { field: '', order: '' };
     const listContext = useList({
         data: listData,
         resource,
-        sort:sort,
+        sort: sort,
     });
 
     const disableEdit = () => {
         unselectAll();
         setStudentVirtualDialogOpen(false);
-        setListData(record?.students);
+        setListData(classroomStudents);
     };
 
     const virtualClassEditHandler = async (e: any) => {
-        const students = (e as Student[]) ?? record?.students;
+        const students = (e as Student[]) ?? classroomStudents;
 
         if (!studentVirtualDialogOpen) {
             setIsLoading(true);
+
             const { data: classes } = await dataProvider.getMany<Classroom>(MAPPING.CLASSROOMS, {
                 ids: Object.keys(record?.parentClasses ?? {}),
             });
             const fullStudents: Student[] = [];
 
             classes?.forEach((e) => {
-                const students = e.students.map((_e) => ({
+                const studentsTemp = Object.values(e.students).map((_e) => ({
                     ..._e,
                     classId: e.id,
                 }));
-                fullStudents.push(...students);
+                fullStudents.push(...studentsTemp);
             });
 
-            setListData(fullStudents);
-            select(record?.students.map((e) => e.id) ?? []);
+            setListData(fullStudents.sort(sortByRoll));
+            select(classroomStudents.map((e) => e.id) ?? []);
             setStudentVirtualDialogOpen(true);
             setIsLoading(false);
         } else {
@@ -114,89 +116,9 @@ const StudentTab = ({
     };
 
     if (record.isDerived) {
-        listContext.onUnselectItems = () => {
-            virtualClassEditHandler(undefined).then(() => {});
-        };
+        listContext.onUnselectItems = () => virtualClassEditHandler(null);
     }
 
-    const CSVStudentReader = () => (
-        <div className="css-1hanliz-MuiStack-root">
-            {' '}
-            <label
-                className="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-rqjjym-MuiButtonBase-root-MuiButton-root"
-                htmlFor="csv-reader"
-            >
-                <UploadIcon fontSize="small"></UploadIcon>
-                <span style={{ paddingLeft: '5px' }}> Import</span>
-                <CSVReader
-                    parserOptions={{
-                        header: true,
-                        dynamicTyping: true,
-                        skipEmptyLines: true,
-                    }}
-                    inputId="csv-reader"
-                    inputStyle={{ display: 'none' }}
-                    onFileLoaded={async (data) => {
-                        const invalidHeader = data.some((e) => {
-                            const keys = Object.keys(e).sort();
-                            const containsAllHeaders = csvExportHeaders.every((header) =>
-                                keys.includes(header)
-                            );
-                            return !containsAllHeaders;
-                        });
-                        if (invalidHeader) {
-                            const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(
-                                ','
-                            )}`;
-                            return notify(message, { type: 'error' });
-                        }
-                        if (record.isDerived) {
-                            // console.log(Object.keys);
-                            const parentClasses = record.parentClasses!;
-                            const keys = Object.keys(parentClasses).map((e) => parentClasses[e].id);
-                            const containedParentClass = data.filter((e) =>
-                                keys.includes(e.classId)
-                            );
-                            const invalidClassId = !containedParentClass.some((e) => e);
-                            data = containedParentClass;
-                            if (invalidClassId) {
-                                const message = `ClassIds don't match the Parent Classes Proper classIds are ${keys.join(
-                                    ','
-                                )}`;
-                                return notify(message, { type: 'error' });
-                            }
-                        }
-                        if (!record.isDerived) {
-                            const classId = record.id;
-                            let containedclassId;
-                            if (data.some((e) => e.hasOwnProperty('classId')))
-                                containedclassId = data.filter((e) => e.classId === classId);
-                            else containedclassId = data;
-                            
-                            console.log(containedclassId);
-                             data = containedclassId;
-                        }
-                        await dataProvider.update(MAPPING.CLASSROOMS, {
-                            id: record.id,
-                            data: {
-                                ...record,
-                                students: data,
-                            },
-                            previousData: {},
-                        });
-
-                        notify(`Updated ${data.length} Students of ${record.id}`, {
-                            type: 'success',
-                        });
-                        setListData(data);
-                    }}
-                    onError={() => {
-                        notify(`Error Importing CSV`, { type: 'error' });
-                    }}
-                />
-            </label>
-        </div>
-    );
     return (
         <Tab label={label} path={path} {...props}>
             <Stack
@@ -205,48 +127,50 @@ const StudentTab = ({
                 justifyContent="space-between"
                 direction="row"
             >
-                {!!record?.isDerived ? (
-                    <LoadingButton
-                        size="medium"
-                        variant="contained"
-                        startIcon={<EditIcon />}
-                        disabled={studentVirtualDialogOpen}
-                        loading={isLoading}
-                        onClick={virtualClassEditHandler}
-                    >
-                        Edit Students
-                    </LoadingButton>
-                ) : (
-                    <Button
-                        size="medium"
-                        variant="contained"
-                        startIcon={<AddIcon />}
-                        onClick={() => {
-                            setStudentDialog({
-                                ...studentDialog,
-                                add: true,
-                                enable: true,
-                                record: undefined,
-                            });
-                        }}
-                    >
-                        Add Student
-                    </Button>
-                )}
+                <Stack spacing="10px" direction="row">
+                    {!!record?.isDerived ? (
+                        <LoadingButton
+                            size="medium"
+                            variant="contained"
+                            startIcon={<EditIcon />}
+                            disabled={studentVirtualDialogOpen}
+                            loading={isLoading}
+                            onClick={virtualClassEditHandler}
+                        >
+                            Edit Students
+                        </LoadingButton>
+                    ) : (
+                        <Button
+                            size="medium"
+                            variant="contained"
+                            startIcon={<AddIcon />}
+                            onClick={() => {
+                                setStudentDialog({
+                                    ...studentDialog,
+                                    add: true,
+                                    enable: true,
+                                    record: undefined,
+                                });
+                            }}
+                        >
+                            Add Student
+                        </Button>
+                    )}
 
-                {studentVirtualDialogOpen && (
-                    <Button
-                        size="medium"
-                        variant="contained"
-                        color="error"
-                        startIcon={<CancelIcon />}
-                        onClick={disableEdit}
-                    >
-                        Cancel
-                    </Button>
-                )}
+                    {studentVirtualDialogOpen && (
+                        <Button
+                            size="medium"
+                            variant="contained"
+                            color="error"
+                            startIcon={<CancelIcon />}
+                            onClick={disableEdit}
+                        >
+                            Cancel
+                        </Button>
+                    )}
+                </Stack>
 
-                <Stack spacing={'10px'} direction="row">
+                <Stack spacing="10px" direction="row">
                     <Button
                         size="medium"
                         variant="outlined"
@@ -259,7 +183,11 @@ const StudentTab = ({
                     >
                         Export
                     </Button>
-                    <CSVStudentReader />
+                    <ImportButton
+                        record={record}
+                        setListData={setListData}
+                        csvExportHeaders={csvExportHeaders}
+                    />
                 </Stack>
             </Stack>
 

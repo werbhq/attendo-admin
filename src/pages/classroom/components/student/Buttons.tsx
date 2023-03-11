@@ -9,6 +9,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import UploadIcon from '@mui/icons-material/Upload';
 
 import {
     useRecordContext,
@@ -19,11 +20,12 @@ import {
     useUnselectAll,
     FunctionField,
 } from 'react-admin';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { MAPPING } from 'provider/mapping';
 import { sortByRoll } from 'Utils/helpers';
-import { Student } from 'types/models/student';
+import { StudentShort as Student } from 'types/models/student';
 import { Classroom } from 'types/models/classroom';
+import CSVReader from 'react-csv-reader';
 
 const resource = MAPPING.STUDENTS;
 
@@ -192,6 +194,94 @@ export const CustomVirtualStudentDeleteButton = ({
     return (
         <Button variant="text" color="error" startIcon={<DeleteIcon />} onClick={handleClose}>
             Delete All
+        </Button>
+    );
+};
+
+export const ImportButton = ({
+    record,
+    csvExportHeaders,
+    setListData,
+}: {
+    record: Classroom;
+    csvExportHeaders: string[];
+    setListData: React.Dispatch<React.SetStateAction<Student[]>>;
+}) => {
+    const importRef = useRef<HTMLInputElement>(null);
+    const notify = useNotify();
+    const dataProvider = useDataProvider();
+
+    const fileLoadHandler = async (data: any[]) => {
+        const invalidHeader = data.some((e) => {
+            const keys = Object.keys(e).sort();
+            const containsAllHeaders = csvExportHeaders.every((header) => keys.includes(header));
+            return !containsAllHeaders;
+        });
+
+        if (invalidHeader) {
+            const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(',')}`;
+            return notify(message, { type: 'error' });
+        }
+
+        if (record.isDerived) {
+            const parentClasses = record.parentClasses!;
+            const keys = Object.keys(parentClasses).map((e) => parentClasses[e].id);
+            const containedParentClass = data.filter((e) => keys.includes(e.classId));
+            const invalidClassId = !containedParentClass.some((e) => e);
+            data = containedParentClass;
+            if (invalidClassId) {
+                const message = `ClassIds don't match the Parent Classes Proper classIds are ${keys.join(
+                    ','
+                )}`;
+                return notify(message, { type: 'error' });
+            }
+        } else {
+            const classId = record.id;
+            let containedClassId;
+            if (data.some((e) => e.hasOwnProperty('classId'))) {
+                containedClassId = data.filter((e) => e.classId === classId);
+            } else {
+                containedClassId = data;
+            }
+            data = containedClassId;
+        }
+
+        await dataProvider.update<Classroom>(MAPPING.CLASSROOMS, {
+            id: record.id,
+            data: {
+                ...record,
+                students: data,
+            },
+            previousData: {},
+        });
+
+        notify(`Updated ${data.length} Students of ${record.id}`, {
+            type: 'success',
+        });
+        setListData(data);
+    };
+
+    return (
+        <Button
+            size="medium"
+            variant="contained"
+            startIcon={<UploadIcon />}
+            onClick={() => {
+                importRef?.current?.click();
+            }}
+        >
+            <CSVReader
+                parserOptions={{
+                    header: true,
+                    dynamicTyping: true,
+                    skipEmptyLines: true,
+                }}
+                inputRef={importRef}
+                inputStyle={{ display: 'none' }}
+                onFileLoaded={fileLoadHandler}
+                onError={() => notify(`Error Importing CSV`, { type: 'error' })}
+            />
+            Import
         </Button>
     );
 };
