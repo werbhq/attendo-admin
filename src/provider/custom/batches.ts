@@ -15,6 +15,7 @@ const BatchesProvider: DataProviderCustom<Batch> = {
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.BATCHES,
         });
+        
         const values = Object.values(data.batches) as Batch[];
         return { data: paginateSingleDoc(params, values), total: values.length };
     },

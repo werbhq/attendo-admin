@@ -86,7 +86,7 @@ const ReportTab = ({
         <Tab label={label} path={path} {...props}>
             <List
                 resource={MAPPING.REPORTS}
-                filter={{ semester, classroomId: record.id }}
+                filter={{ semester, classroomId: record.id}}
                 pagination={false}
                 exporter={reportsExporter}
                 actions={<ReporterToolBar />}

@@ -7,6 +7,7 @@ import ReportsProvider from './custom/reports';
 import BatchesProvider from './custom/batches';
 import { DataProviderCustom } from '../types/DataProvider';
 import AttendanceProvider from './custom/attendance';
+// import AttendanceProvider from './custom/attendance';
 
 // ADD YOUR PROVIDERS HERE
 const CustomProviders: DataProviderCustom<any>[] = [
