@@ -5,4 +5,4 @@ import { MODE } from './Utils/helpers';
  *
  * Values {PROD|DEV|EMULATOR}
  */
-export const kMode = MODE.EMULATOR;
+export const kMode = MODE.DEV;
