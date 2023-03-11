@@ -14,6 +14,8 @@ import {
     SelectInput,
     Tab,
     useRecordContext,
+    useListContext,
+    ReferenceField,
 } from 'react-admin';
 import TeacherField from '../components/classroom/CustomTeacherField';
 import AddIcon from '@mui/icons-material/Add';
@@ -51,7 +53,7 @@ const SubjectTab = ({
     const [semesterChoices, setSemesterChoices] = useState<SubjectSemester[]>([]);
     const [branchData, setBranchData] = useState<SubjectBranchSubs | undefined>(undefined);
     const [teachersData, setTeachersData] = useState<TeacherShort[]>(record?.teachers ?? []);
-
+    const { selectedIds } = useListContext();
     const [dialog, setDialog] = useState({
         open: false, //opening/closing the dialogue
         record: {}, //record regarding the current inputted data
@@ -69,7 +71,6 @@ const SubjectTab = ({
     const tableData = useList({
         data: sem_record,
     });
-
     //closes dialogue
     const handleClose = () => {
         setDialog({ ...dialog, open: false });
@@ -106,11 +107,7 @@ const SubjectTab = ({
         } else {
             const alreadyPresent: string[] = []; // Names
             const final: TeacherShort[] = subjects[subjectIndex].teachers;
-            console.log(final);
-            console.log(teachers);
             teachers.forEach((e) => {
-                console.log(e);
-
                 if (
                     final.some((f) => {
                         return f.id === e.id;
@@ -121,14 +118,12 @@ const SubjectTab = ({
                     final.push(e);
                 }
             });
-            console.log(alreadyPresent.length);
             if (alreadyPresent.length !== 0) {
                 notify(`${alreadyPresent.join(',')} were already present`, { type: 'info' });
                 handleClose();
             }
             subjects[subjectIndex].teachers = final;
         }
-        console.log(subjects);
         const subjectsMap = {} as { [id: string]: ClassroomSubject };
 
         subjects.forEach((obj) => {
@@ -167,7 +162,6 @@ const SubjectTab = ({
                 tchrsList = [];
             }
         });
-        console.log(presentTeachers);
         subjects[currentSubjIndex].teachers = tchrsList;
         const subjectsMap = {} as { [id: string]: ClassroomSubject };
 
@@ -207,7 +201,7 @@ const SubjectTab = ({
             const teacherData = e.data.map(({ id, email, userName }) => ({
                 id,
                 emailId: email,
-                name: titleCase(userName),
+                name: userName === undefined ? '' : titleCase(userName),
             }));
             setTeachersData(teacherData);
         });
@@ -326,6 +320,11 @@ const SubjectTab = ({
                             <WrapperField label="Teacher">
                                 <TeacherField />
                             </WrapperField>
+                            <ReferenceField
+                                source="id"
+                                reference={MAPPING.ATTENDANCES}
+                                link={(record) => `/attendance/${record.id}/show`}
+                            />
                             <MyEditButton></MyEditButton>
                         </Datagrid>
                     </ListContextProvider>

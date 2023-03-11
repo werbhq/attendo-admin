@@ -6,6 +6,7 @@ import AuthTeachersProvider from './custom/authorizedTeachers';
 import ReportsProvider from './custom/reports';
 import BatchesProvider from './custom/batches';
 import { DataProviderCustom } from '../types/DataProvider';
+import AttendanceProvider from './custom/attendance';
 
 // ADD YOUR PROVIDERS HERE
 const CustomProviders: DataProviderCustom<any>[] = [
@@ -16,6 +17,7 @@ const CustomProviders: DataProviderCustom<any>[] = [
     AuthTeachersProvider,
     ReportsProvider,
     BatchesProvider,
+    AttendanceProvider
 ];
 
 export default CustomProviders;
