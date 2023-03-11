@@ -2,16 +2,14 @@ import { MAPPING } from '../mapping';
 import { httpsCallable } from 'firebase/functions';
 import { cloudFunctions } from '../firebase';
 import { DataProviderCustom } from 'types/DataProvider';
-import {
-    AttendanceReportResponse,
-    AttendanceReportResponseFrontEnd,
-} from 'types/models/attendance';
+import { AttendanceReportResponse } from 'types/models/report';
+import { Report } from 'types/frontend/report';
 
 /**
  * Don't call this directly
  * Use dataProvider
  */
-const ReportsProvider: DataProviderCustom<AttendanceReportResponseFrontEnd> = {
+const ReportsProvider: DataProviderCustom<Report> = {
     resource: MAPPING.REPORTS,
 
     getList: async (resource, params) => {

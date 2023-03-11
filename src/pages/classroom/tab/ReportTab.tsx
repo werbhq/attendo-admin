@@ -1,12 +1,12 @@
 import { List, Tab, TopToolbar, ExportButton, downloadCSV, useDataProvider } from 'react-admin';
 import { MAPPING } from 'provider/mapping';
 import { Box, MenuItem, Select, Stack, Typography } from '@mui/material';
-import { AttendanceReportResponseFrontEnd } from 'types/models/attendance';
 import jsonExport from 'jsonexport/dist';
 import AttendanceDataGrid from '../components/report/ShowAttendanceGrid';
 import { Classroom } from 'types/models/classroom';
 import { useEffect, useState } from 'react';
 import { SubjectDoc } from 'types/models/subject';
+import { Report } from 'types/frontend/report';
 
 const ReportTab = ({
     record,
@@ -37,7 +37,7 @@ const ReportTab = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const reportsExporter = (data: AttendanceReportResponseFrontEnd[]) => {
+    const reportsExporter = (data: Report[]) => {
         const headersReports = ['id', 'regNo', 'rollNo', 'name'];
 
         const dataForExport = data.map(({ id, regNo, rollNo, name, attendance }) => {

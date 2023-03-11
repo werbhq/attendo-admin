@@ -11,6 +11,7 @@ interface Period {
 export interface TeacherClassroom {
     gclassroomId?: string;
     tid?: string;
+    id: string;
     meetLookup?: string;
     periods?: Period[];
     classroom: ClassroomShort;

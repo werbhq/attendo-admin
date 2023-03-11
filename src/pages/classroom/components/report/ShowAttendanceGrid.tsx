@@ -3,7 +3,7 @@ import { TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 
 import { titleCase } from 'Utils/helpers';
-import { AttendanceReportResponseFrontEnd } from 'types/models/attendance';
+import { Report } from 'types/frontend/report';
 import React from 'react';
 
 const MyDatagridRow = ({
@@ -11,7 +11,7 @@ const MyDatagridRow = ({
     id,
     children,
 }: {
-    record?: AttendanceReportResponseFrontEnd;
+    record?: Report;
     id?: string;
     children?: any[];
 }) => (
@@ -46,7 +46,7 @@ const MyDatagridRow = ({
     </RecordContextProvider>
 );
 
-const DatagridHeader = (props: { children?: any[]; data?: AttendanceReportResponseFrontEnd[] }) => {
+const DatagridHeader = (props: { children?: any[]; data?: Report[] }) => {
     const children = props.children;
 
     const subjects =

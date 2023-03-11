@@ -1,5 +1,5 @@
 import { Classroom, ClassroomVirtual } from '../types/models/classroom';
-import { Student } from '../types/models/student';
+import { StudentShort as Student } from '../types/models/student';
 
 export const sortByRoll = (a: Student, b: Student) => {
     if (a.classId && b.classId) {

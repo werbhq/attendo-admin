@@ -1,6 +1,6 @@
 import type { Merge } from '../merge';
 import type { Batch, BatchShort } from './batch';
-import type { Student } from './student';
+import type { StudentShort } from './student';
 import type { Subject } from './subject';
 import type { TeacherShort } from './teacher';
 
@@ -20,7 +20,7 @@ interface _BaseClassroomShort {
 
 interface _BaseClassroom extends _BaseClassroomShort {
     batch: Batch;
-    students: Student[];
+    students: { [id: string]: StudentShort };
 }
 
 // -----------------Classroom Actual Types -----------------
@@ -35,9 +35,7 @@ export interface ClassroomNonVirtualShort extends _BaseClassroomShort {
 
 export interface ClassroomNonVirtual extends _BaseClassroom {
     isDerived: false;
-    subjects: {
-        [id: string]: ClassroomSubject;
-    };
+    subjects: { [id: string]: ClassroomSubject };
 }
 
 export interface ClassroomVirtual extends _BaseClassroom {

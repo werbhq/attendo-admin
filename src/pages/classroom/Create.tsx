@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Subject, SubjectDoc } from 'types/models/subject';
 import { Batch } from 'types/models/batch';
 import { defaultParams } from 'provider/firebase';
-import { Classroom, ClassroomNonVirtual, ClassroomSubject, ClassroomVirtual } from 'types/models/classroom';
+import { Classroom, ClassroomNonVirtual, ClassroomVirtual } from 'types/models/classroom';
 import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
 
 const CreateClassroom = ({
@@ -98,7 +98,7 @@ const CreateClassroom = ({
             name: record.name,
             branch: record.branch,
             batch,
-            students: [],
+            students: {},
         };
 
         let finalData: ClassroomNonVirtual | ClassroomVirtual;
@@ -107,7 +107,7 @@ const CreateClassroom = ({
             const nonVirtualClassroom: ClassroomNonVirtual = {
                 ...common,
                 isDerived: false,
-                subjects: {} as { [id: string]: ClassroomSubject },
+                subjects: {},
             };
             finalData = nonVirtualClassroom;
         } else {
@@ -119,7 +119,6 @@ const CreateClassroom = ({
             const virtualClassroom: ClassroomVirtual = {
                 ...common,
                 isDerived: true,
-                students: [],
                 parentClasses: recordVirtual.parentClasses,
                 subject: getSubjects(data.scheme, data.branch, data.semester).find(
                     (e) => e.id === record.subjectId

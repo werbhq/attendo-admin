@@ -1,5 +1,5 @@
 import type { Classroom } from './classroom';
-import type { Student } from './student';
+import type { StudentShort } from './student';
 import type { Subject } from './subject';
 import type { Period } from './teacher';
 
@@ -10,7 +10,7 @@ export interface GoogleClassroom {
     link: string;
     code: string;
     recoginised: boolean;
-    students: Student[];
+    students: StudentShort[];
     classroom?: Classroom;
     subject?: Subject;
     periods?: Period[];
