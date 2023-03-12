@@ -34,7 +34,7 @@ const ClassroomsList = () => {
                 <FunctionField
                     label="Semester"
                     render={(record: Classroom) =>
-                        record.isDerived ? record?.semester ?? 0 : record?.batch?.semester ?? 0
+                        record.isDerived ? record.semester : record.batch.semester
                     }
                 ></FunctionField>
                 <FunctionField
