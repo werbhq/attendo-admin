@@ -28,7 +28,7 @@ export interface AttendanceMini {
     dateTime: number;
     hour: number;
     teacherId: string;
-    absentees?: string[];
+    absentees: string[];
     unrecognisedNames?: string[];
     lateComers?: string[];
     leaves?: string[];

@@ -13,7 +13,7 @@ const Attendance: ResourceProps = {
     icon,
     options: { label: 'Attendances' },
     list: AttendanceList,
-    // show: AttendanceShow,
+    show: AttendanceShow,
     // edit: AttendanceEdit,
     // create: AttendanceCreate,
 };

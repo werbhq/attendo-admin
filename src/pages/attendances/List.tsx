@@ -7,15 +7,23 @@ import {
     useRecordContext,
     FunctionField,
     ReferenceField,
+    useListContext,
 } from 'react-admin';
 import { AttendanceMini, SubjectAttendance } from 'types/models/attendance';
 
 const AttendanceList = () => {
-    const record = useRecordContext();
     return (
         <List exporter={false}>
             <Datagrid rowClick="show">
-                <TextField source="classroom.id" label="Classroom Id" />
+                <ReferenceField
+                    source="classroom.id"
+                    label="Classroom Id"
+                    reference={MAPPING.CLASSROOMS}
+                    link="show"
+                >
+                    {' '}
+                    <TextField source="id" />
+                </ReferenceField>
                 <TextField source="attendance.date" label="Date" />
                 <TextField source="semester" />
                 <TextField source="attendance.hour" label="Hour" />
@@ -29,9 +37,10 @@ const AttendanceList = () => {
                     label="Absentees Count"
                     source="attendance.absentees"
                     render={(record: { attendance: { absentees: string[] | any[] } }) =>
-                    record.attendance.absentees.length
-                }
+                        record.attendance.absentees.length
+                    }
                 />
+                <TextField source="strength" />
             </Datagrid>
         </List>
     );

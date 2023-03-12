@@ -319,11 +319,11 @@ const SubjectTab = ({
                             <WrapperField label="Teacher">
                                 <TeacherField />
                             </WrapperField>
-                            <ReferenceField
+                            {/* <ReferenceField
                                 source="id"
                                 reference={MAPPING.ATTENDANCES}
                                 link={(record) => `/attendance/${record.id}/show`}
-                            />
+                            /> */}
                             <MyEditButton></MyEditButton>
                         </Datagrid>
                     </ListContextProvider>
