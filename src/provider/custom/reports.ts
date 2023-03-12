@@ -30,7 +30,7 @@ const ReportsProvider: DataProviderCustom<Report> = {
                 .get()
         ).docs.map((e) => e.data() as SubjectAttendance);
 
-        const fieldPath = new FieldPath('classroom', classroomId, 'id');
+        const fieldPath = new FieldPath('classroom', 'parentClasses', classroomId, 'id');
         const virtualAttendances = (
             await db
                 .collection(MAPPING.ATTENDANCES)
