@@ -25,19 +25,18 @@ const AttendanceProvider: DataProviderCustom<SubjectAttendance> = {
             resource,
             defaultParams
         );
-        const classroomRecord = await dataProvider
-            .getList<Classroom>(MAPPING.CLASSROOMS, defaultParams)
-            .then((e) => e.data);
+        const { data: classroomRecord } = await dataProvider.getMany<Classroom>(
+            MAPPING.CLASSROOMS,
+            { ids: data.map((e) => e.classroom.id) }
+        );
         const attendanceData = data.flatMap(
             ({ attendances, classroom: classroomShort, semester, subject }) =>
                 Object.values(attendances).map((attendance) => {
-                    let strength = 0;
-                    for (let classroom of classroomRecord) {
-                        if (classroom.id === classroomShort.id)
-                            strength =
-                                Object.keys(classroom.students).length -
-                                attendance.absentees.length;
-                    }
+                    const classroomStrength = Object.keys(
+                        classroomRecord.find((e) => e.id == classroomShort.id)?.students ?? {}
+                    ).length;
+                    const absenttes = attendance.absentees.length;
+                    const strength = classroomStrength - absenttes;
                     return {
                         attendance,
                         id: attendance.id,
@@ -48,14 +47,20 @@ const AttendanceProvider: DataProviderCustom<SubjectAttendance> = {
                     };
                 })
         );
-        console.log(attendanceData);
         return { data: paginateSingleDoc(params, attendanceData), total: attendanceData.length };
     },
 
     // getOne: async (resource, params) => {
     //     const { id } = params;
-    //     const { data } = await dataProviderLegacy.getOne(resource, { id: id });
-    //     return { data: data.attendance.id, status: 200 };
+    //     const attendance = await db
+    //         .collection(MAPPING.ATTENDANCES)
+    //         .where(`attendances.id`, '==', id)
+    //         .get();
+    //     console.log(attendance);
+    //     const { data } = await dataProviderLegacy.getOne(resource, {
+    //         id: id,
+    //     });
+    //     return { data: data.attendance[params.id], status: 200 };
     // },
 };
 
