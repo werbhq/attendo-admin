@@ -4,19 +4,33 @@ import {
     SimpleShowLayout,
     TextField,
     BooleanField,
-    useShowController,
     useNotify,
     useRefresh,
+    WithRecord,
 } from 'react-admin';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useState } from 'react';
+import { AuthorizedTeacher } from 'types/models/teacher';
 
 const AuthorizedTeacherShow = () => {
-    const { record } = useShowController();
     const notify = useNotify();
     const refresh = useRefresh();
     const [loading, setLoading] = useState(false);
+
+    const handleCreation = async (record: AuthorizedTeacher) => {
+        setLoading(true);
+        try {
+            const { message, success } = await AuthTeachersProviderExtended.createEmails([
+                record.id,
+            ]);
+            notify(message, { type: success ? 'success' : 'error' });
+        } catch (e: any) {
+            notify(e.message, { type: 'error' });
+        }
+        setLoading(false);
+        refresh();
+    };
 
     return (
         <Show>
@@ -26,24 +40,22 @@ const AuthorizedTeacherShow = () => {
                 <TextField source="userName" label="Name" />
                 <BooleanField source="created" looseValue />
                 <TextField source="branch" />
-
-                {!record.created && (
-                    <LoadingButton
-                        variant="contained"
-                        color="primary"
-                        loading={loading}
-                        onClick={() => {
-                            setLoading(true);
-                            AuthTeachersProviderExtended.createEmails([record.id]).then((e) => {
-                                setLoading(false);
-                                notify(e.message, { type: e.success ? 'success' : 'error' });
-                            });
-                            refresh();
-                        }}
-                    >
-                        Create Account
-                    </LoadingButton>
-                )}
+                <WithRecord
+                    render={(record: AuthorizedTeacher) =>
+                        !record?.created ? (
+                            <LoadingButton
+                                variant="contained"
+                                color="primary"
+                                loading={loading}
+                                onClick={() => handleCreation(record)}
+                            >
+                                Create Account
+                            </LoadingButton>
+                        ) : (
+                            <></>
+                        )
+                    }
+                />
             </SimpleShowLayout>
         </Show>
     );

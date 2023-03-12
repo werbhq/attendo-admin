@@ -1,10 +1,10 @@
 import type { ClassroomShort } from './classroom';
-import type { SemSubject } from './semAttendance';
-import type { Student } from './student';
+import type { StudentShort } from './student';
 import type { Subject } from './subject';
 import type { TeacherShort } from './teacher';
 import type { Meta } from './meta';
-export interface Attendance {
+
+export interface AttendanceShort {
     id: string;
     date: string;
     dateTime: number;
@@ -13,6 +13,9 @@ export interface Attendance {
     classroom: ClassroomShort;
     teacher: TeacherShort;
     subject: Subject;
+}
+
+export interface Attendance extends AttendanceShort {
     absentees?: string[];
     unrecognisedNames?: string[];
     lateComers?: string[];
@@ -25,7 +28,7 @@ export interface AttendanceMini {
     dateTime: number;
     hour: number;
     teacherId: string;
-    absentees?: string[];
+    absentees: string[];
     unrecognisedNames?: string[];
     lateComers?: string[];
     leaves?: string[];
@@ -40,12 +43,13 @@ export interface SubjectAttendance {
     attendances: { [id: string]: AttendanceMini };
     meta?: Meta;
 }
+
 export interface AutoAttendance extends Attendance {
     meetLookup: string;
     userName: string;
 }
 
-interface _StudentAttendance extends Student {
+interface _StudentAttendance extends StudentShort {
     attendance: {
         subjectId: string;
         percentage: number;
@@ -63,38 +67,35 @@ export interface AttendanceReport {
     attendances: _StudentAttendance[];
 }
 
-interface _CustomSubject extends SemSubject {
-    classId: string;
-}
+export function SubjectAttendanceToAttendances(data: SubjectAttendance) {
+    const { semester, subject, classroom, attendances, teachers } = data;
 
-export interface AttendanceReportResponse {
-    semester: number;
-    classroomId: string;
-    subjects: _CustomSubject[];
-    attendances: {
-        id: string;
-        email: string;
-        regNo: string;
-        userName: string;
-        name: string;
-        rollNo: number;
-        attendance: {
-            subjectId: string;
-            percentage: number;
-        }[];
-    }[];
-}
+    const attendanceData: Attendance[] = [];
 
-export interface AttendanceReportResponseFrontEnd {
-    id: string;
-    email: string;
-    regNo: string;
-    userName: string;
-    name: string;
-    rollNo: number;
-    attendance: {
-        name: string;
-        subjectId: string;
-        percentage: number;
-    }[];
+    Object.values(attendances).forEach((doc) => {
+        const { teacherId } = doc;
+
+        const attendanceDoc: Attendance = {
+            id: doc.id,
+            date: doc.date,
+            dateTime: doc.dateTime,
+            hour: doc.hour,
+            absentees: doc.absentees ?? [],
+            unrecognisedNames: doc.unrecognisedNames ?? [],
+            lateComers: doc.lateComers ?? [],
+            leaves: doc.leaves ?? [],
+            teacher: teachers.find((e) => e.id === teacherId) ?? {
+                id: teacherId,
+                emailId: teacherId,
+                name: teacherId,
+            },
+            semester,
+            classroom,
+            subject,
+        };
+
+        attendanceData.push(attendanceDoc);
+    });
+
+    return attendanceData;
 }

@@ -9,6 +9,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import UploadIcon from '@mui/icons-material/Upload';
 
 import {
     useRecordContext,
@@ -19,11 +20,12 @@ import {
     useUnselectAll,
     FunctionField,
 } from 'react-admin';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { MAPPING } from 'provider/mapping';
 import { sortByRoll } from 'Utils/helpers';
-import { Student } from 'types/models/student';
+import { StudentShort as Student } from 'types/models/student';
 import { Classroom } from 'types/models/classroom';
+import CSVReader from 'react-csv-reader';
 
 const resource = MAPPING.STUDENTS;
 
@@ -192,6 +194,97 @@ export const CustomVirtualStudentDeleteButton = ({
     return (
         <Button variant="text" color="error" startIcon={<DeleteIcon />} onClick={handleClose}>
             Delete All
+        </Button>
+    );
+};
+
+export const ImportButton = ({
+    csvExportHeaders,
+    setListData,
+}: {
+    csvExportHeaders: string[];
+    setListData: React.Dispatch<React.SetStateAction<Student[]>>;
+}) => {
+    type ClassroomCustom = Omit<Classroom, 'parentClasses'> & { parentClasses: string[] };
+    type StudentCustom = Student & { classId: string };
+
+    const importRef = useRef<HTMLInputElement>(null);
+    const notify = useNotify();
+    const dataProvider = useDataProvider();
+    const record: ClassroomCustom = useRecordContext();
+
+    const fileLoadHandler = async (data: StudentCustom[]) => {
+        const invalidHeader = data.some((e) => {
+            const keys = Object.keys(e).sort();
+            const containsAllHeaders = csvExportHeaders.every((header) => keys.includes(header));
+            return !containsAllHeaders;
+        });
+
+        if (invalidHeader) {
+            const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(',')}`;
+            return notify(message, { type: 'error' });
+        }
+
+        if (record.isDerived) {
+            const parentClasses = record.parentClasses;
+            const invalidClassId = data.some((e) => !parentClasses.includes(e.classId));
+
+            if (invalidClassId) {
+                const message = `ClassIds don't match the Parent Classes Proper classIds are ${parentClasses.join(
+                    ','
+                )}`;
+                return notify(message, { type: 'error' });
+            }
+
+            data = data.filter((e) => parentClasses.includes(e.classId));
+        } else {
+            const classId = record.id;
+            let containedClassId;
+            if (data.some((e) => e.hasOwnProperty('classId'))) {
+                containedClassId = data.filter((e) => e.classId === classId);
+            } else {
+                containedClassId = data;
+            }
+            data = containedClassId;
+        }
+
+        await dataProvider.update<Student>(MAPPING.STUDENTS, {
+            id: record.id,
+            data,
+            previousData: Object.values(record.students),
+            meta: { record },
+        });
+
+        notify(`Updated ${data.length} Students of ${record.id}`, {
+            type: 'success',
+        });
+        setListData(data);
+    };
+
+    return (
+        <Button
+            size="medium"
+            variant="contained"
+            startIcon={<UploadIcon />}
+            onClick={() => {
+                if (importRef.current) {
+                    importRef.current.value = '';
+                    importRef.current.click();
+                }
+            }}
+        >
+            <CSVReader
+                parserOptions={{
+                    header: true,
+                    dynamicTyping: true,
+                    skipEmptyLines: true,
+                }}
+                inputRef={importRef}
+                inputStyle={{ display: 'none' }}
+                onFileLoaded={fileLoadHandler}
+                onError={() => notify(`Error Importing CSV`, { type: 'error' })}
+            />
+            Import
         </Button>
     );
 };

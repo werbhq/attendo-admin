@@ -3,15 +3,24 @@ import { TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
 
 import { titleCase } from 'Utils/helpers';
-import { AttendanceReportResponseFrontEnd } from 'types/models/attendance';
+import { Report } from 'types/frontend/report';
 import React from 'react';
+
+type SortParam = { name: string; isVirtualClass: boolean };
+const sorter = (a: SortParam, b: SortParam) => {
+    return a.isVirtualClass === b.isVirtualClass
+        ? a.name?.localeCompare(b.name)
+        : a.isVirtualClass
+        ? 1
+        : -1;
+};
 
 const MyDatagridRow = ({
     record,
     id,
     children,
 }: {
-    record?: AttendanceReportResponseFrontEnd;
+    record?: Report;
     id?: string;
     children?: any[];
 }) => (
@@ -20,40 +29,39 @@ const MyDatagridRow = ({
             {React.Children?.map(children, (field) => (
                 <TableCell key={`${id}-${field.props.source}`}>{field}</TableCell>
             ))}
-            {record?.attendance
-                .sort(({ name: a }, { name: b }) => a?.localeCompare(b))
-                .map((e) => {
-                    return (
-                        <TableCell key={`${e.subjectId}`}>
-                            <Tooltip title={`${e.name} (${e.subjectId.toUpperCase()})`}>
-                                <Typography variant="body2">
-                                    <span
-                                        style={{
-                                            color:
-                                                e.percentage < 70 && e.percentage !== -1
-                                                    ? 'red'
-                                                    : 'black',
-                                        }}
-                                    >
-                                        {e.percentage !== -1 ? `${Math.round(e.percentage)}%` : '-'}
-                                    </span>
-                                </Typography>
-                            </Tooltip>
-                        </TableCell>
-                    );
-                })}
+            {record?.attendance.sort(sorter).map((e) => {
+                return (
+                    <TableCell key={`${e.subjectId}`}>
+                        <Tooltip title={`${e.name} (${e.subjectId.toUpperCase()})`}>
+                            <Typography variant="body2">
+                                <span
+                                    style={{
+                                        color:
+                                            e.percentage < 70 && e.percentage !== -1
+                                                ? 'red'
+                                                : 'black',
+                                    }}
+                                >
+                                    {e.percentage !== -1 ? `${Math.round(e.percentage)}%` : '-'}
+                                </span>
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                );
+            })}
         </TableRow>
     </RecordContextProvider>
 );
 
-const DatagridHeader = (props: { children?: any[]; data?: AttendanceReportResponseFrontEnd[] }) => {
+const DatagridHeader = (props: { children?: any[]; data?: Report[] }) => {
     const children = props.children;
 
     const subjects =
         props.data && props.data?.length !== 0
-            ? props.data[0].attendance.map(({ subjectId, name }) => ({
+            ? props.data[0].attendance.map(({ subjectId, name, isVirtualClass }) => ({
                   id: subjectId.toUpperCase(),
                   name,
+                  isVirtualClass,
               }))
             : [];
 
@@ -69,21 +77,19 @@ const DatagridHeader = (props: { children?: any[]; data?: AttendanceReportRespon
                 {children?.map((field) => (
                     <TableCell key={field.props.source}>{titleCase(field.props.source)}</TableCell>
                 ))}
-                {subjects
-                    .sort(({ name: a }, { name: b }) => a?.localeCompare(b))
-                    .map(({ name, id }) => (
-                        <TableCell key={id}>
-                            <Tooltip title={name}>
-                                <Typography variant="body2">
-                                    {`${name
-                                        .split(' ')
-                                        .map((e) => e[0])
-                                        .filter((e) => ![')', '('].includes(e))
-                                        .join('')} (${id})`}
-                                </Typography>
-                            </Tooltip>
-                        </TableCell>
-                    ))}
+                {subjects.sort(sorter).map(({ name, id, isVirtualClass }) => (
+                    <TableCell key={id}>
+                        <Tooltip title={name}>
+                            <Typography variant="body2" fontWeight={isVirtualClass ? '' : 'bold'}>
+                                {`${name
+                                    .split(' ')
+                                    .map((e) => e[0])
+                                    .filter((e) => ![')', '('].includes(e))
+                                    .join('')} (${id})`}
+                            </Typography>
+                        </Tooltip>
+                    </TableCell>
+                ))}
             </TableRow>
         </TableHead>
     );

@@ -98,6 +98,7 @@ export default function EditClassroom({ state }: Props) {
     }, []);
 
     const handleSave = async (e: any) => {
+        e.teachers = e?.teachers.map((e: string) => ({ id: e })) ?? [];
         const record = e as Classroom;
 
         const common = {
@@ -148,7 +149,7 @@ export default function EditClassroom({ state }: Props) {
             finalData = virtualClassroom;
         }
 
-        await dataProvider.update(resource, {
+        await dataProvider.update<Classroom>(resource, {
             id: record.id,
             data: finalData,
             previousData: record,
@@ -175,7 +176,7 @@ export default function EditClassroom({ state }: Props) {
         }
         return errors;
     };
-    console.log(record);
+
     return (
         <>
             {!loading && (
