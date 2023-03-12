@@ -149,7 +149,7 @@ export default function EditClassroom({ state }: Props) {
             finalData = virtualClassroom;
         }
 
-        await dataProvider.update(resource, {
+        await dataProvider.update<Classroom>(resource, {
             id: record.id,
             data: finalData,
             previousData: record,

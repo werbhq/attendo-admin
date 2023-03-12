@@ -183,11 +183,7 @@ const StudentTab = ({
                     >
                         Export
                     </Button>
-                    <ImportButton
-                        record={record}
-                        setListData={setListData}
-                        csvExportHeaders={csvExportHeaders}
-                    />
+                    <ImportButton setListData={setListData} csvExportHeaders={csvExportHeaders} />
                 </Stack>
             </Stack>
 
