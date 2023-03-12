@@ -7,8 +7,6 @@ import {
     ReferenceField,
     SearchInput,
     TextInput,
-    useRecordContext,
-    useListContext,
 } from 'react-admin';
 import { MAPPING } from 'provider/mapping';
 import { Schemes } from 'Utils/Schemes';

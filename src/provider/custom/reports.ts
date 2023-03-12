@@ -1,5 +1,5 @@
 import { MAPPING } from '../mapping';
-import { dataProvider, db, isProd } from '../firebase';
+import { FieldPath, dataProvider, db, isProd } from '../firebase';
 import { DataProviderCustom } from 'types/DataProvider';
 import { Report, ReportAttendance } from 'types/frontend/report';
 import { SubjectAttendance } from 'types/models/attendance';
@@ -30,11 +30,12 @@ const ReportsProvider: DataProviderCustom<Report> = {
                 .get()
         ).docs.map((e) => e.data() as SubjectAttendance);
 
+        const fieldPath = new FieldPath('classroom', classroomId, 'id');
         const virtualAttendances = (
             await db
                 .collection(MAPPING.ATTENDANCES)
                 .where('semester', '==', semester)
-                .where(`classroom.parentClasses.${classroomId}.id`, '==', classroomId)
+                .where(fieldPath, '==', classroomId)
                 .get()
         ).docs.map((e) => e.data() as SubjectAttendance);
 

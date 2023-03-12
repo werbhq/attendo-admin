@@ -1,10 +1,10 @@
-import icon from '@mui/icons-material/LocalPolice';
+import icon from '@mui/icons-material/CheckCircle';
 
 import { MAPPING } from 'provider/mapping';
 
 import { ResourceProps } from 'react-admin';
-import AttendanceCreate from './Create';
-import AttendanceEdit from './Edit';
+// import AttendanceCreate from './Create';
+// import AttendanceEdit from './Edit';
 import AttendanceList from './List';
 import AttendanceShow from './Show';
 

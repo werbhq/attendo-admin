@@ -1,15 +1,5 @@
-import { Chip } from '@mui/material';
 import { MAPPING } from 'provider/mapping';
-import {
-    List,
-    Datagrid,
-    TextField,
-    useRecordContext,
-    FunctionField,
-    ReferenceField,
-    useListContext,
-} from 'react-admin';
-import { AttendanceMini, SubjectAttendance } from 'types/models/attendance';
+import { List, Datagrid, TextField, FunctionField, ReferenceField } from 'react-admin';
 
 const AttendanceList = () => {
     return (

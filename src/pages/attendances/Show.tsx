@@ -1,30 +1,18 @@
 import { Chip, Typography } from '@mui/material';
-import { dataProvider, defaultParams } from 'provider/firebase';
 import { MAPPING } from 'provider/mapping';
-import { useState } from 'react';
 import {
-    ArrayField,
-    ChipField,
-    FunctionField,
-    ListContextProvider,
-    ReferenceArrayField,
     ReferenceField,
     Show,
-    SingleFieldList,
     Tab,
     TabbedShowLayout,
     TextField,
-    useList,
-    useRecordContext,
-    useShowContext,
+    WithRecord,
     useShowController,
 } from 'react-admin';
-import { Classroom } from 'types/models/classroom';
+import { AttendanceFrontEnd } from 'types/frontend/attendance';
 
 const AttendanceShow = () => {
-    const { record } = useShowController();
-    const absentees = record.attendance.absentees ?? [];
-
+    const { record } = useShowController<AttendanceFrontEnd>();
 
     return (
         <Show emptyWhileLoading>
@@ -45,22 +33,32 @@ const AttendanceShow = () => {
                             reference={MAPPING.CLASSROOMS}
                             link="show"
                         >
-                            {' '}
                             <TextField source="id" />
                         </ReferenceField>
                         <TextField source="subject.name" />
-                        {absentees && (
-                            <div>
-                                <Typography
-                                    sx={{ fontSize: '0.75em', color: 'rgba(0, 0, 0, 0.6)' }}
-                                >
-                                    Absentees
-                                </Typography>
-                                {absentees.map((absentee: any) => (
-                                    <Chip  sx={{ ml: 0.5, mt: 1 }} label={absentee} />
-                                ))}{' '}
-                            </div>
-                        )}
+                        <WithRecord
+                            render={({ attendance }: AttendanceFrontEnd) =>
+                                attendance.absentees ? (
+                                    <div>
+                                        <Typography
+                                            sx={{ fontSize: '0.75em', color: 'rgba(0, 0, 0, 0.6)' }}
+                                        >
+                                            Absentees
+                                        </Typography>
+                                        {attendance.absentees.map((absentee, index) => (
+                                            <Chip
+                                                sx={{ ml: 0.5, mt: 1 }}
+                                                label={absentee}
+                                                key={index}
+                                            />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <></>
+                                )
+                            }
+                        />
+
                         {/* <Typography sx={{ fontSize: '0.75em', color: 'rgba(0, 0, 0, 0.6)' }}>
                             Absentees
                         </Typography>
