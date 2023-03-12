@@ -14,7 +14,8 @@ import { DataProvider } from 'react-admin';
 export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
-const isProd = kMode === MODE.PROD || process.env.NODE_ENV === 'production';
+const env = process.env.REACT_APP_ENV;
+const isProd = kMode === MODE.PROD || env === 'production';
 
 const options: RAFirebaseOptions = {
     // TODO: Enable when lazyLoading supports filtering
@@ -33,11 +34,7 @@ export const authProvider = isProd
 export const db = dataProviderLegacy.app.firestore();
 export const cloudFunctions = getFunctions();
 
-if (
-    kMode === MODE.EMULATOR &&
-    process.env.NODE_ENV !== 'production' &&
-    process.env.NODE_ENV !== 'development'
-) {
+if (kMode === MODE.EMULATOR && env !== 'production' && env !== 'development') {
     firebase.firestore().useEmulator('localhost', 8090);
     connectFunctionsEmulator(cloudFunctions, 'localhost', 5001);
     firebase.auth().useEmulator('http://localhost:9099/');
