@@ -15,7 +15,7 @@ export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
 const env = process.env.REACT_APP_ENV;
-const isProd = kMode === MODE.PROD || env === 'production';
+export const isProd = kMode === MODE.PROD || env === 'production';
 
 const options: RAFirebaseOptions = {
     // TODO: Enable when lazyLoading supports filtering
