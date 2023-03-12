@@ -98,6 +98,7 @@ export default function EditClassroom({ state }: Props) {
     }, []);
 
     const handleSave = async (e: any) => {
+        e.teachers = e?.teachers.map((e: string) => ({ id: e })) ?? [];
         const record = e as Classroom;
 
         const common = {
