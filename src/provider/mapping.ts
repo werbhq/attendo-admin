@@ -6,9 +6,7 @@ export const MAPPING = {
     COURSES: 'courses',
     DATA: 'data',
     AUTH_TEACHERS: 'authorized_teachers',
-    MASTER_CLASSROOMS: 'master_classrooms',
-    REPORTS: 'reports',
+    REPORTS: 'reports', // Not an actual collection. Only for resource
     BATCHES: 'batches',
-    ATTENDANCES:'attendance'
+    ATTENDANCES: 'attendance',
 };
-//subjectsV2

@@ -1,6 +1,6 @@
 import { DataProviderCustom } from 'types/DataProvider';
 import { Classroom, ClassroomNonVirtualShort } from 'types/models/classroom';
-import { dataProvider, db, FieldPath, FieldValue } from '../firebase';
+import { dataProvider, db } from '../firebase';
 import { MAPPING } from '../mapping';
 
 const getClassroomShort = (data: Classroom) => {
@@ -49,9 +49,6 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             .doc(id as string)
             .update({ ...data });
 
-        const fieldPath = new FieldPath('classrooms', id as string);
-        await db.collection(MAPPING.DATA).doc(MAPPING.MASTER_CLASSROOMS).update(fieldPath, data);
-
         return { data: { ...data, id }, status: 200 };
     },
 
@@ -85,31 +82,7 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
 
         await db.collection(MAPPING.CLASSROOMS).doc(data.id).set(data);
 
-        const fieldPath = new FieldPath('classrooms', data.id);
-        await db.collection(MAPPING.DATA).doc(MAPPING.MASTER_CLASSROOMS).update(fieldPath, data);
-
-        const record = data;
-
-        return { data: record, status: 200 };
-    },
-
-    delete: async (resource, params) => {
-        const { id } = params;
-        await db.collection(MAPPING.CLASSROOMS).doc(id).delete();
-
-        const fieldPath = new FieldPath('classrooms', id);
-        await db
-            .collection(MAPPING.DATA)
-            .doc(MAPPING.MASTER_CLASSROOMS)
-            .update(fieldPath, FieldValue.delete());
-
-        return { data: { id }, status: 200 };
-    },
-
-    deleteMany: async (resource, params) => {
-        const { ids } = params;
-        for (const id of ids) await dataProvider.delete(resource, { id });
-        return { data: ids, status: 200 };
+        return { data, status: 200 };
     },
 };
 
