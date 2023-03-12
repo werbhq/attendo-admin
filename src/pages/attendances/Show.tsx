@@ -1,8 +1,12 @@
-import { Chip } from '@mui/material';
+import { Chip, Typography } from '@mui/material';
+import { dataProvider, defaultParams } from 'provider/firebase';
 import { MAPPING } from 'provider/mapping';
+import { useState } from 'react';
 import {
     ArrayField,
     ChipField,
+    FunctionField,
+    ListContextProvider,
     ReferenceArrayField,
     ReferenceField,
     Show,
@@ -10,14 +14,18 @@ import {
     Tab,
     TabbedShowLayout,
     TextField,
+    useList,
     useRecordContext,
     useShowContext,
     useShowController,
 } from 'react-admin';
+import { Classroom } from 'types/models/classroom';
 
 const AttendanceShow = () => {
     const { record } = useShowController();
-    const absentees=record.attendance.absentees;
+    const absentees = record.attendance.absentees ?? [];
+
+
     return (
         <Show emptyWhileLoading>
             {record !== undefined && (
@@ -25,7 +33,6 @@ const AttendanceShow = () => {
                     <Tab label="summary">
                         <TextField source="id" />
                         <TextField source="attendance.date" label="Date" />
-
                         <ReferenceField
                             source="attendance.teacherId"
                             label="Teacher"
@@ -44,11 +51,23 @@ const AttendanceShow = () => {
                         <TextField source="subject.name" />
                         {absentees && (
                             <div>
+                                <Typography
+                                    sx={{ fontSize: '0.75em', color: 'rgba(0, 0, 0, 0.6)' }}
+                                >
+                                    Absentees
+                                </Typography>
                                 {absentees.map((absentee: any) => (
-                                    <Chip label={absentee} />
+                                    <Chip  sx={{ ml: 0.5, mt: 1 }} label={absentee} />
                                 ))}{' '}
                             </div>
                         )}
+                        {/* <Typography sx={{ fontSize: '0.75em', color: 'rgba(0, 0, 0, 0.6)' }}>
+                            Absentees
+                        </Typography>
+                        <FunctionField
+                            label="Absentees"
+                            render={(record: Classroom) => Object.values(record?.students).find((e)=>absentees.contains(e.id))?.name??[]}
+                        ></FunctionField> */}
                     </Tab>
                 </TabbedShowLayout>
             )}

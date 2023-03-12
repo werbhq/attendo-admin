@@ -7,6 +7,8 @@ import {
     ReferenceField,
     SearchInput,
     TextInput,
+    useRecordContext,
+    useListContext,
 } from 'react-admin';
 import { MAPPING } from 'provider/mapping';
 import { Schemes } from 'Utils/Schemes';
@@ -31,7 +33,12 @@ const ClassroomsList = () => {
                 <TextField source="subject.name" label="Subject" emptyText="-" sortable={false} />
                 <BooleanField source="batch.running" label="Running" />
                 <TextField source="batch.yearOfJoining" label="Year" emptyText="-" />
-                <TextField source="batch.semester" label="Semester" emptyText="-" />
+                <FunctionField
+                    label="Semester"
+                    render={(record: Classroom) =>
+                        record.isDerived ? record.semester : record.batch.semester
+                    }
+                ></FunctionField>
                 <FunctionField
                     label="Branch"
                     render={(record: Classroom) => record.branch.toUpperCase()}
