@@ -7,6 +7,7 @@ import { Classroom } from 'types/models/classroom';
 import { useEffect, useState } from 'react';
 import { SubjectDoc } from 'types/models/subject';
 import { Report } from 'types/frontend/report';
+import PageLoader from 'components/ui/PageLoader';
 
 const ReportTab = ({
     record,
@@ -21,9 +22,11 @@ const ReportTab = ({
 }) => {
     const [semester, setSemester] = useState(record.batch.semester ?? 1);
     const [semesterChoices, setSemesterChoices] = useState<number[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const dataProvider = useDataProvider();
 
     useEffect(() => {
+        setIsLoading(true);
         dataProvider
             .getOne<SubjectDoc>(MAPPING.SUBJECT, { id: record?.batch.schemeId })
             .then((e) => {
@@ -33,6 +36,7 @@ const ReportTab = ({
                     semesters.push(e.data.semesters[i].semester);
                 setSemesterChoices(semesters);
                 if (totalSemesters !== 0) setSemester(semesters[semesters.length - 1]);
+                setIsLoading(false);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -81,6 +85,8 @@ const ReportTab = ({
             </Stack>
         </TopToolbar>
     );
+
+    if (isLoading) return <PageLoader loading={isLoading} />;
 
     return (
         <Tab label={label} path={path} {...props}>
