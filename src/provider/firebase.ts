@@ -33,7 +33,11 @@ export const authProvider = isProd
 export const db = dataProviderLegacy.app.firestore();
 export const cloudFunctions = getFunctions();
 
-if (kMode === MODE.EMULATOR && process.env.NODE_ENV !== 'production') {
+if (
+    kMode === MODE.EMULATOR &&
+    process.env.NODE_ENV !== 'production' &&
+    process.env.NODE_ENV !== 'development'
+) {
     firebase.firestore().useEmulator('localhost', 8090);
     connectFunctionsEmulator(cloudFunctions, 'localhost', 5001);
     firebase.auth().useEmulator('http://localhost:9099/');
