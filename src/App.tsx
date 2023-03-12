@@ -16,7 +16,7 @@ const myTheme = {
     ...defaultTheme,
     palette: {
         primary: {
-            main: isProd ? '#179F97' : '#000',
+            main: '#179F97',
         },
         secondary: {
             main: isProd ? '#179F97' : '#000',
