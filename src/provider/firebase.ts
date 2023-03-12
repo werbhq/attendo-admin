@@ -44,7 +44,11 @@ const getCustomConvertor = async (resource: string, params: any, method: keyof D
     const provider = CustomProviders.find((e) => e.resource === resource);
     if (provider) {
         if (provider[method] !== undefined) return provider[method](resource, params);
-        else console.warn(`${method}() Not Implemented For ${resource}. Using legacy call`);
+        else if (!isProd) {
+            console.warn(
+                `${method}() Not Implemented For ${resource}. Using legacy call. Ignore if intended`
+            );
+        }
     }
     return dataProviderLegacy[method](resource, params);
 };
