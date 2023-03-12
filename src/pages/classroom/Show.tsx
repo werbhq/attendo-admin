@@ -75,6 +75,8 @@ export const ClassroomShow = () => {
                                 <TextField source="subject.name" label="Subject"></TextField>
                             )}
 
+                            {!!record.isDerived && <TextField source="semester"></TextField>}
+
                             <BooleanField source="isDerived" label="Virtual Class" />
                             {!!record.isDerived && (
                                 <ReferenceArrayField
@@ -106,7 +108,9 @@ export const ClassroomShow = () => {
 
                             <FunctionField
                                 label="Students Count"
-                                render={(record: Classroom) => Object.values(record?.students).length}
+                                render={(record: Classroom) =>
+                                    Object.values(record?.students).length
+                                }
                             ></FunctionField>
                             <Typography sx={{ fontSize: '0.75em', color: 'rgba(0, 0, 0, 0.6)' }}>
                                 Batch
@@ -115,7 +119,11 @@ export const ClassroomShow = () => {
 
                         <SimpleShowLayout sx={{ ml: 2, mt: -2 }}>
                             <TextField source="batch.name" label="Batch Name" />
-                            <TextField source="batch.semester" label="Semester" emptyText="-" />
+                            <TextField
+                                source="batch.semester"
+                                label="Batch Semester"
+                                emptyText="-"
+                            />
                             <BooleanField source="batch.running" label="Running" />
                             <TextField source="batch.schemeId" label="Scheme Id" />
                             <TextField source="batch.course" label="Course" />
