@@ -66,23 +66,14 @@ export default function EditClassroom({ state }: Props) {
 
     const fetchData = () => {
         dataProvider.getList<AuthorizedTeacher>(MAPPING.AUTH_TEACHERS, defaultParams).then((e) => {
-            const teachers = [];
-
-            for (let i = 0; i < e.data.length; i++) {
-                const teacher = {
-                    id: e.data[i].id,
-                    emailId: e.data[i].email,
-                    name: titleCase(e.data[i].userName),
-                };
-                teachers.push(teacher);
-            }
-
             setTeachersData(
-                e.data.map((e) => ({
-                    id: e.id,
-                    emailId: e.email,
-                    name: titleCase(e.userName),
-                }))
+                e.data
+                    .filter((e) => e.created)
+                    .map((e) => ({
+                        id: e.id,
+                        emailId: e.email,
+                        name: titleCase(e.userName),
+                    }))
             );
         });
 
