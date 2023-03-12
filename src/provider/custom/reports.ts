@@ -1,9 +1,14 @@
 import { MAPPING } from '../mapping';
-import { httpsCallable } from 'firebase/functions';
-import { cloudFunctions } from '../firebase';
+import { dataProvider, db } from '../firebase';
 import { DataProviderCustom } from 'types/DataProvider';
-import { AttendanceReportResponse } from 'types/models/report';
-import { Report } from 'types/frontend/report';
+import { Report, ReportAttendance } from 'types/frontend/report';
+import { SubjectAttendance } from 'types/models/attendance';
+import { Classroom } from 'types/models/classroom';
+import { sortByRoll } from 'Utils/helpers';
+
+type ReportMap = Omit<Report, 'attendance'> & {
+    attendance: { [subjectId: string]: ReportAttendance & { absent: number } };
+};
 
 /**
  * Don't call this directly
@@ -16,30 +21,115 @@ const ReportsProvider: DataProviderCustom<Report> = {
         const { filter } = params;
         const { semester, classroomId } = filter;
 
-        const attendanceReportApi = httpsCallable(cloudFunctions, 'attendanceReports');
-        const response = (await attendanceReportApi({ semester, classroomId })).data as
-            | AttendanceReportResponse
-            | undefined;
+        const normalAttendances = (
+            await db
+                .collection(MAPPING.ATTENDANCES)
+                .where('semester', '==', semester)
+                .where('classroom.id', '==', classroomId)
+                .get()
+        ).docs.map((e) => e.data() as SubjectAttendance);
 
-        const subjects: {
-            [id: string]: string;
-        } = {};
+        const virtualAttendances = (
+            await db
+                .collection(MAPPING.ATTENDANCES)
+                .where('semester', '==', semester)
+                .where(`classroom.parentClasses.${classroomId}.id`, '==', classroomId)
+                .get()
+        ).docs.map((e) => e.data() as SubjectAttendance);
 
-        response?.subjects?.forEach((e) => {
-            subjects[e.subjectId.toLowerCase()] = e.name;
+        if (normalAttendances.length === 0 && virtualAttendances.length === 0) {
+            return {
+                data: [],
+                total: 0,
+                status: 200,
+            };
+        }
+
+        const { data: classroom } = await dataProvider.getOne<Classroom>(MAPPING.CLASSROOMS, {
+            id: classroomId,
         });
 
-        const attendances = response?.attendances?.map((e) => ({
-            ...e,
-            attendance: e.attendance.map((sub) => ({
-                ...sub,
-                name: subjects[sub.subjectId],
-            })),
-        }));
+        const virtualClassIds = virtualAttendances.map((e) => e.classroom.id);
+
+        const { data: classroomsVirtual } = await dataProvider.getMany<Classroom>(
+            MAPPING.CLASSROOMS,
+            { ids: virtualClassIds }
+        );
+
+        const students = new Map<string, ReportMap>(
+            Object.entries(classroom.students).map(([e, v]) => {
+                return [e, { ...v, attendance: {} }];
+            })
+        );
+
+        [...normalAttendances, ...virtualAttendances].forEach(
+            ({ subject, attendances: e, classroom: attendanceClassroom }) => {
+                const attendances = Object.values(e);
+                const totalAttendance = attendances.length;
+
+                const currentClassroom = [classroom, ...classroomsVirtual].find(
+                    (e) => e.id === attendanceClassroom.id
+                );
+
+                // Initializing percentage values
+                students.forEach((e, k) => {
+                    const val = {
+                        ...e,
+                        attendance: {
+                            ...e.attendance,
+                            [subject.id]: {
+                                name: subject.name.toUpperCase(),
+                                subjectId: subject.id,
+                                percentage: currentClassroom?.students[k] ? 100 : -1,
+                                absent: 0,
+                                isVirtualClass: currentClassroom?.isDerived ?? false,
+                            },
+                        },
+                    };
+                    students.set(k, val);
+                });
+
+                attendances.forEach(({ absentees }) => {
+                    absentees?.forEach((absentee) => {
+                        const student = students.get(absentee);
+                        if (!student) return;
+
+                        const absent = student.attendance[subject.id].absent + 1;
+                        const percentage = ((totalAttendance - absent) / totalAttendance) * 100;
+
+                        students.set(absentee, {
+                            ...student,
+                            attendance: {
+                                ...student.attendance,
+                                [subject.id]: {
+                                    ...student.attendance[subject.id],
+                                    absent,
+                                    percentage,
+                                },
+                            },
+                        });
+                    });
+                });
+            }
+        );
+
+        const attendances: Report[] = Array.from(students.values())
+            .map((e) => ({
+                ...e,
+                attendance: Object.values(e.attendance).map(
+                    ({ name, percentage, subjectId, isVirtualClass }) => ({
+                        name,
+                        percentage,
+                        subjectId,
+                        isVirtualClass,
+                    })
+                ),
+            }))
+            .sort(sortByRoll);
 
         return {
-            data: attendances ?? [],
-            total: attendances?.length ?? 0,
+            data: attendances,
+            total: attendances.length,
             status: 200,
         };
     },

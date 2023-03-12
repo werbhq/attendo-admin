@@ -175,7 +175,7 @@ export default function EditClassroom({ state }: Props) {
         }
         return errors;
     };
-    console.log(record);
+
     return (
         <>
             {!loading && (
