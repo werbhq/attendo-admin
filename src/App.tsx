@@ -8,7 +8,7 @@ import Courses from './pages/courses';
 import Attendance from './pages/attendances/Index';
 import { RaDatagrid, RaList } from 'components/ui/style';
 import AuthTeachers from './pages/authTeachers';
-import { authProvider, dataProvider } from './provider/firebase';
+import { authProvider, dataProvider, isProd } from './provider/firebase';
 import { CustomLayout } from './components/ui/Layout';
 import { customQueryClient } from './provider/queryClient';
 
@@ -16,10 +16,10 @@ const myTheme = {
     ...defaultTheme,
     palette: {
         primary: {
-            main: '#000',
+            main: isProd ? '#179F97' : '#000',
         },
         secondary: {
-            main: '#000',
+            main: isProd ? '#179F97' : '#000',
         },
         error: red,
         contrastThreshold: 3,

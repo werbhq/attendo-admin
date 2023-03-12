@@ -199,19 +199,21 @@ export const CustomVirtualStudentDeleteButton = ({
 };
 
 export const ImportButton = ({
-    record,
     csvExportHeaders,
     setListData,
 }: {
-    record: Classroom;
     csvExportHeaders: string[];
     setListData: React.Dispatch<React.SetStateAction<Student[]>>;
 }) => {
+    type ClassroomCustom = Omit<Classroom, 'parentClasses'> & { parentClasses: string[] };
+    type StudentCustom = Student & { classId: string };
+
     const importRef = useRef<HTMLInputElement>(null);
     const notify = useNotify();
     const dataProvider = useDataProvider();
+    const record: ClassroomCustom = useRecordContext();
 
-    const fileLoadHandler = async (data: any[]) => {
+    const fileLoadHandler = async (data: StudentCustom[]) => {
         const invalidHeader = data.some((e) => {
             const keys = Object.keys(e).sort();
             const containsAllHeaders = csvExportHeaders.every((header) => keys.includes(header));
@@ -224,17 +226,17 @@ export const ImportButton = ({
         }
 
         if (record.isDerived) {
-            const parentClasses = record.parentClasses!;
-            const keys = Object.keys(parentClasses).map((e) => parentClasses[e].id);
-            const containedParentClass = data.filter((e) => keys.includes(e.classId));
-            const invalidClassId = !containedParentClass.some((e) => e);
-            data = containedParentClass;
+            const parentClasses = record.parentClasses;
+            const invalidClassId = data.some((e) => !parentClasses.includes(e.classId));
+
             if (invalidClassId) {
-                const message = `ClassIds don't match the Parent Classes Proper classIds are ${keys.join(
+                const message = `ClassIds don't match the Parent Classes Proper classIds are ${parentClasses.join(
                     ','
                 )}`;
                 return notify(message, { type: 'error' });
             }
+
+            data = data.filter((e) => parentClasses.includes(e.classId));
         } else {
             const classId = record.id;
             let containedClassId;
@@ -246,13 +248,11 @@ export const ImportButton = ({
             data = containedClassId;
         }
 
-        await dataProvider.update<Classroom>(MAPPING.CLASSROOMS, {
+        await dataProvider.update<Student>(MAPPING.STUDENTS, {
             id: record.id,
-            data: {
-                ...record,
-                students: data,
-            },
-            previousData: {},
+            data,
+            previousData: Object.values(record.students),
+            meta: { record },
         });
 
         notify(`Updated ${data.length} Students of ${record.id}`, {
@@ -267,7 +267,10 @@ export const ImportButton = ({
             variant="contained"
             startIcon={<UploadIcon />}
             onClick={() => {
-                importRef?.current?.click();
+                if (importRef.current) {
+                    importRef.current.value = '';
+                    importRef.current.click();
+                }
             }}
         >
             <CSVReader

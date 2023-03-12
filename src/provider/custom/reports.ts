@@ -1,10 +1,11 @@
 import { MAPPING } from '../mapping';
-import { dataProvider, db } from '../firebase';
+import { dataProvider, db, isProd } from '../firebase';
 import { DataProviderCustom } from 'types/DataProvider';
 import { Report, ReportAttendance } from 'types/frontend/report';
 import { SubjectAttendance } from 'types/models/attendance';
 import { Classroom } from 'types/models/classroom';
 import { sortByRoll } from 'Utils/helpers';
+import { developers } from 'constants/developers';
 
 type ReportMap = Omit<Report, 'attendance'> & {
     attendance: { [subjectId: string]: ReportAttendance & { absent: number } };
@@ -65,7 +66,11 @@ const ReportsProvider: DataProviderCustom<Report> = {
         [...normalAttendances, ...virtualAttendances].forEach(
             ({ subject, attendances: e, classroom: attendanceClassroom }) => {
                 const attendances = Object.values(e);
-                const totalAttendance = attendances.length;
+                const totalAttendance: number = isProd
+                    ? attendances.length
+                    : attendances.filter((e) => !developers[e.teacherId]).length;
+
+                if (totalAttendance === 0) return;
 
                 const currentClassroom = [classroom, ...classroomsVirtual].find(
                     (e) => e.id === attendanceClassroom.id
@@ -89,7 +94,9 @@ const ReportsProvider: DataProviderCustom<Report> = {
                     students.set(k, val);
                 });
 
-                attendances.forEach(({ absentees }) => {
+                attendances.forEach(({ absentees, teacherId }) => {
+                    if (developers[teacherId] && isProd) return; // Ignoring developer attendances
+
                     absentees?.forEach((absentee) => {
                         const student = students.get(absentee);
                         if (!student) return;

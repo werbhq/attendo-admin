@@ -10,7 +10,6 @@ import {
 import { MAPPING } from 'provider/mapping';
 import { getClassroomId, titleCase } from 'Utils/helpers';
 import { Schemes } from 'Utils/Schemes';
-import { v4 as uuidv4 } from 'uuid';
 import { Subject, SubjectDoc } from 'types/models/subject';
 import { Batch } from 'types/models/batch';
 import { defaultParams } from 'provider/firebase';
@@ -82,16 +81,12 @@ const CreateClassroom = ({
         return errors;
     };
 
-    function getId(data: Classroom) {
-        return `${getClassroomId(data)}-${uuidv4().substring(0, 4)}`;
-    }
-
     const transformSubmit = (props: any) => {
         const record = props as Classroom;
         const batch = batchData.find((e) => e.id === record.batch?.id) as Batch;
         record.batch = batch;
 
-        const classroomId = isDerived(record.name) ? getId(record) : getClassroomId(record);
+        const classroomId = getClassroomId(record, isDerived(record.name));
 
         const common = {
             id: classroomId,
