@@ -32,6 +32,35 @@ import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
 import { defaultParams } from 'provider/firebase';
 import EditIcon from '@mui/icons-material/Edit';
 
+type EditProps = {
+    setSubjectDialogue: React.Dispatch<
+        React.SetStateAction<{
+            open: boolean;
+            record: {};
+        }>
+    >;
+};
+
+const EditButton = ({ setSubjectDialogue }: EditProps) => {
+    const record = useRecordContext();
+    return (
+        <Button
+            size="small"
+            variant="outlined"
+            startIcon={<EditIcon />}
+            onClick={() => {
+                setSubjectDialogue((e) => ({
+                    ...e,
+                    open: true,
+                    record: record,
+                }));
+            }}
+        >
+            Edit
+        </Button>
+    );
+};
+
 const SubjectTab = ({
     label,
     path,
@@ -54,30 +83,65 @@ const SubjectTab = ({
     const [teachersData, setTeachersData] = useState<TeacherShort[]>(record?.teachers ?? []);
 
     const [dialog, setDialog] = useState({
-        open: false, //opening/closing the dialogue
-        record: {}, //record regarding the current inputted data
+        open: false,
+        record: {},
     });
+
     const sem_record =
         record.subjects === undefined
             ? ([] as ClassroomSubject[])
             : (Object.values(record.subjects).filter(
                   (val) => val.semester === semester
               ) as ClassroomSubject[]);
+
     const [subjectDialogue, setSubjectDialogue] = useState({
-        open: false, //opening/closing the dialogue
-        record: {}, //record regarding the current inputted data
+        open: false,
+        record: {},
     });
-    const tableData = useList({
-        data: sem_record,
-    });
-    //closes dialogue
-    const handleClose = () => {
-        setDialog({ ...dialog, open: false });
+
+    const tableData = useList({ data: sem_record });
+
+    const handleClose = () => setDialog({ ...dialog, open: false });
+    const handleEditClose = () => setSubjectDialogue({ ...subjectDialogue, open: false });
+
+    const handleEdit = async (e: any) => {
+        const oldData = record;
+        const subjects = record.subjects === undefined ? [] : Object.values(record.subjects);
+        const currentSubjIndex = subjects.findIndex((f) => f.id === e.id);
+        const teachers = e.teachers.map((o: { id: string }) => {
+            const teacher = teachersData.find((_e) => _e.id === o.id);
+            return {
+                id: teacher?.id,
+                emailId: teacher?.emailId,
+                name: teacher?.name,
+            };
+        }) as TeacherShort[];
+        let tchrsList: TeacherShort[] = [];
+        const presentTeachers = new Set(teachers.map((e) => e.id));
+        teachers.forEach((e) => {
+            if (presentTeachers.has(e.id)) {
+                tchrsList.push(e);
+            } else {
+                tchrsList = [];
+            }
+        });
+        subjects[currentSubjIndex].teachers = tchrsList;
+        const subjectsMap = {} as { [id: string]: ClassroomSubject };
+
+        subjects.forEach((obj) => {
+            subjectsMap[obj.id] = obj;
+        });
+        record.subjects = subjectsMap;
+        await dataProvider.update(MAPPING.CLASSROOMS, {
+            id: record.id,
+            data: record,
+            previousData: oldData,
+        });
+        refresh();
+        notify('Classroom Subject Updated');
+        handleEditClose();
     };
-    //closes dialogue
-    const handleEditClose = () => {
-        setSubjectDialogue({ ...subjectDialogue, open: false });
-    };
+
     const handleSubmit = async (e: any) => {
         const oldData = record;
         const { SubjectId, TeacherIds } = e as {
@@ -140,45 +204,8 @@ const SubjectTab = ({
         notify(`Classroom Subject ${SubjectId} Updated`, { type: 'success' });
         handleClose();
     };
-    const handleEdit = async (e: any) => {
-        const oldData = record;
-        const subjects = record.subjects === undefined ? [] : Object.values(record.subjects);
-        const currentSubjIndex = subjects.findIndex((f) => f.id === e.id);
-        const teachers = e.teachers.map((o: { id: string }) => {
-            const teacher = teachersData.find((_e) => _e.id === o.id);
-            return {
-                id: teacher?.id,
-                emailId: teacher?.emailId,
-                name: teacher?.name,
-            };
-        }) as TeacherShort[];
-        let tchrsList: TeacherShort[] = [];
-        const presentTeachers = new Set(teachers.map((e) => e.id));
-        teachers.forEach((e) => {
-            if (presentTeachers.has(e.id)) {
-                tchrsList.push(e);
-            } else {
-                tchrsList = [];
-            }
-        });
-        subjects[currentSubjIndex].teachers = tchrsList;
-        const subjectsMap = {} as { [id: string]: ClassroomSubject };
 
-        subjects.forEach((obj) => {
-            subjectsMap[obj.id] = obj;
-        });
-        record.subjects = subjectsMap;
-        await dataProvider.update(MAPPING.CLASSROOMS, {
-            id: record.id,
-            data: record,
-            previousData: oldData,
-        });
-        refresh();
-        notify('Classroom Subject Updated');
-        handleEditClose();
-    };
-    //for disabling of add subject button where there is no data
-    function shouldEnableSubject() {
+    const shouldDisableSubject = () => {
         let a = false;
         if (semesterChoices.length === 0) {
             a = true;
@@ -193,7 +220,7 @@ const SubjectTab = ({
         }
 
         return a;
-    }
+    };
 
     const fetchData = () => {
         dataProvider.getList<AuthorizedTeacher>(MAPPING.AUTH_TEACHERS, defaultParams).then((e) => {
@@ -240,25 +267,7 @@ const SubjectTab = ({
         setLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    const MyEditButton = () => {
-        const record1 = useRecordContext();
-        return (
-            <Button
-                size="small"
-                variant="outlined"
-                startIcon={<EditIcon />}
-                onClick={async () => {
-                    setSubjectDialogue({
-                        ...subjectDialogue,
-                        open: true,
-                        record: record1,
-                    });
-                }}
-            >
-                Edit
-            </Button>
-        );
-    };
+
     return (
         <Tab label={label} path={path} {...props}>
             {loading ? (
@@ -298,7 +307,7 @@ const SubjectTab = ({
                     </Stack>
                     <Stack direction="row">
                         <Button
-                            disabled={shouldEnableSubject()}
+                            disabled={shouldDisableSubject()}
                             variant="contained"
                             size="medium"
                             startIcon={<AddIcon />}
@@ -324,7 +333,7 @@ const SubjectTab = ({
                                 reference={MAPPING.ATTENDANCES}
                                 link={(record) => `/attendance/${record.id}/show`}
                             />
-                            <MyEditButton></MyEditButton>
+                            <EditButton setSubjectDialogue={setSubjectDialogue} />
                         </Datagrid>
                     </ListContextProvider>
                     <Dialog open={subjectDialogue.open} onClose={handleEditClose} fullWidth={true}>
