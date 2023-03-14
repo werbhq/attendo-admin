@@ -1,5 +1,3 @@
-import { Button, Stack, Typography } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import {
     BooleanField,
     TextField,
@@ -16,19 +14,18 @@ import {
     SingleFieldList,
 } from 'react-admin';
 import { useMemo, useState } from 'react';
-
+import { Button, Stack, Typography } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import { Schemes } from 'Utils/Schemes';
 import { MAPPING } from 'provider/mapping';
-import EditClassroom from './components/classroom/Edit';
-
-import SubjectTab from './tab/SubjectTab';
-
 import { SubjectDoc } from 'types/models/subject';
 import { defaultParams } from 'provider/firebase';
 import { Classroom } from 'types/models/classroom';
-
+import EditClassroom from './components/classroom/Edit';
+import SubjectTab from './tab/SubjectTab';
 import ReportTab from './tab/ReportTab';
 import StudentTab from './tab/StudentTab';
+import SK from 'pages/source-keys';
 
 type ClassroomDialog = {
     enable: boolean;
@@ -60,7 +57,7 @@ export const ClassroomShow = () => {
                     {/* Summary */}
                     <Tab label="summary">
                         <SimpleShowLayout>
-                            <TextField source="id" />
+                            <TextField source={SK.CLASSROOM('id')} />
                             <FunctionField
                                 label="Branch"
                                 render={(record: Classroom) => record.branch.toUpperCase()}
@@ -72,22 +69,30 @@ export const ClassroomShow = () => {
                                 }
                             ></FunctionField>
                             {!!record.isDerived && (
-                                <TextField source="subject.name" label="Subject"></TextField>
+                                <TextField
+                                    source={SK.CLASSROOM('subject.name')}
+                                    label="Subject"
+                                ></TextField>
                             )}
 
-                            {!!record.isDerived && <TextField source="semester"></TextField>}
+                            {!!record.isDerived && (
+                                <TextField source={SK.CLASSROOM('semester')}></TextField>
+                            )}
 
-                            <BooleanField source="isDerived" label="Virtual Class" />
+                            <BooleanField
+                                source={SK.CLASSROOM('isDerived')}
+                                label="Virtual Class"
+                            />
                             {!!record.isDerived && (
                                 <ReferenceArrayField
                                     label="Parent Classes"
-                                    source="parentClasses"
+                                    source={SK.CLASSROOM('parentClasses')}
                                     reference={MAPPING.CLASSROOMS}
                                     resource={MAPPING.CLASSROOMS}
                                     sx={{ margin: '10px 0px' }}
                                 >
                                     <SingleFieldList linkType="show">
-                                        <ChipField source="id" />
+                                        <ChipField source={SK.CLASSROOM('id')} />
                                     </SingleFieldList>
                                 </ReferenceArrayField>
                             )}
@@ -95,13 +100,13 @@ export const ClassroomShow = () => {
                             {!!record.isDerived && (
                                 <ReferenceArrayField
                                     label="Teachers"
-                                    source="teachers"
+                                    source={SK.CLASSROOM('teachers')}
                                     reference={MAPPING.AUTH_TEACHERS}
                                     resource={MAPPING.AUTH_TEACHERS}
                                     sx={{ margin: '10px 0px' }}
                                 >
                                     <SingleFieldList linkType="show">
-                                        <ChipField source="userName" />
+                                        <ChipField source={SK.AUTH_TEACHERS('userName')} />
                                     </SingleFieldList>
                                 </ReferenceArrayField>
                             )}
@@ -118,16 +123,19 @@ export const ClassroomShow = () => {
                         </SimpleShowLayout>
 
                         <SimpleShowLayout sx={{ ml: 2, mt: -2 }}>
-                            <TextField source="batch.name" label="Batch Name" />
+                            <TextField source={SK.CLASSROOM('batch.name')} label="Batch Name" />
                             <TextField
-                                source="batch.semester"
+                                source={SK.CLASSROOM('batch.semester')}
                                 label="Batch Semester"
                                 emptyText="-"
                             />
-                            <BooleanField source="batch.running" label="Running" />
-                            <TextField source="batch.schemeId" label="Scheme Id" />
-                            <TextField source="batch.course" label="Course" />
-                            <TextField source="batch.yearOfJoining" label="Year Of Joining" />
+                            <BooleanField source={SK.CLASSROOM('batch.running')} label="Running" />
+                            <TextField source={SK.CLASSROOM('batch.schemeId')} label="Scheme Id" />
+                            <TextField source={SK.CLASSROOM('batch.course')} label="Course" />
+                            <TextField
+                                source={SK.CLASSROOM('batch.yearOfJoining')}
+                                label="Year Of Joining"
+                            />
                         </SimpleShowLayout>
 
                         <div style={{ margin: '20px 0px' }}>

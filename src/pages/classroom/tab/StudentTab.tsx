@@ -32,6 +32,7 @@ import {
 } from '../components/student/Buttons';
 import { LoadingButton } from '@mui/lab';
 import { sortByRoll } from 'Utils/helpers';
+import SK from 'pages/source-keys';
 
 const resource = MAPPING.STUDENTS;
 
@@ -208,16 +209,20 @@ const StudentTab = ({
                         )
                     }
                 >
-                    <NumberField source="rollNo" />
+                    <NumberField source={SK.STUDENT('rollNo')} />
                     {record.isDerived && (
-                        <ReferenceField source="classId" reference={MAPPING.CLASSROOMS} link="show">
-                            <TextField source="id" />
+                        <ReferenceField
+                            source={SK.STUDENT('classId')}
+                            reference={MAPPING.CLASSROOMS}
+                            link="show"
+                        >
+                            <TextField source={SK.STUDENT('id')} />
                         </ReferenceField>
                     )}
-                    <TextField source="regNo" />
-                    <TextField source="name" />
-                    <EmailField source="email" />
-                    <TextField source="userName" />
+                    <TextField source={SK.STUDENT('regNo')} />
+                    <TextField source={SK.STUDENT('name')} />
+                    <EmailField source={SK.STUDENT('email')} />
+                    <TextField source={SK.STUDENT('userName')} />
                     {!record.isDerived && (
                         <CustomStudentEditButton
                             state={{

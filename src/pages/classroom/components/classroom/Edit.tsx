@@ -22,6 +22,7 @@ import { AuthorizedTeacher } from 'types/models/teacher';
 import { Classroom, ClassroomNonVirtual, ClassroomVirtual } from 'types/models/classroom';
 import { Batch } from 'types/models/batch';
 import { Subject, SubjectDoc } from 'types/models/subject';
+import SK from 'pages/source-keys';
 
 const resource = MAPPING.CLASSROOMS;
 
@@ -186,7 +187,7 @@ export default function EditClassroom({ state }: Props) {
                     >
                         <SelectInput
                             label="Course"
-                            source="batch.course"
+                            source={SK.CLASSROOM('batch.course')}
                             choices={getCourses()}
                             onChange={(e) => setData({ ...data, course: e.target.value })}
                             required
@@ -194,7 +195,7 @@ export default function EditClassroom({ state }: Props) {
                         />
                         <SelectInput
                             label="Scheme Id"
-                            source="batch.schemeId"
+                            source={SK.CLASSROOM('batch.schemeId')}
                             choices={getSchemes(data.course)}
                             onChange={(e) => setData({ ...data, scheme: e.target.value })}
                             required
@@ -202,21 +203,21 @@ export default function EditClassroom({ state }: Props) {
                         />
                         <SelectInput
                             label="Batch Name"
-                            source="batch.name"
+                            source={SK.CLASSROOM('batch.name')}
                             choices={batches.map(({ name }) => ({ id: name, name: name }))}
                             onChange={(e) => setData({ ...data, batch: e.target.value })}
                             required
                             disabled={true}
                         />
                         <SelectInput
-                            source="branch"
+                            source={SK.CLASSROOM('branch')}
                             choices={getBranches(data.scheme)}
                             onChange={(e) => setData({ ...data, branch: e.target.value })}
                             required
                             disabled={true}
                         />
                         <SelectInput
-                            source="name"
+                            source={SK.CLASSROOM('name')}
                             choices={data.branch ? Schemes.classNames : []}
                             onChange={(e) => setData({ ...data, name: e.target.value })}
                             disabled={true}
@@ -225,14 +226,14 @@ export default function EditClassroom({ state }: Props) {
                         {isDerived(data.name) && (
                             <>
                                 <SelectInput
-                                    source="semester"
+                                    source={SK.CLASSROOM('semester')}
                                     choices={getSemesters(data.scheme)}
                                     onChange={(e) => setData({ ...data, semester: e.target.value })}
                                     required
                                     disabled={true}
                                 />
                                 <SelectInput
-                                    source="subject.id"
+                                    source={SK.CLASSROOM('subject.id')}
                                     label="Subject"
                                     choices={
                                         data.semester
@@ -243,21 +244,21 @@ export default function EditClassroom({ state }: Props) {
                                     required
                                 />
                                 <ReferenceArrayInput
-                                    source="parentClasses"
+                                    source={SK.CLASSROOM('parentClasses')}
                                     reference={MAPPING.CLASSROOMS}
                                     filter={{ isDerived: false }}
                                     isRequired
                                 >
                                     <AutocompleteArrayInput
                                         optionText="id"
-                                        source="id"
+                                        source={SK.CLASSROOM('id')}
                                         filterToQuery={(searchText) => ({ id: searchText })}
                                         isRequired
                                         disabled={true}
                                     />
                                 </ReferenceArrayInput>
                                 <AutocompleteArrayInput
-                                    source="teachers"
+                                    source={SK.CLASSROOM('teachers')}
                                     choices={teachersData.map((e) => ({ id: e.id, name: e.name }))}
                                     optionText={(choice) => `${titleCase(choice.name)}`}
                                     filterToQuery={(searchText) => ({ id: searchText })}
