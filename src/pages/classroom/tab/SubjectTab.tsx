@@ -91,8 +91,8 @@ const SubjectTab = ({
         record.subjects === undefined
             ? ([] as ClassroomSubject[])
             : (Object.values(record.subjects).filter(
-                  (val) => val.semester === semester
-              ) as ClassroomSubject[]);
+                (val) => val.semester === semester
+            ) as ClassroomSubject[]);
 
     const [subjectDialogue, setSubjectDialogue] = useState({
         open: false,
@@ -224,7 +224,7 @@ const SubjectTab = ({
 
     const fetchData = () => {
         dataProvider.getList<AuthorizedTeacher>(MAPPING.AUTH_TEACHERS, defaultParams).then((e) => {
-            const teacherData = e.data.map(({ id, email, userName }) => ({
+            const teacherData = e.data.filter((e) => e.created).map(({ id, email, userName }) => ({
                 id,
                 emailId: email,
                 name: userName === undefined ? '' : titleCase(userName),
