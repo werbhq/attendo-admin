@@ -66,7 +66,7 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             const parentClasses: { [classId: string]: ClassroomNonVirtualShort } = {};
 
             if (Array.isArray(data.parentClasses)) {
-                Promise.all(
+                await Promise.all(
                     data.parentClasses.map(async (e) => {
                         const { data } = await dataProvider.getOne<Classroom>(resource, {
                             id: e,
