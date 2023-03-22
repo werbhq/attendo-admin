@@ -12,8 +12,9 @@ import {
     useNotify,
     BulkActionProps,
     useRefresh,
+    Button,
 } from 'react-admin';
-
+import AddIcon from '@mui/icons-material/Add';
 import { Chip } from '@mui/material';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 
@@ -36,8 +37,9 @@ const AuthorizedTeacherList = () => {
     const PostBulkActionButtons = (data: BulkActionProps) => {
         return (
             <>
-                <BulkUpdateButton
+                <Button
                     label="Create Account"
+                    startIcon={<AddIcon />}
                     onClick={() =>
                         AuthTeachersProviderExtended.createEmails(
                             data.selectedIds as string[]
@@ -47,6 +49,7 @@ const AuthorizedTeacherList = () => {
                         })
                     }
                 />
+                <BulkUpdateButton></BulkUpdateButton>
                 <BulkDeleteButton />
             </>
         );
