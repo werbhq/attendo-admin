@@ -213,11 +213,13 @@ const ClassroomsCreate = () => {
 
     const fetchData = () => {
         dataProvider.getList<AuthorizedTeacher>(MAPPING.AUTH_TEACHERS, defaultParams).then((e) => {
-            const teacherData = e.data.map(({ id, email, userName }) => ({
-                id,
-                emailId: email,
-                name: titleCase(userName),
-            }));
+            const teacherData = e.data
+                .filter((e) => e.created)
+                .map(({ id, email, userName }) => ({
+                    id,
+                    emailId: email,
+                    name: titleCase(userName),
+                }));
             setTeachers(teacherData);
         });
 
