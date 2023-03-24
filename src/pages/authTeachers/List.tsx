@@ -13,12 +13,17 @@ import {
     BulkActionProps,
     useRefresh,
     Button,
+    downloadCSV,
+    TopToolbar,
+    ExportButton,
 } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
-import { Chip } from '@mui/material';
+import { Chip, Stack } from '@mui/material';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 import { ImportButton } from './components/Button';
-
+import jsonExport from 'jsonexport/dist';
+import { MAPPING } from 'provider/mapping';
+import { AuthorizedTeacher } from 'types/models/teacher';
 const QuickFilter = ({ label, source }: { label: string; source: string }) => {
     const translate = useTranslate();
     return <Chip sx={{ marginBottom: 1 }} label={translate(label)} />;
@@ -55,10 +60,31 @@ const AuthorizedTeacherList = () => {
             </>
         );
     };
-    const ListActions = () => <ImportButton csvExportHeaders={csvExportHeaders} />;
+    
+    const teachersExporter = (data:AuthorizedTeacher[]) => {
+        const dataForExport = data;
+           
+        jsonExport(dataForExport, { headers: csvExportHeaders }, (err, csv) => {
+            downloadCSV(
+                csv,
+                `Teachers`
+            );
+        });
+    };
+
+    const TopToolBar = () => {
+        return (
+            <TopToolbar>
+                <Stack direction="row" spacing={2}>
+                    <ExportButton/>
+                    <ImportButton csvExportHeaders={csvExportHeaders} />
+                </Stack>
+            </TopToolbar>
+        );
+    };
 
     return (
-        <List exporter={false} filters={filters} actions={<ListActions />}>
+        <List resource={MAPPING.AUTH_TEACHERS} exporter={teachersExporter} filters={filters} actions={<TopToolBar />}>
             <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons />}>
                 <EmailField source="email" />
                 <TextField source="userName" label="Name" />
