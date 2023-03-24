@@ -58,8 +58,8 @@ export class Schemes {
         const branch = semesters?.branchSubs?.find(({ branch }) => branch === branchId);
 
         return (
-            branch?.subjects?.map(({ id, name }) => {
-                return { id, name };
+            branch?.subjects?.map(({code, id, name }) => {
+                return { id, name ,code};
             }) || []
         );
     };
