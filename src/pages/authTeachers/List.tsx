@@ -17,6 +17,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { Chip } from '@mui/material';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
+import { ImportButton } from './components/Button';
 
 const QuickFilter = ({ label, source }: { label: string; source: string }) => {
     const translate = useTranslate();
@@ -33,7 +34,7 @@ const filters = [
 const AuthorizedTeacherList = () => {
     const notify = useNotify();
     const refresh = useRefresh();
-
+    const csvExportHeaders = ['id', 'email', 'branch', 'userName'];
     const PostBulkActionButtons = (data: BulkActionProps) => {
         return (
             <>
@@ -54,9 +55,10 @@ const AuthorizedTeacherList = () => {
             </>
         );
     };
+    const ListActions = () => <ImportButton csvExportHeaders={csvExportHeaders} />;
 
     return (
-        <List exporter={false} filters={filters}>
+        <List exporter={false} filters={filters} actions={<ListActions />}>
             <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons />}>
                 <EmailField source="email" />
                 <TextField source="userName" label="Name" />
