@@ -12,6 +12,7 @@ import {
 } from 'react-admin';
 import { Course } from 'types/models/courses';
 import { MAPPING } from 'provider/mapping';
+import SK from 'pages/source-keys';
 
 const url = MAPPING.COURSES;
 
@@ -42,13 +43,13 @@ const CourseCreate = () => {
         <Create redirect="list">
             <SimpleForm onSubmit={onSubmit}>
                 <TextInput
-                    source="id"
+                    source={SK.COURSE("id")}
                     label="Course Name"
                     format={(e) => e?.toUpperCase() ?? ''}
                     validate={[required()]}
                 />
                 <NumberInput
-                    source="totalSemesters"
+                    source={SK.COURSE("totalSemesters")}
                     onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
                     validate={[required(), number('Number Required')]}
                     label="Total Semesters"

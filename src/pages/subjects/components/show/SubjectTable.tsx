@@ -28,6 +28,7 @@ import Button from '@mui/material/Button';
 import { titleCase } from 'Utils/helpers';
 import { Subject, SubjectDoc, SubjectSemester } from 'types/models/subject';
 import { DeleteButtonDialog } from '../SubjectButtons';
+import SK from 'pages/source-keys';
 
 const url = MAPPING.SUBJECT;
 
@@ -206,8 +207,8 @@ const SubjectTable = () => {
                         />
                     }
                 >
-                    <TextField source="code" />
-                    <TextField source="name" />
+                    <TextField source={SK.SUBJECT("code")} />
+                    <TextField source={SK.SUBJECT("name")} />
                     <FunctionField
                         render={(record: Subject) => (
                             <Button
@@ -231,14 +232,14 @@ const SubjectTable = () => {
             <Dialog open={addSubject.open} onClose={handleClose} fullWidth={true}>
                 <SimpleForm record={addSubject.record} onSubmit={handleSubmit} toolbar={false}>
                     <TextInput
-                        source="code"
+                        source={SK.SUBJECT("code")}
                         label="Code"
                         fullWidth={true}
                         format={(props) => props?.toUpperCase() ?? ''}
                         validate={[required(), noSpaceValidation]}
                     />
                     <TextInput
-                        source="name"
+                        source={SK.SUBJECT("name")}
                         label="Name"
                         format={(props) => props && titleCase(props)}
                         fullWidth={true}
