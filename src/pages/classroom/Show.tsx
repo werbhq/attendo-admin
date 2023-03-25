@@ -22,8 +22,8 @@ export const ClassroomShow = () => {
                 <TabbedShowLayout>
                     <SummaryTab label="summary" />
                     <StudentTab label="students" path="students" />
-                    {!isNonVirtual && <ReportTab label="reports" path="reports" />}
-                    {!isNonVirtual && <SubjectTab label="subject" path="subject" />}
+                    {isNonVirtual && <ReportTab label="reports" path="reports" />}
+                    {isNonVirtual && <SubjectTab label="subject" path="subject" />}
                 </TabbedShowLayout>
             </RecordContextProvider>
         </Show>
