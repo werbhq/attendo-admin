@@ -176,7 +176,11 @@ const CreateClassroom = ({
                         <ReferenceArrayInput
                             source={SK.CLASSROOM('parentClasses')}
                             reference={MAPPING.CLASSROOMS}
-                            filter={{ isDerived: false, branch: data.branch }}
+                            filter={{
+                                isDerived: false,
+                                branch: data.branch,
+                                batch:{ id: data.batch}
+                            }}
                         >
                             <AutocompleteArrayInput
                                 optionText="id"
