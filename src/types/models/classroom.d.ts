@@ -51,7 +51,7 @@ export interface ClassroomVirtual extends _BaseClassroom {
     semester: number; // This is to separate the semester in batch vs actual semester in which the virtual class was created
     groupLinks: {
         id: string;
-        group: string;
+        group: string | null;
     }[];
 }
 
