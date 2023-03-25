@@ -37,14 +37,14 @@ const CreateClassroom = ({
         name: null | string;
         group: null | string;
         semester: null | number;
-        batch: null | string;
+        batchId: null | string;
     }>({
         scheme: null,
         branch: null,
         name: null,
         group: null,
         semester: null,
-        batch: null,
+        batchId: null,
     });
 
     const [groupDependency, setGroupDependency] = useState<{
@@ -61,14 +61,14 @@ const CreateClassroom = ({
             setData({
                 ...data,
                 scheme: batch?.schemeId ?? null,
-                batch: batchId,
+                batchId,
             });
         } else {
             setData({
                 ...data,
                 scheme: batch?.schemeId ?? null,
                 semester: batch?.semester ?? null,
-                batch: batchId,
+                batchId,
             });
         }
     }
@@ -223,7 +223,7 @@ const CreateClassroom = ({
                             filter={{
                                 isDerived: false,
                                 branch: data.branch,
-                                batch: batchData.find((e) => e.id === data.batch),
+                                batch: batchData.find((e) => e.id === data.batchId),
                             }}
                         >
                             <AutocompleteArrayInput

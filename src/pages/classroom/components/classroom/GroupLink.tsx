@@ -28,7 +28,7 @@ const GroupLink = ({
         name: null | string;
         group: null | string;
         semester: null | number;
-        batch: null | string;
+        batchId: null | string;
     };
     subjectId: string;
     parentClasses: string[];
