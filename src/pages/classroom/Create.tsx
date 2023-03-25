@@ -99,7 +99,6 @@ const CreateClassroom = ({
                 SK.CLASSROOM('subjectId')
             );
             customValidatorArray(values, SK.CLASSROOM('parentClasses'));
-            customValidatorArray(values, SK.CLASSROOM('teachers'));
 
             if (values[SK.CLASSROOM('groupLinks')]) {
                 const groupSet = new Set();
@@ -257,7 +256,6 @@ const CreateClassroom = ({
                                 optionText={SK.AUTH_TEACHERS('userName')}
                                 source={SK.AUTH_TEACHERS('userName')}
                                 filterToQuery={(searchText) => ({ username: searchText })}
-                                isRequired
                             />
                         </ReferenceArrayInput>
                     </>
