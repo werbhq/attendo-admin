@@ -17,6 +17,13 @@ export class Schemes {
         { id: 'l', name: 'Lab', isDerived: true },
     ];
 
+    static groupNames = [
+        { id: 'A', name: 'A' },
+        { id: 'B', name: 'B' },
+        { id: 'C', name: 'C' },
+        { id: 'D', name: 'D' },
+    ];
+
     derivedClasses = Schemes.classNames.filter((e) => e.isDerived).map((e) => e.id);
 
     isDerived = (className: string | null) => this.derivedClasses.includes(className ?? '');
@@ -58,8 +65,8 @@ export class Schemes {
         const branch = semesters?.branchSubs?.find(({ branch }) => branch === branchId);
 
         return (
-            branch?.subjects?.map(({code, id, name }) => {
-                return { id, name ,code};
+            branch?.subjects?.map(({ code, id, name }) => {
+                return { id, name, code };
             }) || []
         );
     };

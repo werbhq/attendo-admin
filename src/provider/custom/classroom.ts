@@ -8,6 +8,7 @@ const getClassroomShort = (data: Classroom) => {
         id: data.id,
         branch: data.branch,
         name: data.name,
+        group: data.group ?? null,
         batch: {
             course: data.batch.course,
             yearOfJoining: data.batch.yearOfJoining,
