@@ -223,7 +223,7 @@ const CreateClassroom = ({
                             filter={{
                                 isDerived: false,
                                 branch: data.branch,
-                                batch: {id:data.batch},
+                                batch: batchData.find((e) => e.id === data.batch),
                             }}
                         >
                             <AutocompleteArrayInput
