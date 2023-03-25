@@ -20,15 +20,13 @@ const AuthorizedTeacherCreate = () => {
     const redirect = useRedirect();
 
     const onSubmit = (data: any) => {
-        data = { ...data, id: data.email };
+        data = { ...data, id: data.email, created: false };
         update(
             url,
             { id: data.id, data },
             {
                 onSuccess: () => {
-                    notify(`Added ${data.id}`, {
-                        type: 'success',
-                    });
+                    notify(`Added ${data.id}`, { type: 'success' });
                     refresh();
                     redirect('list', url);
                 },

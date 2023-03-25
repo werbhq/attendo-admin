@@ -42,7 +42,7 @@ export interface AuthorizedTeacher {
     email: string;
     userName: string;
     branch: string;
-    created?: boolean;
+    created: boolean;
 }
 
 export interface AuthorizedTeacherIndex {
