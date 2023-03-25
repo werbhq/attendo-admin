@@ -60,15 +60,12 @@ const AuthorizedTeacherList = () => {
             </>
         );
     };
-    
-    const teachersExporter = (data:AuthorizedTeacher[]) => {
+
+    const teachersExporter = (data: AuthorizedTeacher[]) => {
         const dataForExport = data;
-           
+
         jsonExport(dataForExport, { headers: csvExportHeaders }, (err, csv) => {
-            downloadCSV(
-                csv,
-                `Teachers`
-            );
+            downloadCSV(csv, `Teachers`);
         });
     };
 
@@ -76,7 +73,7 @@ const AuthorizedTeacherList = () => {
         return (
             <TopToolbar>
                 <Stack direction="row" spacing={2}>
-                    <ExportButton/>
+                    <ExportButton variant="outlined" />
                     <ImportButton csvExportHeaders={csvExportHeaders} />
                 </Stack>
             </TopToolbar>
@@ -84,7 +81,12 @@ const AuthorizedTeacherList = () => {
     };
 
     return (
-        <List resource={MAPPING.AUTH_TEACHERS} exporter={teachersExporter} filters={filters} actions={<TopToolBar />}>
+        <List
+            resource={MAPPING.AUTH_TEACHERS}
+            exporter={teachersExporter}
+            filters={filters}
+            actions={<TopToolBar />}
+        >
             <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons />}>
                 <EmailField source="email" />
                 <TextField source="userName" label="Name" />
