@@ -42,11 +42,7 @@ const EditClassroom = ({
     teacherData: TeacherShort[];
     state: Props;
 }) => {
-    const originalRecord: any = useRecordContext();
-    const record = {
-        ...originalRecord,
-    };
-
+    const record: Classroom & { parentClasses: string[] } = useRecordContext();
     const dataProvider = useDataProvider();
     const notify = useNotify();
     const refresh = useRefresh();
@@ -78,7 +74,10 @@ const EditClassroom = ({
 
     const batchChoices = batchData.map(({ name, id }) => ({ name, id }));
 
-    const groupLinks = [{ id: CURRENT_CLASS_ID, group: record.group }, ...record.groupLinks];
+    const groupLinks = [
+        { id: CURRENT_CLASS_ID, group: record.group },
+        ...(record?.groupLinks ?? []),
+    ];
 
     function changeBatch(batchId: string) {
         const batch = batchData.find((e) => e.id === batchId);
