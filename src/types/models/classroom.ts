@@ -73,3 +73,19 @@ export interface ClassroomShort extends _BaseClassroomShort {
     };
     subject?: Subject;
 }
+
+export function ClassroomToClassroomShort(data: Classroom) {
+    return {
+        id: data.id,
+        branch: data.branch,
+        name: data.name,
+        group: data.group ?? null,
+        batch: {
+            course: data.batch.course,
+            yearOfJoining: data.batch.yearOfJoining,
+            id: data.batch.id,
+            name: data.batch.name,
+            schemeId: data.batch.schemeId,
+        },
+    } as ClassroomShort;
+}

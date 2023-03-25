@@ -1,23 +1,11 @@
 import { DataProviderCustom } from 'types/DataProvider';
-import { Classroom, ClassroomNonVirtualShort } from 'types/models/classroom';
+import {
+    Classroom,
+    ClassroomNonVirtualShort,
+    ClassroomToClassroomShort,
+} from 'types/models/classroom';
 import { dataProvider, db } from '../firebase';
 import { MAPPING } from '../mapping';
-
-const getClassroomShort = (data: Classroom) => {
-    return {
-        id: data.id,
-        branch: data.branch,
-        name: data.name,
-        group: data.group ?? null,
-        batch: {
-            course: data.batch.course,
-            yearOfJoining: data.batch.yearOfJoining,
-            id: data.batch.id,
-            name: data.batch.name,
-            schemeId: data.batch.schemeId,
-        },
-    };
-};
 
 /**
  * Don't call this directly
@@ -37,7 +25,7 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
                           const { data } = await dataProvider.getOne<Classroom>(resource, {
                               id: e,
                           });
-                          parentClasses[data.id] = getClassroomShort(data);
+                          parentClasses[data.id] = ClassroomToClassroomShort(data);
                       })
                     : []
             );
@@ -90,7 +78,8 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
                             id: e,
                         });
 
-                        parentClasses[data.id] = parentClasses[data.id] = getClassroomShort(data);
+                        parentClasses[data.id] = parentClasses[data.id] =
+                            ClassroomToClassroomShort(data);
                     })
                 );
             }
