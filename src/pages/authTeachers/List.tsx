@@ -6,7 +6,6 @@ import {
     TextInput,
     EmailField,
     BooleanField,
-    useTranslate,
     BulkDeleteButton,
     BulkUpdateButton,
     useNotify,
