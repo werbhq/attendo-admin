@@ -61,17 +61,8 @@ const EditButton = ({ setSubjectDialogue }: EditProps) => {
     );
 };
 
-const SubjectTab = ({
-    label,
-    path,
-    record,
-    ...props
-}: {
-    label: string;
-    path: string;
-    record: Classroom;
-    props?: any;
-}) => {
+const SubjectTab = ({ label, path, ...props }: { label: string; path: string; props?: any }) => {
+    const record: Classroom = useRecordContext();
     const refresh = useRefresh();
     const notify = useNotify();
     const dataProvider = useDataProvider();
@@ -91,8 +82,8 @@ const SubjectTab = ({
         record.subjects === undefined
             ? ([] as ClassroomSubject[])
             : (Object.values(record.subjects).filter(
-                (val) => val.semester === semester
-            ) as ClassroomSubject[]);
+                  (val) => val.semester === semester
+              ) as ClassroomSubject[]);
 
     const [subjectDialogue, setSubjectDialogue] = useState({
         open: false,
@@ -224,11 +215,13 @@ const SubjectTab = ({
 
     const fetchData = () => {
         dataProvider.getList<AuthorizedTeacher>(MAPPING.AUTH_TEACHERS, defaultParams).then((e) => {
-            const teacherData = e.data.filter((e) => e.created).map(({ id, email, userName }) => ({
-                id,
-                emailId: email,
-                name: userName === undefined ? '' : titleCase(userName),
-            }));
+            const teacherData = e.data
+                .filter((e) => e.created)
+                .map(({ id, email, userName }) => ({
+                    id,
+                    emailId: email,
+                    name: userName === undefined ? '' : titleCase(userName),
+                }));
             setTeachersData(teacherData);
         });
 

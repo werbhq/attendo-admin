@@ -8,6 +8,7 @@ const getClassroomShort = (data: Classroom) => {
         id: data.id,
         branch: data.branch,
         name: data.name,
+        group: data.group ?? null,
         batch: {
             course: data.batch.course,
             yearOfJoining: data.batch.yearOfJoining,
@@ -44,10 +45,27 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             data.parentClasses = parentClasses;
         }
 
-        await db
-            .collection(MAPPING.CLASSROOMS)
-            .doc(id as string)
-            .update({ ...data });
+        const ref = db.collection(MAPPING.CLASSROOMS);
+        const promises = [ref.doc(data.id).set({ ...data })];
+
+        if (data.groupLinks) {
+            data.groupLinks.forEach(({ id: cId, group }) => {
+                promises.push(
+                    ref.doc(cId).update({
+                        group,
+                        groupLinks: [
+                            {
+                                id: data.id,
+                                group: data.group,
+                            },
+                            ...(data.groupLinks?.filter((e) => e.id !== cId) ?? []),
+                        ],
+                    })
+                );
+            });
+        }
+
+        await Promise.all(promises);
 
         return { data: { ...data, id }, status: 200 };
     },
@@ -80,7 +98,27 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             data.parentClasses = parentClasses;
         }
 
-        await db.collection(MAPPING.CLASSROOMS).doc(data.id).set(data);
+        const ref = db.collection(MAPPING.CLASSROOMS);
+        const promises = [ref.doc(data.id).set(data)];
+
+        if (data.groupLinks) {
+            data.groupLinks.forEach(({ id: cId, group }) => {
+                promises.push(
+                    ref.doc(cId).update({
+                        group,
+                        groupLinks: [
+                            {
+                                id: data.id,
+                                group: data.group,
+                            },
+                            ...(data.groupLinks?.filter((e) => e.id !== cId) ?? []),
+                        ],
+                    })
+                );
+            });
+        }
+
+        await Promise.all(promises);
 
         return { data, status: 200 };
     },

@@ -12,6 +12,7 @@ import {
     useRecordSelection,
     useUnselectAll,
     TextField,
+    useRecordContext,
 } from 'react-admin';
 import { Classroom } from 'types/models/classroom';
 import EditIcon from '@mui/icons-material/Edit';
@@ -42,18 +43,9 @@ type studentDialog = {
     record: Student | undefined;
 };
 
-const StudentTab = ({
-    record,
-    label,
-    path,
-    ...props
-}: {
-    record: Classroom;
-    label: string;
-    path: string;
-    props?: any;
-}) => {
+const StudentTab = ({ label, path, ...props }: { label: string; path: string; props?: any }) => {
     const dataProvider = useDataProvider();
+    const record: Classroom = useRecordContext();
 
     const csvExportHeaders = record.isDerived
         ? ['classId', 'id', 'email', 'regNo', 'rollNo', 'name', 'userName']
