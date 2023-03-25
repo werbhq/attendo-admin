@@ -1,17 +1,7 @@
-import {
-    Button,
-
-} from '@mui/material';
+import { Button } from '@mui/material';
 import UploadIcon from '@mui/icons-material/Upload';
-
-import {
-
-    useNotify,
-    useRefresh,
-    useDataProvider,
-    useUpdate,
-} from 'react-admin';
-import {  useRef } from 'react';
+import { useNotify, useRefresh, useDataProvider, useUpdate } from 'react-admin';
+import { useRef } from 'react';
 import { MAPPING } from 'provider/mapping';
 import CSVReader from 'react-csv-reader';
 import { AuthorizedTeacher } from 'types/models/teacher';
@@ -19,7 +9,7 @@ import { defaultParams } from 'provider/firebase';
 
 const resource = MAPPING.AUTH_TEACHERS;
 
-export const ImportButton = ({ csvExportHeaders }: { csvExportHeaders: string[] }) => {
+export const ImportButton = ({ csvExportHeaders, ...rest }: { csvExportHeaders: string[] }) => {
     const importRef = useRef<HTMLInputElement>(null);
     const notify = useNotify();
     const refresh = useRefresh();
@@ -27,9 +17,7 @@ export const ImportButton = ({ csvExportHeaders }: { csvExportHeaders: string[] 
     const [update] = useUpdate();
     const fileLoadHandler = async (data: AuthorizedTeacher[]) => {
         let filteredData = [];
-        const record = await dataProvider
-            .getList(resource, defaultParams)
-            .then((e) => e.data); //whole data will be read only while importing
+        const record = await dataProvider.getList(resource, defaultParams).then((e) => e.data); //whole data will be read only while importing
         const invalidHeader = data.some((e) => {
             const keys = Object.keys(e).sort();
             const containsAllHeaders = csvExportHeaders.every((header) => keys.includes(header));
@@ -43,7 +31,7 @@ export const ImportButton = ({ csvExportHeaders }: { csvExportHeaders: string[] 
                 (e) => !record.some((value: { id: string }) => value.id === e.id)
             );
         }
-        filteredData.forEach(e => update(resource, { id: e.id, data: e }));
+        filteredData.forEach((e) => update(resource, { id: e.id, data: e }));
         refresh();
         notify(`Updated ${data.length} Teachers`, {
             type: 'success',
@@ -52,8 +40,7 @@ export const ImportButton = ({ csvExportHeaders }: { csvExportHeaders: string[] 
 
     return (
         <Button
-            size="medium"
-            variant="contained"
+            size="small"
             startIcon={<UploadIcon />}
             onClick={() => {
                 if (importRef.current) {

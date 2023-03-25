@@ -6,7 +6,6 @@ import {
     TextInput,
     EmailField,
     BooleanField,
-    useTranslate,
     BulkDeleteButton,
     BulkUpdateButton,
     useNotify,
@@ -16,24 +15,21 @@ import {
     downloadCSV,
     TopToolbar,
     ExportButton,
+    FilterButton,
+    CreateButton,
 } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
-import { Chip, Stack } from '@mui/material';
+import QuickFilter from 'components/ui/QuickFilter';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 import { ImportButton } from './components/Button';
 import jsonExport from 'jsonexport/dist';
 import { MAPPING } from 'provider/mapping';
 import { AuthorizedTeacher } from 'types/models/teacher';
-const QuickFilter = ({ label, source }: { label: string; source: string }) => {
-    const translate = useTranslate();
-    return <Chip sx={{ marginBottom: 1 }} label={translate(label)} />;
-};
 
 const filters = [
     <SearchInput source="id" alwaysOn resettable />,
     <TextInput source="branch" resettable />,
-    //<SelectInput source="created" label="new create" choices={[{id: true, name: "True"}, {id:false, name: "False"}]}/>,
-    <QuickFilter source="created" label="Create" />,
+    <QuickFilter source="created" label="Account created" defaultValue={true} />,
 ];
 
 const AuthorizedTeacherList = () => {
@@ -55,7 +51,7 @@ const AuthorizedTeacherList = () => {
                         })
                     }
                 />
-                <BulkUpdateButton></BulkUpdateButton>
+                <BulkUpdateButton />
                 <BulkDeleteButton />
             </>
         );
@@ -63,7 +59,6 @@ const AuthorizedTeacherList = () => {
 
     const teachersExporter = (data: AuthorizedTeacher[]) => {
         const dataForExport = data;
-
         jsonExport(dataForExport, { headers: csvExportHeaders }, (err, csv) => {
             downloadCSV(csv, `Teachers`);
         });
@@ -72,10 +67,10 @@ const AuthorizedTeacherList = () => {
     const TopToolBar = () => {
         return (
             <TopToolbar>
-                <Stack direction="row" spacing={2}>
-                    <ExportButton variant="outlined" />
-                    <ImportButton csvExportHeaders={csvExportHeaders} />
-                </Stack>
+                <CreateButton />
+                <FilterButton />
+                <ExportButton />
+                <ImportButton csvExportHeaders={csvExportHeaders} />
             </TopToolbar>
         );
     };
