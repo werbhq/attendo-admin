@@ -12,6 +12,7 @@ import {
     ReferenceArrayField,
     ChipField,
     SingleFieldList,
+    ReferenceField,
 } from 'react-admin';
 import { useMemo, useState } from 'react';
 import { Button, Stack, Typography } from '@mui/material';
@@ -123,15 +124,35 @@ export const ClassroomShow = () => {
                         </SimpleShowLayout>
 
                         <SimpleShowLayout sx={{ ml: 2, mt: -2 }}>
-                            <TextField source={SK.CLASSROOM('batch.name')} label="Batch Name" />
+                            <ReferenceField
+                                source={SK.CLASSROOM('batch.id')}
+                                reference={MAPPING.BATCHES}
+                                link="show"
+                            >
+                                <TextField source={SK.CLASSROOM('name')} />
+                            </ReferenceField>{' '}
                             <TextField
                                 source={SK.CLASSROOM('batch.semester')}
                                 label="Batch Semester"
                                 emptyText="-"
                             />
                             <BooleanField source={SK.CLASSROOM('batch.running')} label="Running" />
-                            <TextField source={SK.CLASSROOM('batch.schemeId')} label="Scheme Id" />
-                            <TextField source={SK.CLASSROOM('batch.course')} label="Course" />
+                            <ReferenceField
+                                source={SK.CLASSROOM('batch.schemeId')}
+                                label='SchemeId'
+                                reference={MAPPING.SUBJECT}
+                                link="show"
+                            >
+                                <TextField source={SK.CLASSROOM('id')} />
+                            </ReferenceField>{' '}
+                            <ReferenceField
+                                source={SK.CLASSROOM('batch.course')}
+                                label='Course'
+                                reference={MAPPING.COURSES}
+                                link="show"
+                            >
+                                <TextField source={SK.CLASSROOM('id')} />
+                            </ReferenceField>
                             <TextField
                                 source={SK.CLASSROOM('batch.yearOfJoining')}
                                 label="Year Of Joining"

@@ -33,7 +33,13 @@ const ClassroomsList = () => {
         <List exporter={false} filters={filters} emptyWhileLoading>
             <Datagrid rowClick="show">
                 <TextField source={SK.CLASSROOM('id')} />
-                <TextField source={SK.CLASSROOM('batch.name')} label="Batch" emptyText="-" />
+                <ReferenceField
+                    source={SK.CLASSROOM('batch.id')}
+                    reference={MAPPING.BATCHES}
+                    link="show"
+                >
+                    <TextField source={SK.CLASSROOM('name')} />
+                </ReferenceField>{' '}
                 <TextField
                     source={SK.CLASSROOM('subject.name')}
                     label="Subject"
