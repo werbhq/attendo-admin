@@ -302,7 +302,7 @@ const EditClassroom = ({
                             <AutocompleteArrayInput
                                 optionText={SK.AUTH_TEACHERS('userName')}
                                 source={SK.AUTH_TEACHERS('userName')}
-                                filterToQuery={(searchText) => ({ username: searchText })}
+                                filterToQuery={(searchText) => ({ userName: searchText })}
                             />
                         </ReferenceArrayInput>
                     </>
