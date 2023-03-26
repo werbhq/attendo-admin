@@ -34,6 +34,7 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { sortByRoll } from 'Utils/helpers';
 import SK from 'pages/source-keys';
+import { ClassroomFrontend } from 'types/frontend/classroom';
 
 const resource = MAPPING.STUDENTS;
 
@@ -45,7 +46,7 @@ type studentDialog = {
 
 const StudentTab = ({ label, path, ...props }: { label: string; path: string; props?: any }) => {
     const dataProvider = useDataProvider();
-    const record: Classroom = useRecordContext();
+    const record: ClassroomFrontend = useRecordContext();
 
     const csvExportHeaders = record.isDerived
         ? ['classId', 'id', 'email', 'regNo', 'rollNo', 'name', 'userName']
@@ -85,12 +86,12 @@ const StudentTab = ({ label, path, ...props }: { label: string; path: string; pr
             setIsLoading(true);
 
             const { data: classes } = await dataProvider.getMany<Classroom>(MAPPING.CLASSROOMS, {
-                ids: Object.keys(record?.parentClasses ?? {}),
+                ids: record?.parentClasses,
             });
             const fullStudents: Student[] = [];
 
             classes?.forEach((e) => {
-                const studentsTemp = Object.values(e.students).map((_e) => ({
+                const studentsTemp = Object.values(e.students ?? {}).map((_e) => ({
                     ..._e,
                     classId: e.id,
                 }));
