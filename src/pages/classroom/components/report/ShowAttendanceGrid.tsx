@@ -1,10 +1,10 @@
+import React from 'react';
 import { Datagrid, DatagridBody, TextField, RecordContextProvider, NumberField } from 'react-admin';
 import { TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import Tooltip from '@mui/material/Tooltip';
-
 import { titleCase } from 'Utils/helpers';
 import { Report } from 'types/frontend/report';
-import React from 'react';
+import SK from 'pages/source-keys';
 
 type SortParam = { name: string; isVirtualClass: boolean };
 const sorter = (a: SortParam, b: SortParam) => {
@@ -114,8 +114,8 @@ const MyDatagrid = (props: any) => (
 
 const AttendanceDataGrid = (props: any) => (
     <MyDatagrid optimized {...props}>
-        <NumberField source="rollNo" />
-        <TextField source="name" />
+        <NumberField source={SK.STUDENT('rollNo')} />
+        <TextField source={SK.STUDENT('name')} />
     </MyDatagrid>
 );
 

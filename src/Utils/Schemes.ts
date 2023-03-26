@@ -9,14 +9,22 @@ export class Schemes {
     }
 
     static classNames = [
-        { id: '1', name: '1' },
-        { id: '2', name: '2' },
-        { id: 'h', name: 'Honors' },
-        { id: 'm', name: 'Minors' },
-        { id: 'e', name: 'Elective' },
+        { id: '1', name: '1', isDerived: false },
+        { id: '2', name: '2', isDerived: false },
+        { id: 'h', name: 'Honors', isDerived: true },
+        { id: 'm', name: 'Minors', isDerived: true },
+        { id: 'e', name: 'Elective', isDerived: true },
+        { id: 'l', name: 'Lab', isDerived: true },
     ];
 
-    derivedClasses = ['h', 'm', 'e'];
+    static groupNames = [
+        { id: 'A', name: 'A' },
+        { id: 'B', name: 'B' },
+        { id: 'C', name: 'C' },
+        { id: 'D', name: 'D' },
+    ];
+
+    derivedClasses = Schemes.classNames.filter((e) => e.isDerived).map((e) => e.id);
 
     isDerived = (className: string | null) => this.derivedClasses.includes(className ?? '');
 
@@ -57,8 +65,8 @@ export class Schemes {
         const branch = semesters?.branchSubs?.find(({ branch }) => branch === branchId);
 
         return (
-            branch?.subjects?.map(({ id, name }) => {
-                return { id, name };
+            branch?.subjects?.map(({ code, id, name }) => {
+                return { id, name, code };
             }) || []
         );
     };

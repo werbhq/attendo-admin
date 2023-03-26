@@ -1,22 +1,11 @@
 import { DataProviderCustom } from 'types/DataProvider';
-import { Classroom, ClassroomNonVirtualShort } from 'types/models/classroom';
+import {
+    Classroom,
+    ClassroomNonVirtualShort,
+    ClassroomToClassroomShort,
+} from 'types/models/classroom';
 import { dataProvider, db } from '../firebase';
 import { MAPPING } from '../mapping';
-
-const getClassroomShort = (data: Classroom) => {
-    return {
-        id: data.id,
-        branch: data.branch,
-        name: data.name,
-        batch: {
-            course: data.batch.course,
-            yearOfJoining: data.batch.yearOfJoining,
-            id: data.batch.id,
-            name: data.batch.name,
-            schemeId: data.batch.schemeId,
-        },
-    };
-};
 
 /**
  * Don't call this directly
@@ -36,7 +25,7 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
                           const { data } = await dataProvider.getOne<Classroom>(resource, {
                               id: e,
                           });
-                          parentClasses[data.id] = getClassroomShort(data);
+                          parentClasses[data.id] = ClassroomToClassroomShort(data);
                       })
                     : []
             );
@@ -44,10 +33,27 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             data.parentClasses = parentClasses;
         }
 
-        await db
-            .collection(MAPPING.CLASSROOMS)
-            .doc(id as string)
-            .update({ ...data });
+        const ref = db.collection(MAPPING.CLASSROOMS);
+        const promises = [ref.doc(data.id).set({ ...data })];
+
+        if (data.groupLinks) {
+            data.groupLinks.forEach(({ id: cId, group }) => {
+                promises.push(
+                    ref.doc(cId).update({
+                        group,
+                        groupLinks: [
+                            {
+                                id: data.id,
+                                group: data.group,
+                            },
+                            ...(data.groupLinks?.filter((e) => e.id !== cId) ?? []),
+                        ],
+                    })
+                );
+            });
+        }
+
+        await Promise.all(promises);
 
         return { data: { ...data, id }, status: 200 };
     },
@@ -66,13 +72,14 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             const parentClasses: { [classId: string]: ClassroomNonVirtualShort } = {};
 
             if (Array.isArray(data.parentClasses)) {
-                Promise.all(
+                await Promise.all(
                     data.parentClasses.map(async (e) => {
                         const { data } = await dataProvider.getOne<Classroom>(resource, {
                             id: e,
                         });
 
-                        parentClasses[data.id] = parentClasses[data.id] = getClassroomShort(data);
+                        parentClasses[data.id] = parentClasses[data.id] =
+                            ClassroomToClassroomShort(data);
                     })
                 );
             }
@@ -80,7 +87,27 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             data.parentClasses = parentClasses;
         }
 
-        await db.collection(MAPPING.CLASSROOMS).doc(data.id).set(data);
+        const ref = db.collection(MAPPING.CLASSROOMS);
+        const promises = [ref.doc(data.id).set(data)];
+
+        if (data.groupLinks) {
+            data.groupLinks.forEach(({ id: cId, group }) => {
+                promises.push(
+                    ref.doc(cId).update({
+                        group,
+                        groupLinks: [
+                            {
+                                id: data.id,
+                                group: data.group,
+                            },
+                            ...(data.groupLinks?.filter((e) => e.id !== cId) ?? []),
+                        ],
+                    })
+                );
+            });
+        }
+
+        await Promise.all(promises);
 
         return { data, status: 200 };
     },

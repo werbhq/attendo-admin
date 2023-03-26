@@ -17,6 +17,7 @@ import { autoCapitalize } from 'Utils/helpers';
 import { useState } from 'react';
 import { StudentShort as Student } from 'types/models/student';
 import { Classroom } from 'types/models/classroom';
+import SK from 'pages/source-keys';
 
 const CustomDeleteButton = ({
     handleDelete,
@@ -146,24 +147,26 @@ export default function EditStudent({
             fullWidth={true}
         >
             <SimpleForm record={student} onSubmit={handleSave} toolbar={false}>
-                {!dialog.add && <TextInput source="id" label="Id" disabled={true} sx={style} />}
+                {!dialog.add && (
+                    <TextInput source={SK.STUDENT('id')} label="Id" disabled={true} sx={style} />
+                )}
                 <NumberInput
-                    source="rollNo"
+                    source={SK.STUDENT('rollNo')}
                     label="Roll"
                     sx={style}
                     onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
                     required
                 />
                 <TextInput
-                    source="regNo"
+                    source={SK.STUDENT('regNo')}
                     label="Registration Number"
                     sx={style}
                     required
                     format={(props) => props && autoCapitalize(props)}
                 />
-                <TextInput source="name" label="Name" sx={style} required />
-                <TextInput source="email" label="Email" sx={style} required />
-                <TextInput source="userName" label="User Name" sx={style} />
+                <TextInput source={SK.STUDENT('name')} label="Name" sx={style} required />
+                <TextInput source={SK.STUDENT('email')} label="Email" sx={style} required />
+                <TextInput source={SK.STUDENT('userName')} label="User Name" sx={style} />
                 <Stack direction="row" spacing={3}>
                     <SaveButton label={dialog.add ? 'Add' : 'Save'} />
                     {!dialog.add && <CustomDeleteButton handleDelete={handleDelete} />}

@@ -12,6 +12,7 @@ import {
     useRecordSelection,
     useUnselectAll,
     TextField,
+    useRecordContext,
 } from 'react-admin';
 import { Classroom } from 'types/models/classroom';
 import EditIcon from '@mui/icons-material/Edit';
@@ -32,6 +33,7 @@ import {
 } from '../components/student/Buttons';
 import { LoadingButton } from '@mui/lab';
 import { sortByRoll } from 'Utils/helpers';
+import SK from 'pages/source-keys';
 
 const resource = MAPPING.STUDENTS;
 
@@ -41,18 +43,9 @@ type studentDialog = {
     record: Student | undefined;
 };
 
-const StudentTab = ({
-    record,
-    label,
-    path,
-    ...props
-}: {
-    record: Classroom;
-    label: string;
-    path: string;
-    props?: any;
-}) => {
+const StudentTab = ({ label, path, ...props }: { label: string; path: string; props?: any }) => {
     const dataProvider = useDataProvider();
+    const record: Classroom = useRecordContext();
 
     const csvExportHeaders = record.isDerived
         ? ['classId', 'id', 'email', 'regNo', 'rollNo', 'name', 'userName']
@@ -208,16 +201,20 @@ const StudentTab = ({
                         )
                     }
                 >
-                    <NumberField source="rollNo" />
+                    <NumberField source={SK.STUDENT('rollNo')} />
                     {record.isDerived && (
-                        <ReferenceField source="classId" reference={MAPPING.CLASSROOMS} link="show">
-                            <TextField source="id" />
+                        <ReferenceField
+                            source={SK.STUDENT('classId')}
+                            reference={MAPPING.CLASSROOMS}
+                            link="show"
+                        >
+                            <TextField source={SK.STUDENT('id')} />
                         </ReferenceField>
                     )}
-                    <TextField source="regNo" />
-                    <TextField source="name" />
-                    <EmailField source="email" />
-                    <TextField source="userName" />
+                    <TextField source={SK.STUDENT('regNo')} />
+                    <TextField source={SK.STUDENT('name')} />
+                    <EmailField source={SK.STUDENT('email')} />
+                    <TextField source={SK.STUDENT('userName')} />
                     {!record.isDerived && (
                         <CustomStudentEditButton
                             state={{
