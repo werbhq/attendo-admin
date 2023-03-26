@@ -22,9 +22,10 @@ import SK from 'pages/source-keys';
 import EmptySingleDisplay from 'components/ui/EmptySingleField';
 import { useState } from 'react';
 import EditClassroom from '../components/classroom/Edit';
+import { ClassroomFrontend } from 'types/frontend/classroom';
 
 const SummaryTab = ({ label, ...rest }: { label: string }) => {
-    const record: Classroom = useRecordContext();
+    const record: ClassroomFrontend = useRecordContext();
     const [classroomDialog, setClassroomDialog] = useState<boolean>(false);
     const isVirtual = record.isDerived;
     const hasGroup = record.isDerived && record.group;

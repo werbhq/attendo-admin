@@ -31,6 +31,7 @@ import { titleCase } from 'Utils/helpers';
 import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
 import { defaultParams } from 'provider/firebase';
 import EditIcon from '@mui/icons-material/Edit';
+import { ClassroomFrontend } from 'types/frontend/classroom';
 
 type EditProps = {
     setSubjectDialogue: React.Dispatch<
@@ -42,7 +43,7 @@ type EditProps = {
 };
 
 const EditButton = ({ setSubjectDialogue }: EditProps) => {
-    const record = useRecordContext();
+    const record: ClassroomFrontend = useRecordContext();
     return (
         <Button
             size="small"

@@ -11,14 +11,14 @@ import { MAPPING } from 'provider/mapping';
 import { Box, MenuItem, Select, Stack, Typography } from '@mui/material';
 import jsonExport from 'jsonexport/dist';
 import AttendanceDataGrid from '../components/report/ShowAttendanceGrid';
-import { Classroom } from 'types/models/classroom';
 import { useEffect, useState } from 'react';
 import { SubjectDoc } from 'types/models/subject';
 import { Report } from 'types/frontend/report';
 import PageLoader from 'components/ui/PageLoader';
+import { ClassroomFrontend } from 'types/frontend/classroom';
 
 const ReportTab = ({ label, path, ...props }: { label: string; path: string; props?: any }) => {
-    const record: Classroom = useRecordContext();
+    const record: ClassroomFrontend = useRecordContext();
     const [semester, setSemester] = useState(record.batch.semester ?? 1);
     const [semesterChoices, setSemesterChoices] = useState<number[]>([]);
     const [isLoading, setIsLoading] = useState(true);
