@@ -18,7 +18,6 @@ import { Classroom } from 'types/models/classroom';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
-import CancelIcon from '@mui/icons-material/Cancel';
 import jsonExport from 'jsonexport/dist';
 import { useState } from 'react';
 import { StudentShort as Student } from 'types/models/student';
@@ -27,7 +26,6 @@ import EditStudent from '../components/student/Edit';
 import {
     CustomStudentBulkDeleteButton,
     CustomStudentEditButton,
-    CustomVirtualStudentDeleteButton,
     CustomVirtualStudentSaveButton,
     ImportButton,
 } from '../components/student/Buttons';
@@ -72,12 +70,6 @@ const StudentTab = ({ label, path, ...props }: { label: string; path: string; pr
         resource,
         sort: sort,
     });
-
-    const disableEdit = () => {
-        unselectAll();
-        setStudentVirtualDialogOpen(false);
-        setListData(classroomStudents);
-    };
 
     const virtualClassEditHandler = async (e: any) => {
         const students = (e as Student[]) ?? classroomStudents;
@@ -150,35 +142,28 @@ const StudentTab = ({ label, path, ...props }: { label: string; path: string; pr
                             Add Student
                         </Button>
                     )}
+                </Stack>
 
-                    {studentVirtualDialogOpen && (
+                {!studentVirtualDialogOpen && (
+                    <Stack spacing="10px" direction="row">
                         <Button
                             size="medium"
-                            variant="contained"
-                            color="error"
-                            startIcon={<CancelIcon />}
-                            onClick={disableEdit}
+                            variant="outlined"
+                            startIcon={<DownloadIcon />}
+                            onClick={() => {
+                                jsonExport(listData, { headers: csvExportHeaders }, (err, csv) => {
+                                    downloadCSV(csv, `${record.id}`);
+                                });
+                            }}
                         >
-                            Cancel
+                            Export
                         </Button>
-                    )}
-                </Stack>
-
-                <Stack spacing="10px" direction="row">
-                    <Button
-                        size="medium"
-                        variant="outlined"
-                        startIcon={<DownloadIcon />}
-                        onClick={() => {
-                            jsonExport(listData, { headers: csvExportHeaders }, (err, csv) => {
-                                downloadCSV(csv, `${record.id}`);
-                            });
-                        }}
-                    >
-                        Export
-                    </Button>
-                    <ImportButton setListData={setListData} csvExportHeaders={csvExportHeaders} />
-                </Stack>
+                        <ImportButton
+                            setListData={setListData}
+                            csvExportHeaders={csvExportHeaders}
+                        />
+                    </Stack>
+                )}
             </Stack>
 
             <ListContextProvider value={listContext}>
@@ -188,9 +173,6 @@ const StudentTab = ({ label, path, ...props }: { label: string; path: string; pr
                         record.isDerived ? (
                             studentVirtualDialogOpen && (
                                 <>
-                                    <CustomVirtualStudentDeleteButton
-                                        deleteHandler={virtualClassEditHandler}
-                                    />
                                     <CustomVirtualStudentSaveButton
                                         list={listData}
                                         saveHandler={virtualClassEditHandler}
