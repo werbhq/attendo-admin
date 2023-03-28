@@ -79,7 +79,9 @@ const ReportsProvider: DataProviderCustom<Report> = {
 
                 // Initializing percentage values
                 students.forEach((e, k) => {
-                    if (students.get(k)?.attendance[subject.id]) return;
+                    if (students.get(k)?.attendance[subject.id] && !currentClassroom?.students[k]) {
+                        return;
+                    }
                     const val = {
                         ...e,
                         attendance: {
