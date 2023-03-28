@@ -9,6 +9,8 @@ import {
     WithRecord,
     useShowController,
     FunctionField,
+    ReferenceField,
+    ChipField,
 } from 'react-admin';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -82,11 +84,15 @@ const AuthorizedTeacherShow = () => {
                                                 )
                                         )
                                         .map((e) => (
-                                            <Chip
-                                                key={e.classroom.id}
-                                                sx={{ ml: 0.5, mt: 1 }}
+                                            <ReferenceField
+                                                record={e.classroom}
+                                                reference={MAPPING.CLASSROOMS}
+                                                source="id"
+                                                link="show"
                                                 label={e.classroom.id}
-                                            />
+                                            >
+                                                <ChipField source="id" />
+                                            </ReferenceField>
                                         ))
                                 ) : (
                                     <> - </>
@@ -95,7 +101,7 @@ const AuthorizedTeacherShow = () => {
                         )}
                     />
                     <FunctionField
-                        label="Subject-Classroom"
+                        label="Subject Names"
                         emptyText="-"
                         render={() => (
                             <ul style={{ padding: 0, margin: 0 }}>
