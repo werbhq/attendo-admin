@@ -57,21 +57,22 @@ const ClassroomsList = () => {
                     render={(record: Classroom) =>
                         record.isDerived ? record.semester : record.batch.semester
                     }
-                ></FunctionField>
+                />
                 <FunctionField
                     label="Branch"
                     render={(record: Classroom) => record.branch.toUpperCase()}
-                ></FunctionField>
+                />
                 <FunctionField
                     label="Name"
                     render={(record: Classroom) =>
                         Schemes.classNames.find(({ id }) => record.name === id)?.name
                     }
-                ></FunctionField>
+                />
+                <TextField source={SK.CLASSROOM('group')} emptyText="-" />
                 <FunctionField
                     label="Students"
                     render={(record: Classroom) => Object.values(record.students)?.length}
-                ></FunctionField>
+                />
                 <ReferenceField
                     source={SK.CLASSROOM('batch.schemeId')}
                     reference={MAPPING.SUBJECT}

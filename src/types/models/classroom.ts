@@ -16,6 +16,7 @@ interface _BaseClassroomShort {
     id: string;
     branch: string;
     name: string; // class name
+    group: string | null;
 }
 
 interface _BaseClassroom extends _BaseClassroomShort {
@@ -30,6 +31,7 @@ export interface ClassroomNonVirtualShort extends _BaseClassroomShort {
     id: string;
     branch: string;
     name: string;
+    group: string | null;
     batch: BatchShort;
 }
 
@@ -47,6 +49,10 @@ export interface ClassroomVirtual extends _BaseClassroom {
     subjectId: string;
     teachers: TeacherShort[];
     semester: number; // This is to separate the semester in batch vs actual semester in which the virtual class was created
+    groupLinks: {
+        id: string;
+        group: string | null;
+    }[];
 }
 
 // Merged Property
@@ -66,4 +72,22 @@ export interface ClassroomShort extends _BaseClassroomShort {
         [id: string]: ClassroomNonVirtualShort;
     };
     subject?: Subject;
+}
+
+export function ClassroomToClassroomShort(data: Classroom) {
+    return {
+        id: data.id,
+        branch: data.branch,
+        name: data.name,
+        group: data.group ?? null,
+        batch: {
+            course: data.batch.course,
+            yearOfJoining: data.batch.yearOfJoining,
+            id: data.batch.id,
+            name: data.batch.name,
+            schemeId: data.batch.schemeId,
+        },
+        parentClasses: data?.parentClasses ?? null,
+        subject: data?.subject ?? null,
+    } as ClassroomShort;
 }

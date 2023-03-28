@@ -8,14 +8,18 @@ import {
     AutocompleteArrayInput,
 } from 'react-admin';
 import { MAPPING } from 'provider/mapping';
-import { getClassroomId, titleCase } from 'Utils/helpers';
+import { getClassroomId } from 'Utils/helpers';
 import { Schemes } from 'Utils/Schemes';
 import { Subject, SubjectDoc } from 'types/models/subject';
 import { Batch } from 'types/models/batch';
 import { defaultParams } from 'provider/firebase';
 import { Classroom, ClassroomNonVirtual, ClassroomVirtual } from 'types/models/classroom';
 import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
+
 import SK from 'pages/source-keys';
+import GroupLink from './components/classroom/GroupLink';
+
+const CURRENT_CLASS_ID = 'This Classroom';
 
 const CreateClassroom = ({
     schemes: schemeData,
@@ -28,20 +32,26 @@ const CreateClassroom = ({
 }) => {
     const { getBranches, getSemesters, getSubjects, isDerived } = new Schemes(schemeData);
     const [data, setData] = useState<{
-        course: null | string;
         scheme: null | string;
         branch: null | string;
         name: null | string;
+        group: null | string;
         semester: null | number;
-        batch: null | string;
+        batchId: null | string;
     }>({
-        course: null,
         scheme: null,
         branch: null,
         name: null,
+        group: null,
         semester: null,
-        batch: null,
+        batchId: null,
     });
+
+    const [groupDependency, setGroupDependency] = useState<{
+        subjectId: string;
+        parentClasses: string[];
+    }>({ subjectId: '', parentClasses: [] });
+
     const batchChoices = batchData.map(({ name, id }) => ({ name, id }));
 
     function changeBatch(batchId: string) {
@@ -51,33 +61,56 @@ const CreateClassroom = ({
             setData({
                 ...data,
                 scheme: batch?.schemeId ?? null,
-                batch: batchId,
+                batchId,
             });
         } else {
             setData({
                 ...data,
                 scheme: batch?.schemeId ?? null,
                 semester: batch?.semester ?? null,
-                batch: batchId,
+                batchId,
             });
         }
     }
 
     const validateClassroom = (values: any) => {
         const errors: { [index: string]: string } = {};
-        const id = (e: Classroom) => e.id;
+        const id = (e: { id: string }) => e.id;
 
         const customValidator = (data: any[], fieldName: string) => {
-            if (!data.map(id).includes(values[fieldName])) {
+            if (!data.map(id).includes(values[fieldName as keyof Classroom])) {
                 errors[fieldName] = 'ra.validation.required';
             }
         };
 
-        customValidator(getBranches(data.scheme), 'branch');
-        customValidator(Schemes.classNames, 'name');
+        const customValidatorArray = (data: any, fieldName: string) => {
+            if (data[fieldName]?.length === 0) {
+                errors[fieldName] = 'ra.validation.required';
+            }
+        };
+
+        customValidator(getBranches(data.scheme), SK.CLASSROOM('branch'));
+        customValidator(Schemes.classNames, SK.CLASSROOM('name'));
+
         if (isDerived(values.name)) {
-            customValidator(getSemesters(data.scheme), 'semester');
-            customValidator(getSubjects(data.scheme, data.branch, data.semester), 'subjectId');
+            customValidator(getSemesters(data.scheme), SK.CLASSROOM('semester'));
+            customValidator(
+                getSubjects(data.scheme, data.branch, data.semester),
+                SK.CLASSROOM('subjectId')
+            );
+            customValidatorArray(values, SK.CLASSROOM('parentClasses'));
+
+            if (values[SK.CLASSROOM('groupLinks')]) {
+                const groupSet = new Set();
+
+                (values[SK.CLASSROOM('groupLinks')] as Classroom['groupLinks'])?.forEach(
+                    ({ group }) => {
+                        if (groupSet.has(group))
+                            errors['groupLinks'] = 'Group names must be unique';
+                        else groupSet.add(group);
+                    }
+                );
+            }
         }
         return errors;
     };
@@ -89,9 +122,15 @@ const CreateClassroom = ({
 
         const classroomId = getClassroomId(record, isDerived(record.name));
 
+        if (record.groupLinks) {
+            record.group = record.groupLinks.find((e) => e.id === CURRENT_CLASS_ID)?.group ?? null;
+            record.groupLinks = record.groupLinks.filter((e) => e.id !== CURRENT_CLASS_ID);
+        }
+
         const common = {
             id: classroomId,
             name: record.name,
+            group: record.group ?? null,
             branch: record.branch,
             batch,
             students: {},
@@ -107,15 +146,14 @@ const CreateClassroom = ({
             };
             finalData = nonVirtualClassroom;
         } else {
-            const recordVirtual = record as ClassroomVirtual; // type casting
-
-            const selectedTeachers = recordVirtual.teachers.map((e) => e.id) ?? [];
-            const newTeachers = teacherData.filter((e) => selectedTeachers.includes(e.id));
+            const recordVirtual = record as ClassroomVirtual & { teachers: string[] };
+            const newTeachers = teacherData.filter((e) => recordVirtual.teachers.includes(e.id));
 
             const virtualClassroom: ClassroomVirtual = {
                 ...common,
                 isDerived: true,
                 parentClasses: recordVirtual.parentClasses,
+                groupLinks: record.groupLinks ?? [],
                 subject: getSubjects(data.scheme, data.branch, data.semester).find(
                     (e) => e.id === record.subjectId
                 ) as Subject,
@@ -151,6 +189,7 @@ const CreateClassroom = ({
                     onChange={(e) => setData({ ...data, name: e.target.value })}
                     required
                 />
+
                 {isDerived(data.name) && (
                     <>
                         <SelectInput
@@ -159,6 +198,7 @@ const CreateClassroom = ({
                             onChange={(e) => setData({ ...data, semester: e.target.value })}
                             required
                         />
+
                         <SelectInput
                             source={SK.CLASSROOM('subjectId')}
                             choices={
@@ -171,35 +211,53 @@ const CreateClassroom = ({
                                     ? true
                                     : false
                             }
+                            onChange={(e) =>
+                                setGroupDependency((v) => ({ ...v, subjectId: e.target.value }))
+                            }
                             required
                         />
+
                         <ReferenceArrayInput
                             source={SK.CLASSROOM('parentClasses')}
                             reference={MAPPING.CLASSROOMS}
                             filter={{
                                 isDerived: false,
                                 branch: data.branch,
-                                batch:{ id: data.batch}
+                                batch: batchData.find((e) => e.id === data.batchId),
                             }}
                         >
                             <AutocompleteArrayInput
                                 optionText="id"
                                 source={SK.CLASSROOM('id')}
                                 filterToQuery={(searchText) => ({ id: searchText })}
+                                onChange={(e) =>
+                                    setGroupDependency((v) => ({
+                                        ...v,
+                                        parentClasses: e,
+                                    }))
+                                }
                                 isRequired
                             />
                         </ReferenceArrayInput>
-                        <AutocompleteArrayInput
-                            source={SK.CLASSROOM('teachers')}
-                            parse={(value) => value && value.map((v: TeacherShort) => ({ id: v }))}
-                            format={(value) => value && value.map((v: TeacherShort) => v.id)}
-                            choices={teacherData.map((e) => ({ id: e.id, name: e.name }))}
-                            optionText={(choice) => `${titleCase(choice.name)}`}
-                            filterToQuery={(searchText) => ({ id: searchText })}
-                            emptyText="No Option"
-                            sx={{ minWidth: 300 }}
-                            isRequired
+
+                        <GroupLink
+                            subjectId={groupDependency.subjectId}
+                            parentClasses={groupDependency.parentClasses}
+                            data={data}
+                            currentClassIdAlias={CURRENT_CLASS_ID}
                         />
+
+                        <ReferenceArrayInput
+                            source={SK.CLASSROOM('teachers')}
+                            reference={MAPPING.AUTH_TEACHERS}
+                            filter={{ created: true }}
+                        >
+                            <AutocompleteArrayInput
+                                optionText={SK.AUTH_TEACHERS('userName')}
+                                source={SK.AUTH_TEACHERS('userName')}
+                                filterToQuery={(searchText) => ({ userName: searchText })}
+                            />
+                        </ReferenceArrayInput>
                     </>
                 )}
             </SimpleForm>
@@ -222,7 +280,7 @@ const ClassroomsCreate = () => {
                 .map(({ id, email, userName }) => ({
                     id,
                     emailId: email,
-                    name: titleCase(userName),
+                    name: userName,
                 }));
             setTeachers(teacherData);
         });

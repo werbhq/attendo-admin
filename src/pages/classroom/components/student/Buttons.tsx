@@ -166,38 +166,6 @@ export const CustomVirtualStudentSaveButton = ({
     );
 };
 
-export const CustomVirtualStudentDeleteButton = ({
-    deleteHandler,
-}: {
-    deleteHandler: (students?: Student[] | undefined) => Promise<void>;
-}) => {
-    const dataProvider = useDataProvider();
-    const record = useRecordContext();
-    const notify = useNotify();
-    const refresh = useRefresh();
-
-    const students: Student[] = [];
-
-    const handleClose = async () => {
-        await dataProvider.updateMany(resource, {
-            ids: [],
-            data: students,
-            meta: {
-                classId: record.id,
-            },
-        });
-        refresh();
-        notify(`Deleted all students`, { type: 'success' });
-        await deleteHandler(students);
-    };
-
-    return (
-        <Button variant="text" color="error" startIcon={<DeleteIcon />} onClick={handleClose}>
-            Delete All
-        </Button>
-    );
-};
-
 export const ImportButton = ({
     csvExportHeaders,
     setListData,

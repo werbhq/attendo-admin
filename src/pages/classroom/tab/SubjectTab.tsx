@@ -14,7 +14,6 @@ import {
     SelectInput,
     Tab,
     useRecordContext,
-    ReferenceField,
 } from 'react-admin';
 import TeacherField from '../components/classroom/CustomTeacherField';
 import AddIcon from '@mui/icons-material/Add';
@@ -27,10 +26,10 @@ import { CustomSubjectBulkDeleteButton } from '../components/subject/Button';
 import Button from '@mui/material/Button';
 import { Classroom, ClassroomSubject } from 'types/models/classroom';
 import { Subject, SubjectBranchSubs, SubjectDoc, SubjectSemester } from 'types/models/subject';
-import { titleCase } from 'Utils/helpers';
 import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
 import { defaultParams } from 'provider/firebase';
 import EditIcon from '@mui/icons-material/Edit';
+import { ClassroomFrontend } from 'types/frontend/classroom';
 
 type EditProps = {
     setSubjectDialogue: React.Dispatch<
@@ -42,7 +41,7 @@ type EditProps = {
 };
 
 const EditButton = ({ setSubjectDialogue }: EditProps) => {
-    const record = useRecordContext();
+    const record: ClassroomFrontend = useRecordContext();
     return (
         <Button
             size="small"
@@ -61,17 +60,8 @@ const EditButton = ({ setSubjectDialogue }: EditProps) => {
     );
 };
 
-const SubjectTab = ({
-    label,
-    path,
-    record,
-    ...props
-}: {
-    label: string;
-    path: string;
-    record: Classroom;
-    props?: any;
-}) => {
+const SubjectTab = ({ label, path, ...props }: { label: string; path: string; props?: any }) => {
+    const record: Classroom = useRecordContext();
     const refresh = useRefresh();
     const notify = useNotify();
     const dataProvider = useDataProvider();
@@ -91,8 +81,8 @@ const SubjectTab = ({
         record.subjects === undefined
             ? ([] as ClassroomSubject[])
             : (Object.values(record.subjects).filter(
-                (val) => val.semester === semester
-            ) as ClassroomSubject[]);
+                  (val) => val.semester === semester
+              ) as ClassroomSubject[]);
 
     const [subjectDialogue, setSubjectDialogue] = useState({
         open: false,
@@ -224,11 +214,13 @@ const SubjectTab = ({
 
     const fetchData = () => {
         dataProvider.getList<AuthorizedTeacher>(MAPPING.AUTH_TEACHERS, defaultParams).then((e) => {
-            const teacherData = e.data.filter((e) => e.created).map(({ id, email, userName }) => ({
-                id,
-                emailId: email,
-                name: userName === undefined ? '' : titleCase(userName),
-            }));
+            const teacherData = e.data
+                .filter((e) => e.created)
+                .map(({ id, email, userName }) => ({
+                    id,
+                    emailId: email,
+                    name: userName,
+                }));
             setTeachersData(teacherData);
         });
 
@@ -328,11 +320,6 @@ const SubjectTab = ({
                             <WrapperField label="Teacher">
                                 <TeacherField />
                             </WrapperField>
-                            <ReferenceField
-                                source="id"
-                                reference={MAPPING.ATTENDANCES}
-                                link={(record) => `/attendance/${record.id}/show`}
-                            />
                             <EditButton setSubjectDialogue={setSubjectDialogue} />
                         </Datagrid>
                     </ListContextProvider>
@@ -345,7 +332,7 @@ const SubjectTab = ({
                         >
                             <SelectInput
                                 source="subject.id"
-                                choices={branchData?.subjects}
+                                choices={branchData?.subjects ?? []}
                                 optionText={(choice) => `${choice.code} - ${choice.name}`}
                                 // filterToQuery={(searchText: any) => ({ id: searchText })}
                                 emptyText="No Option"
@@ -357,7 +344,7 @@ const SubjectTab = ({
                                 parse={(value) => value && value.map((v: any) => ({ id: v }))}
                                 format={(value) => value && value.map((v: { id: any }) => v.id)}
                                 choices={teachersData}
-                                optionText={(choice) => `${titleCase(choice.name)}`}
+                                optionText={(choice: TeacherShort) => choice.name}
                                 filterToQuery={(searchText) => ({ id: searchText })}
                                 emptyText="No Option"
                                 sx={{ minWidth: 300 }}
@@ -385,7 +372,7 @@ const SubjectTab = ({
                                     value && value.map((v) => v.id)
                                 }
                                 choices={teachersData}
-                                optionText={(choice) => `${titleCase(choice.name)}`}
+                                optionText={(choice: TeacherShort) => choice.name}
                                 filterToQuery={(searchText) => ({ id: searchText })}
                                 emptyText="No Option"
                                 sx={{ minWidth: 300 }}

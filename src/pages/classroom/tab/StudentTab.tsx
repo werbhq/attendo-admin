@@ -12,12 +12,12 @@ import {
     useRecordSelection,
     useUnselectAll,
     TextField,
+    useRecordContext,
 } from 'react-admin';
 import { Classroom } from 'types/models/classroom';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import DownloadIcon from '@mui/icons-material/Download';
-import CancelIcon from '@mui/icons-material/Cancel';
 import jsonExport from 'jsonexport/dist';
 import { useState } from 'react';
 import { StudentShort as Student } from 'types/models/student';
@@ -26,13 +26,13 @@ import EditStudent from '../components/student/Edit';
 import {
     CustomStudentBulkDeleteButton,
     CustomStudentEditButton,
-    CustomVirtualStudentDeleteButton,
     CustomVirtualStudentSaveButton,
     ImportButton,
 } from '../components/student/Buttons';
 import { LoadingButton } from '@mui/lab';
 import { sortByRoll } from 'Utils/helpers';
 import SK from 'pages/source-keys';
+import { ClassroomFrontend } from 'types/frontend/classroom';
 
 const resource = MAPPING.STUDENTS;
 
@@ -42,18 +42,9 @@ type studentDialog = {
     record: Student | undefined;
 };
 
-const StudentTab = ({
-    record,
-    label,
-    path,
-    ...props
-}: {
-    record: Classroom;
-    label: string;
-    path: string;
-    props?: any;
-}) => {
+const StudentTab = ({ label, path, ...props }: { label: string; path: string; props?: any }) => {
     const dataProvider = useDataProvider();
+    const record: ClassroomFrontend = useRecordContext();
 
     const csvExportHeaders = record.isDerived
         ? ['classId', 'id', 'email', 'regNo', 'rollNo', 'name', 'userName']
@@ -80,12 +71,6 @@ const StudentTab = ({
         sort: sort,
     });
 
-    const disableEdit = () => {
-        unselectAll();
-        setStudentVirtualDialogOpen(false);
-        setListData(classroomStudents);
-    };
-
     const virtualClassEditHandler = async (e: any) => {
         const students = (e as Student[]) ?? classroomStudents;
 
@@ -93,12 +78,12 @@ const StudentTab = ({
             setIsLoading(true);
 
             const { data: classes } = await dataProvider.getMany<Classroom>(MAPPING.CLASSROOMS, {
-                ids: Object.keys(record?.parentClasses ?? {}),
+                ids: record?.parentClasses,
             });
             const fullStudents: Student[] = [];
 
             classes?.forEach((e) => {
-                const studentsTemp = Object.values(e.students).map((_e) => ({
+                const studentsTemp = Object.values(e.students ?? {}).map((_e) => ({
                     ..._e,
                     classId: e.id,
                 }));
@@ -157,35 +142,28 @@ const StudentTab = ({
                             Add Student
                         </Button>
                     )}
+                </Stack>
 
-                    {studentVirtualDialogOpen && (
+                {!studentVirtualDialogOpen && (
+                    <Stack spacing="10px" direction="row">
                         <Button
                             size="medium"
-                            variant="contained"
-                            color="error"
-                            startIcon={<CancelIcon />}
-                            onClick={disableEdit}
+                            variant="outlined"
+                            startIcon={<DownloadIcon />}
+                            onClick={() => {
+                                jsonExport(listData, { headers: csvExportHeaders }, (err, csv) => {
+                                    downloadCSV(csv, `${record.id}`);
+                                });
+                            }}
                         >
-                            Cancel
+                            Export
                         </Button>
-                    )}
-                </Stack>
-
-                <Stack spacing="10px" direction="row">
-                    <Button
-                        size="medium"
-                        variant="outlined"
-                        startIcon={<DownloadIcon />}
-                        onClick={() => {
-                            jsonExport(listData, { headers: csvExportHeaders }, (err, csv) => {
-                                downloadCSV(csv, `${record.id}`);
-                            });
-                        }}
-                    >
-                        Export
-                    </Button>
-                    <ImportButton setListData={setListData} csvExportHeaders={csvExportHeaders} />
-                </Stack>
+                        <ImportButton
+                            setListData={setListData}
+                            csvExportHeaders={csvExportHeaders}
+                        />
+                    </Stack>
+                )}
             </Stack>
 
             <ListContextProvider value={listContext}>
@@ -195,9 +173,6 @@ const StudentTab = ({
                         record.isDerived ? (
                             studentVirtualDialogOpen && (
                                 <>
-                                    <CustomVirtualStudentDeleteButton
-                                        deleteHandler={virtualClassEditHandler}
-                                    />
                                     <CustomVirtualStudentSaveButton
                                         list={listData}
                                         saveHandler={virtualClassEditHandler}
