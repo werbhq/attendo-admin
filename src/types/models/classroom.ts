@@ -31,7 +31,7 @@ export interface ClassroomNonVirtualShort extends _BaseClassroomShort {
     id: string;
     branch: string;
     name: string;
-    group: string | null;
+    group: string | null; // don't make optional
     batch: BatchShort;
 }
 
@@ -51,7 +51,7 @@ export interface ClassroomVirtual extends _BaseClassroom {
     semester: number; // This is to separate the semester in batch vs actual semester in which the virtual class was created
     groupLinks: {
         id: string;
-        group: string | null;
+        group: string | null; // don't make optional
     }[];
 }
 
@@ -75,11 +75,12 @@ export interface ClassroomShort extends _BaseClassroomShort {
 }
 
 export function ClassroomToClassroomShort(data: Classroom) {
-    return {
+    const classroomShort: ClassroomShort = {
         id: data.id,
         branch: data.branch,
         name: data.name,
         group: data.group ?? null,
+        isDerived: data.isDerived,
         batch: {
             course: data.batch.course,
             yearOfJoining: data.batch.yearOfJoining,
@@ -87,7 +88,13 @@ export function ClassroomToClassroomShort(data: Classroom) {
             name: data.batch.name,
             schemeId: data.batch.schemeId,
         },
-        parentClasses: data?.parentClasses ?? null,
-        subject: data?.subject ?? null,
-    } as ClassroomShort;
+        ...(data.isDerived
+            ? {
+                  parentClasses: data?.parentClasses,
+                  subject: data?.subject,
+              }
+            : {}),
+    };
+
+    return classroomShort;
 }

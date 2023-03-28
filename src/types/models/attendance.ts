@@ -16,7 +16,7 @@ export interface AttendanceShort {
 }
 
 export interface Attendance extends AttendanceShort {
-    absentees?: string[];
+    absentees: string[];
     unrecognisedNames?: string[];
     lateComers?: string[];
     leaves?: string[];
@@ -84,7 +84,7 @@ export function SubjectAttendanceToAttendances(data: SubjectAttendance) {
             unrecognisedNames: doc.unrecognisedNames ?? [],
             lateComers: doc.lateComers ?? [],
             leaves: doc.leaves ?? [],
-            teacher: teachers.find((e) => e.id === teacherId) ?? {
+            teacher: teachers?.find((e) => e.id === teacherId) ?? {
                 id: teacherId,
                 emailId: teacherId,
                 name: teacherId,
@@ -98,4 +98,15 @@ export function SubjectAttendanceToAttendances(data: SubjectAttendance) {
     });
 
     return attendanceData;
+}
+
+export interface ClassAttendance {
+    id: string;
+    classroom: ClassroomShort;
+    dateTime?: number;
+    date?: string;
+    hour?: number;
+    students: {
+        [id: string]: 'Present' | 'Absent' | 'Unknown';
+    };
 }
