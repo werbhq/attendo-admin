@@ -1,5 +1,5 @@
 import { MAPPING } from '../mapping';
-import { FieldPath, dataProvider, db, isProd } from '../firebase';
+import { FieldPath, dataProvider, db } from '../firebase';
 import { DataProviderCustom } from 'types/DataProvider';
 import { Report, ReportAttendance } from 'types/frontend/report';
 import { SubjectAttendance } from 'types/models/attendance';
@@ -66,10 +66,8 @@ const ReportsProvider: DataProviderCustom<Report> = {
 
         [...normalAttendances, ...virtualAttendances].forEach(
             ({ subject, attendances: e, classroom: attendanceClassroom }) => {
-                const attendances = Object.values(e);
-                const totalAttendance: number = isProd
-                    ? attendances.length
-                    : attendances.filter((e) => !developers[e.teacherId]).length;
+                const attendances = Object.values(e).filter((e) => !developers[e.teacherId]);
+                const totalAttendance: number = attendances.length;
 
                 if (totalAttendance === 0) return;
 
@@ -98,9 +96,7 @@ const ReportsProvider: DataProviderCustom<Report> = {
                     students.set(k, val);
                 });
 
-                attendances.forEach(({ absentees, teacherId }) => {
-                    if (developers[teacherId] && isProd) return; // Ignoring developer attendances
-
+                attendances.forEach(({ absentees }) => {
                     absentees?.forEach((absentee) => {
                         const student = students.get(absentee);
                         if (!student) return;
