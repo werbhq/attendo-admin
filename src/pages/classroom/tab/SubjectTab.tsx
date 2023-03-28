@@ -321,11 +321,6 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
                             <WrapperField label="Teacher">
                                 <TeacherField />
                             </WrapperField>
-                            <ReferenceField
-                                source="id"
-                                reference={MAPPING.ATTENDANCES}
-                                link={(record) => `/attendance/${record.id}/show`}
-                            />
                             <EditButton setSubjectDialogue={setSubjectDialogue} />
                         </Datagrid>
                     </ListContextProvider>
