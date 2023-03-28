@@ -87,6 +87,7 @@ export function ClassroomToClassroomShort(data: Classroom) {
             name: data.batch.name,
             schemeId: data.batch.schemeId,
         },
-        ...(data.isDerived ? { parentClasses: data.parentClasses, subject: data.subject } : {}),
+        parentClasses: data?.parentClasses ?? null,
+        subject: data?.subject ?? null,
     } as ClassroomShort;
 }
