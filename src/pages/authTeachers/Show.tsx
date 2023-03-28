@@ -9,7 +9,6 @@ import {
     WithRecord,
     useShowController,
     FunctionField,
-    ReferenceArrayField,
 } from 'react-admin';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -19,6 +18,7 @@ import { dataProvider } from 'provider/firebase';
 import { MAPPING } from 'provider/mapping';
 import { Chip } from '@mui/material';
 import SK from 'pages/source-keys';
+import { Subject } from 'types/models/subject';
 
 const AuthorizedTeacherShow = () => {
     const notify = useNotify();
@@ -26,10 +26,12 @@ const AuthorizedTeacherShow = () => {
     const record = useShowController().record as AuthorizedTeacher;
     const [loading, setLoading] = useState(false);
     const [classroomData, setClassroomData] = useState<TeacherClassroom[]>([]);
+    const [subjectData, setSubjectData] = useState<Subject[]>([]);
 
     const fetchData = () => {
-        dataProvider.getOne<Teacher>(MAPPING.TEACHERS, { id: record.id }).then((e) => {
+        dataProvider.getOne<Teacher>(MAPPING.TEACHERS, { id: record?.id }).then((e) => {
             setClassroomData(Object.values(e.data.classrooms));
+            setSubjectData(Object.values(e.data.classrooms).map((f) => f.subject));
         });
     };
 
@@ -49,7 +51,7 @@ const AuthorizedTeacherShow = () => {
         } catch (e: any) {
             notify(e.message, { type: 'error' });
         }
-        setLoading(false);
+        setLoading(true);
         refresh();
     };
 
@@ -59,18 +61,19 @@ const AuthorizedTeacherShow = () => {
                 <>Loading...</>
             ) : (
                 <SimpleShowLayout>
-                    <TextField source={SK.AUTH_TEACHERS("id")} />
-                    <EmailField source={SK.AUTH_TEACHERS("email")} />
-                    <TextField source={SK.AUTH_TEACHERS("userName")} label="Name" />
-                    <BooleanField source={SK.AUTH_TEACHERS("created")} looseValue />
-                    <TextField source={SK.AUTH_TEACHERS("branch" )}/>
-                    
-                        <FunctionField
-                            label="Classroom"
-                            emptyText="-"
-                            render={() => (
-                                <ul style={{ padding: 0, margin: 0 }}>
-                                    {classroomData
+                    <TextField source={SK.AUTH_TEACHERS('id')} />
+                    <EmailField source={SK.AUTH_TEACHERS('email')} />
+                    <TextField source={SK.AUTH_TEACHERS('userName')} label="Name" />
+                    <BooleanField source={SK.AUTH_TEACHERS('created')} looseValue />
+                    <TextField source={SK.AUTH_TEACHERS('branch')} />
+
+                    <FunctionField
+                        label="Classroom"
+                        emptyText="-"
+                        render={() => (
+                            <ul style={{ padding: 0, margin: 0 }}>
+                                {classroomData.length != 0 ? (
+                                    classroomData
                                         .filter(
                                             (classroom, index, self) =>
                                                 index ===
@@ -79,35 +82,39 @@ const AuthorizedTeacherShow = () => {
                                                 )
                                         )
                                         .map((e) => (
-                                            <Chip                                                                                     
+                                            <Chip
                                                 key={e.classroom.id}
                                                 sx={{ ml: 0.5, mt: 1 }}
                                                 label={e.classroom.id}
                                             />
-                                        ))}
-                                </ul>
-                            )}
-                        />
+                                        ))
+                                ) : (
+                                    <> - </>
+                                )}
+                            </ul>
+                        )}
+                    />
                     <FunctionField
                         label="Subject-Classroom"
-                        emptyText='-'
+                        emptyText="-"
                         render={() => (
                             <ul style={{ padding: 0, margin: 0 }}>
-                                {classroomData
-                                    .filter(
-                                        (classroom, index, self) =>
-                                            index ===
-                                            self.findIndex(
-                                                (c) => c.id === classroom.id
-                                            )
-                                    )
-                                    .map((e) => (
-                                        <Chip
-                                            key={e.id}
-                                            sx={{ ml: 0.5, mt: 1 }}
-                                            label={e.id}
-                                        />
-                                    ))}
+                                {subjectData.length != 0 ? (
+                                    subjectData
+                                        .filter(
+                                            (subject, index, self) =>
+                                                index === self.findIndex((c) => c.id === subject.id)
+                                        )
+                                        .map((e) => (
+                                            <Chip
+                                                key={e.name}
+                                                sx={{ ml: 0.5, mt: 1 }}
+                                                label={e.name}
+                                            />
+                                        ))
+                                ) : (
+                                    <>- </>
+                                )}
                             </ul>
                         )}
                     />
