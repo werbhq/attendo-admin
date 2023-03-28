@@ -74,7 +74,7 @@ const AuthorizedTeacherShow = () => {
                         emptyText="-"
                         render={() => (
                             <ul style={{ padding: 0, margin: 0 }}>
-                                {classroomData.length != 0 ? (
+                                {classroomData.length !== 0 ? (
                                     classroomData
                                         .filter(
                                             (classroom, index, self) =>
@@ -105,7 +105,7 @@ const AuthorizedTeacherShow = () => {
                         emptyText="-"
                         render={() => (
                             <ul style={{ padding: 0, margin: 0 }}>
-                                {subjectData.length != 0 ? (
+                                {subjectData.length !== 0 ? (
                                     subjectData
                                         .filter(
                                             (subject, index, self) =>

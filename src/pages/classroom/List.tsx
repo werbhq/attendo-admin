@@ -15,7 +15,12 @@ import QuickFilter from 'components/ui/QuickFilter';
 import SK from 'pages/source-keys';
 
 const filters = [
-    <SearchInput source={SK.CLASSROOM('id')} placeholder="Enter Id" alwaysOn resettable />,
+    <SearchInput
+        source={SK.CLASSROOM('id')}
+        placeholder="Enter Id"
+        alwaysOn
+        resettable
+    />,
     <QuickFilter
         source={SK.CLASSROOM('batch.running')}
         label="Running"
@@ -25,6 +30,8 @@ const filters = [
     <TextInput source={SK.CLASSROOM('batch.name')} resettable />,
     <TextInput source={SK.CLASSROOM('branch')} resettable />,
     <TextInput source={SK.CLASSROOM('name')} resettable />,
+    <TextInput label='Year Of Joining' source={SK.CLASSROOM('batch.yearOfJoining')} resettable />,
+    <TextInput label='Subject' source={SK.CLASSROOM('subject.name')} resettable />,
     <QuickFilter source={SK.CLASSROOM('isDerived')} label="Virtual" defaultValue={true} />,
 ];
 

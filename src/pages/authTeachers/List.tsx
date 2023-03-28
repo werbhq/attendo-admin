@@ -6,7 +6,6 @@ import {
     TextInput,
     EmailField,
     BooleanField,
-    BulkDeleteButton,
     BulkUpdateButton,
     useNotify,
     BulkActionProps,
@@ -17,6 +16,7 @@ import {
     ExportButton,
     FilterButton,
     CreateButton,
+    BulkDeleteWithConfirmButton,
 } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
 import QuickFilter from 'components/ui/QuickFilter';
@@ -53,7 +53,7 @@ const AuthorizedTeacherList = () => {
                     }
                 />
                 <BulkUpdateButton />
-                <BulkDeleteButton />
+                <BulkDeleteWithConfirmButton mutationMode="undoable" />
             </>
         );
     };
@@ -84,10 +84,10 @@ const AuthorizedTeacherList = () => {
             actions={<TopToolBar />}
         >
             <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons />}>
-                <EmailField source={SK.AUTH_TEACHERS("email")} />
-                <TextField source={SK.AUTH_TEACHERS("userName")} label="Name" />
-                <BooleanField source={SK.AUTH_TEACHERS("created")} looseValue sortable={false} />
-                <TextField source={SK.AUTH_TEACHERS("branch")} />
+                <EmailField source={SK.AUTH_TEACHERS('email')} />
+                <TextField source={SK.AUTH_TEACHERS('userName')} label="Name" />
+                <BooleanField source={SK.AUTH_TEACHERS('created')} looseValue sortable={false} />
+                <TextField source={SK.AUTH_TEACHERS('branch')} />
             </Datagrid>
         </List>
     );
