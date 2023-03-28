@@ -61,7 +61,8 @@ const EditButton = ({ setSubjectDialogue }: EditProps) => {
 };
 
 const SubjectTab = ({ label, path, ...props }: { label: string; path: string; props?: any }) => {
-    const record: Classroom = useRecordContext();
+    const record: ClassroomFrontend = useRecordContext();
+
     const refresh = useRefresh();
     const notify = useNotify();
     const dataProvider = useDataProvider();
@@ -70,7 +71,7 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
     const [semester, setSemester] = useState<number>(record.batch.semester);
     const [semesterChoices, setSemesterChoices] = useState<SubjectSemester[]>([]);
     const [branchData, setBranchData] = useState<SubjectBranchSubs | undefined>(undefined);
-    const [teachersData, setTeachersData] = useState<TeacherShort[]>(record?.teachers ?? []);
+    const [teachersData, setTeachersData] = useState<TeacherShort[]>([]);
 
     const [dialog, setDialog] = useState({
         open: false,
@@ -106,22 +107,18 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
                 name: teacher?.name,
             };
         }) as TeacherShort[];
-        let tchrsList: TeacherShort[] = [];
+        let teachersList: TeacherShort[] = [];
         const presentTeachers = new Set(teachers.map((e) => e.id));
         teachers.forEach((e) => {
-            if (presentTeachers.has(e.id)) {
-                tchrsList.push(e);
-            } else {
-                tchrsList = [];
-            }
+            if (presentTeachers.has(e.id)) teachersList.push(e);
+            else teachersList = [];
         });
-        subjects[currentSubjIndex].teachers = tchrsList;
-        const subjectsMap = {} as { [id: string]: ClassroomSubject };
+        subjects[currentSubjIndex].teachers = teachersList;
 
-        subjects.forEach((obj) => {
-            subjectsMap[obj.id] = obj;
-        });
+        const subjectsMap = {} as { [id: string]: ClassroomSubject };
+        subjects.forEach((obj) => (subjectsMap[obj.id] = obj));
         record.subjects = subjectsMap;
+
         await dataProvider.update(MAPPING.CLASSROOMS, {
             id: record.id,
             data: record,
@@ -132,7 +129,7 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
         handleEditClose();
     };
 
-    const handleSubmit = async (e: any) => {
+    const handleCreate = async (e: any) => {
         const oldData = record;
         const { SubjectId, TeacherIds } = e as {
             SubjectId: string;
@@ -161,15 +158,8 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
             const alreadyPresent: string[] = []; // Names
             const final: TeacherShort[] = subjects[subjectIndex].teachers;
             teachers.forEach((e) => {
-                if (
-                    final.some((f) => {
-                        return f.id === e.id;
-                    })
-                )
-                    alreadyPresent.push(e.name);
-                else {
-                    final.push(e);
-                }
+                if (final.some((f) => f.id === e.id)) alreadyPresent.push(e.name);
+                else final.push(e);
             });
             if (alreadyPresent.length !== 0) {
                 notify(`${alreadyPresent.join(',')} were already present`, { type: 'info' });
@@ -177,11 +167,9 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
             }
             subjects[subjectIndex].teachers = final;
         }
-        const subjectsMap = {} as { [id: string]: ClassroomSubject };
 
-        subjects.forEach((obj) => {
-            subjectsMap[obj.id] = obj;
-        });
+        const subjectsMap = {} as { [id: string]: ClassroomSubject };
+        subjects.forEach((e) => (subjectsMap[e.id] = e));
         record.subjects = subjectsMap;
 
         await dataProvider.update<Classroom>(MAPPING.CLASSROOMS, {
@@ -356,7 +344,7 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
                         </SimpleForm>
                     </Dialog>
                     <Dialog open={dialog.open} onClose={handleClose} fullWidth={true}>
-                        <SimpleForm record={dialog.record} onSubmit={handleSubmit} toolbar={false}>
+                        <SimpleForm record={dialog.record} onSubmit={handleCreate} toolbar={false}>
                             <SelectInput
                                 source="SubjectId"
                                 parse={(value) => value}

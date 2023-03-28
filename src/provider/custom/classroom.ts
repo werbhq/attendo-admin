@@ -31,10 +31,18 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             );
 
             data.parentClasses = parentClasses;
+            delete data.subjects;
+        } else {
+            delete data.parentClasses;
+            delete data.subject;
+            delete data.teachers;
+            delete data.semester;
+            delete data.groupLinks;
+            delete data.subjectId;
         }
 
         const ref = db.collection(MAPPING.CLASSROOMS);
-        const promises = [ref.doc(data.id).set({ ...data })];
+        const promises = [ref.doc(data.id).update({ ...data })];
 
         if (data.groupLinks) {
             data.groupLinks.forEach(({ id: cId, group }) => {
@@ -85,6 +93,14 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             }
 
             data.parentClasses = parentClasses;
+            delete data.subjects;
+        } else {
+            delete data.parentClasses;
+            delete data.subject;
+            delete data.teachers;
+            delete data.semester;
+            delete data.groupLinks;
+            delete data.subjectId;
         }
 
         const ref = db.collection(MAPPING.CLASSROOMS);
