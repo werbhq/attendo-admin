@@ -16,7 +16,7 @@ export interface AttendanceShort {
 }
 
 export interface Attendance extends AttendanceShort {
-    absentees?: string[];
+    absentees: string[];
     unrecognisedNames?: string[];
     lateComers?: string[];
     leaves?: string[];
