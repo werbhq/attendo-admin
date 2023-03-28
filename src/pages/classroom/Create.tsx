@@ -8,7 +8,7 @@ import {
     AutocompleteArrayInput,
 } from 'react-admin';
 import { MAPPING } from 'provider/mapping';
-import { getClassroomId, titleCase } from 'Utils/helpers';
+import { getClassroomId } from 'Utils/helpers';
 import { Schemes } from 'Utils/Schemes';
 import { Subject, SubjectDoc } from 'types/models/subject';
 import { Batch } from 'types/models/batch';
@@ -280,7 +280,7 @@ const ClassroomsCreate = () => {
                 .map(({ id, email, userName }) => ({
                     id,
                     emailId: email,
-                    name: titleCase(userName),
+                    name: userName,
                 }));
             setTeachers(teacherData);
         });

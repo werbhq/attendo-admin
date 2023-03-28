@@ -13,7 +13,6 @@ import {
     DeleteButton,
 } from 'react-admin';
 import { MAPPING } from 'provider/mapping';
-import { titleCase } from 'Utils/helpers';
 import { Schemes } from 'Utils/Schemes';
 import { Subject, SubjectDoc } from 'types/models/subject';
 import { Batch } from 'types/models/batch';
@@ -327,7 +326,7 @@ const ClassroomsEdit = ({ state }: { state: Props }) => {
                 .map(({ id, email, userName }) => ({
                     id,
                     emailId: email,
-                    name: titleCase(userName),
+                    name: userName,
                 }));
             setTeachers(teacherData);
         });

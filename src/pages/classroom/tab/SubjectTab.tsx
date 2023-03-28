@@ -27,7 +27,6 @@ import { CustomSubjectBulkDeleteButton } from '../components/subject/Button';
 import Button from '@mui/material/Button';
 import { Classroom, ClassroomSubject } from 'types/models/classroom';
 import { Subject, SubjectBranchSubs, SubjectDoc, SubjectSemester } from 'types/models/subject';
-import { titleCase } from 'Utils/helpers';
 import { AuthorizedTeacher, TeacherShort } from 'types/models/teacher';
 import { defaultParams } from 'provider/firebase';
 import EditIcon from '@mui/icons-material/Edit';
@@ -221,7 +220,7 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
                 .map(({ id, email, userName }) => ({
                     id,
                     emailId: email,
-                    name: userName === undefined ? '' : titleCase(userName),
+                    name: userName,
                 }));
             setTeachersData(teacherData);
         });
@@ -339,7 +338,7 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
                         >
                             <SelectInput
                                 source="subject.id"
-                                choices={branchData?.subjects}
+                                choices={branchData?.subjects ?? []}
                                 optionText={(choice) => `${choice.code} - ${choice.name}`}
                                 // filterToQuery={(searchText: any) => ({ id: searchText })}
                                 emptyText="No Option"
@@ -351,7 +350,7 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
                                 parse={(value) => value && value.map((v: any) => ({ id: v }))}
                                 format={(value) => value && value.map((v: { id: any }) => v.id)}
                                 choices={teachersData}
-                                optionText={(choice) => `${titleCase(choice.name)}`}
+                                optionText={(choice: TeacherShort) => choice.name}
                                 filterToQuery={(searchText) => ({ id: searchText })}
                                 emptyText="No Option"
                                 sx={{ minWidth: 300 }}
@@ -379,7 +378,7 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
                                     value && value.map((v) => v.id)
                                 }
                                 choices={teachersData}
-                                optionText={(choice) => `${titleCase(choice.name)}`}
+                                optionText={(choice: TeacherShort) => choice.name}
                                 filterToQuery={(searchText) => ({ id: searchText })}
                                 emptyText="No Option"
                                 sx={{ minWidth: 300 }}
