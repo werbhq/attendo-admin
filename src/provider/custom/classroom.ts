@@ -25,7 +25,9 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
                           const { data } = await dataProvider.getOne<Classroom>(resource, {
                               id: e,
                           });
-                          parentClasses[data.id] = ClassroomToClassroomShort(data);
+                          parentClasses[data.id] = ClassroomToClassroomShort(
+                              data
+                          ) as ClassroomNonVirtualShort;
                       })
                     : []
             );
@@ -86,8 +88,9 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
                             id: e,
                         });
 
-                        parentClasses[data.id] = parentClasses[data.id] =
-                            ClassroomToClassroomShort(data);
+                        parentClasses[data.id] = parentClasses[data.id] = ClassroomToClassroomShort(
+                            data
+                        ) as ClassroomNonVirtualShort;
                     })
                 );
             }
