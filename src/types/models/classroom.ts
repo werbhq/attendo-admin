@@ -18,6 +18,7 @@ interface _BaseClassroomShort {
     name: string; // class name
     group: string | null;
     batch: BatchShort;
+    isDerived: boolean;
 }
 
 interface _BaseClassroom extends _BaseClassroomShort {
@@ -29,7 +30,9 @@ interface _BaseClassroom extends _BaseClassroomShort {
 
 // Actual Types
 
-export type ClassroomNonVirtualShort = _BaseClassroomShort;
+export interface ClassroomNonVirtualShort extends _BaseClassroomShort {
+    isDerived: false;
+}
 export interface ClassroomVirtualShort extends _BaseClassroomShort {
     isDerived: true;
     parentClasses: {
@@ -74,6 +77,7 @@ export function ClassroomToClassroomShort(data: Classroom) {
         branch: data.branch,
         name: data.name,
         group: data.group ?? null,
+        isDerived: data.isDerived,
         batch: {
             course: data.batch.course,
             yearOfJoining: data.batch.yearOfJoining,
@@ -85,7 +89,6 @@ export function ClassroomToClassroomShort(data: Classroom) {
             ? {
                   parentClasses: data?.parentClasses,
                   subject: data?.subject,
-                  isDerived: data.isDerived,
               }
             : {}),
     };
