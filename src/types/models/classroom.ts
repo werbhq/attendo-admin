@@ -17,6 +17,7 @@ interface _BaseClassroomShort {
     branch: string;
     name: string; // class name
     group: string | null;
+    batch: BatchShort;
 }
 
 interface _BaseClassroom extends _BaseClassroomShort {
@@ -27,12 +28,14 @@ interface _BaseClassroom extends _BaseClassroomShort {
 // -----------------Classroom Actual Types -----------------
 
 // Actual Types
-export interface ClassroomNonVirtualShort extends _BaseClassroomShort {
-    id: string;
-    branch: string;
-    name: string;
-    group: string | null; // don't make optional
-    batch: BatchShort;
+
+export type ClassroomNonVirtualShort = _BaseClassroomShort;
+export interface ClassroomVirtualShort extends _BaseClassroomShort {
+    isDerived: true;
+    parentClasses: {
+        [id: string]: ClassroomNonVirtualShort;
+    };
+    subject: Subject;
 }
 
 export interface ClassroomNonVirtual extends _BaseClassroom {
@@ -55,23 +58,14 @@ export interface ClassroomVirtual extends _BaseClassroom {
     }[];
 }
 
-// Merged Property
+// Merged Properties
 export type Classroom = Merge<ClassroomNonVirtual, ClassroomVirtual>;
+export type ClassroomShort = Merge<ClassroomNonVirtualShort, ClassroomVirtualShort>;
 
 export interface ClassroomIndex {
     classrooms: {
         [id: string]: Classroom;
     };
-}
-
-// ClassroomShort used in teachers
-export interface ClassroomShort extends _BaseClassroomShort {
-    batch: BatchShort;
-    isDerived: boolean;
-    parentClasses?: {
-        [id: string]: ClassroomNonVirtualShort;
-    };
-    subject?: Subject;
 }
 
 export function ClassroomToClassroomShort(data: Classroom) {
@@ -80,7 +74,6 @@ export function ClassroomToClassroomShort(data: Classroom) {
         branch: data.branch,
         name: data.name,
         group: data.group ?? null,
-        isDerived: data.isDerived,
         batch: {
             course: data.batch.course,
             yearOfJoining: data.batch.yearOfJoining,
@@ -92,6 +85,7 @@ export function ClassroomToClassroomShort(data: Classroom) {
             ? {
                   parentClasses: data?.parentClasses,
                   subject: data?.subject,
+                  isDerived: data.isDerived,
               }
             : {}),
     };
