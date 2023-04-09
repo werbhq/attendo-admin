@@ -103,10 +103,11 @@ export function SubjectAttendanceToAttendances(data: SubjectAttendance) {
 export interface ClassAttendance {
     id: string;
     classroom: ClassroomShort;
-    dateTime?: number;
+    dateTime?: Date;
     date?: string;
     hour?: number;
+    teacher?: TeacherShort;
     students: {
-        [id: string]: 'Present' | 'Absent' | 'Unknown';
+        [id: string]: string;
     };
 }
