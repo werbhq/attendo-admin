@@ -40,3 +40,18 @@ export const MODE = {
     DEV: 'dev',
     EMULATOR: 'emulate',
 };
+
+export const validateName = (value: string) => {
+    const regex = /\d/;
+    if (value && value.includes('.')) {
+        return 'Name must not contain a dot';
+    } else if (value && Array.isArray(value)) {
+        for (let i = 0; i < value.length; i++) {
+            if (regex.test(value[i])) {
+                return 'Value must not contain a number';
+            }
+        }
+    } else if (value && regex.test(value)) {
+        return 'Value must not contain a number';
+    }
+};

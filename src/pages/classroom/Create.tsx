@@ -256,6 +256,7 @@ const CreateClassroom = ({
                                 optionText={SK.AUTH_TEACHERS('userName')}
                                 source={SK.AUTH_TEACHERS('userName')}
                                 filterToQuery={(searchText) => ({ userName: searchText })}
+                                isRequired
                             />
                         </ReferenceArrayInput>
                     </>

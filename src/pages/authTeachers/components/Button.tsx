@@ -27,15 +27,24 @@ export const ImportButton = ({ csvExportHeaders, ...rest }: { csvExportHeaders: 
             const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(',')}`;
             return notify(message, { type: 'error' });
         } else {
-            filteredData = data.filter(
-                (e) => !record.some((value: { id: string }) => value.id === e.id)
-            );
+            filteredData = data.filter((e) => {
+                let matchingRecord = record.find((value: { id: string }) => value.id === e.id);
+                if (matchingRecord) {
+                    refresh();
+                    notify(`Updated data of ${e.userName} teacher`, {
+                        type: 'success',
+                    });
+                    return e; // replace with element from data
+                } else {
+                    refresh();
+                    notify(`Updated ${data.length} Teachers`, {
+                        type: 'success',
+                    });
+                    return !record.some((value: { id: string }) => value.id === e.id); // exclude if not in record
+                }
+            });
         }
         filteredData.forEach((e) => update(resource, { id: e.id, data: e }));
-        refresh();
-        notify(`Updated ${data.length} Teachers`, {
-            type: 'success',
-        });
     };
 
     return (

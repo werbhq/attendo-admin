@@ -6,7 +6,6 @@ import {
     TextInput,
     EmailField,
     BooleanField,
-    BulkDeleteButton,
     BulkUpdateButton,
     useNotify,
     BulkActionProps,
@@ -17,6 +16,7 @@ import {
     ExportButton,
     FilterButton,
     CreateButton,
+    BulkDeleteWithConfirmButton,
 } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
 import QuickFilter from 'components/ui/QuickFilter';
@@ -52,14 +52,15 @@ const AuthorizedTeacherList = () => {
                     }
                 />
                 <BulkUpdateButton />
-                <BulkDeleteButton />
+                <BulkDeleteWithConfirmButton mutationMode='optimistic'/>
             </>
         );
     };
 
     const teachersExporter = (data: AuthorizedTeacher[]) => {
         const dataForExport = data;
-        jsonExport(dataForExport, { headers: csvExportHeaders }, (err, csv) => {
+        const dataForExportWithoutCreated = dataForExport.map(({ created, ...rest }) => rest); // created parameter wont be presented
+        jsonExport(dataForExportWithoutCreated, { headers: csvExportHeaders }, (err, csv) => {
             downloadCSV(csv, `Teachers`);
         });
     };
