@@ -2,7 +2,6 @@ import {
     Datagrid,
     TextField,
     List,
-    EditButton,
     FunctionField,
     SearchInput,
     TextInput,
@@ -30,7 +29,7 @@ const SubjectList = () => (
                 label="Semester"
                 render={(record: SubjectDoc) => <CustomSemesterField record={record} />}
             />
-            <EditButton />
+            {/* <EditButton /> */}
         </Datagrid>
     </List>
 );

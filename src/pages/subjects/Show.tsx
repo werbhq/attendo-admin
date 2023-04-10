@@ -19,11 +19,11 @@ const SubjectShow = () => {
                         render={(record: SubjectDoc) => <CustomSemesterField record={record} />}
                     />
                 </Tab>
-                <Tab label="semesters" path="semesters">
-                    <SemesterTable />
-                </Tab>
                 <Tab label="subjects" path="subjects">
                     <SubjectTable />
+                </Tab>
+                <Tab label="semesters" path="semesters">
+                    <SemesterTable />
                 </Tab>
             </TabbedShowLayout>
         </Show>
