@@ -4,7 +4,7 @@ import {
     ClassroomNonVirtualShort,
     ClassroomToClassroomShort,
 } from 'types/models/classroom';
-import { dataProvider, db } from '../firebase';
+import { FieldValue, dataProvider, db } from '../firebase';
 import { MAPPING } from '../mapping';
 
 /**
@@ -44,7 +44,10 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
         }
 
         const ref = db.collection(MAPPING.CLASSROOMS);
-        const promises = [ref.doc(data.id).update({ ...data })];
+        console.log('Updating classroom doc');
+        const promises = [
+            ref.doc(data.id).update({ ...data, 'meta.lastUpdated': FieldValue.serverTimestamp() }),
+        ];
 
         if (data.groupLinks) {
             data.groupLinks.forEach(({ id: cId, group }) => {
@@ -105,9 +108,18 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             delete data.groupLinks;
             delete data.subjectId;
         }
-
         const ref = db.collection(MAPPING.CLASSROOMS);
-        const promises = [ref.doc(data.id).set(data)];
+        const promises = [
+            ref.doc(data.id).set({
+                ...data,
+                meta: {
+                    createdAt: FieldValue.serverTimestamp(),
+                    lastUpdated: FieldValue.serverTimestamp(),
+                    deleted: false,
+                    version: 2,
+                },
+            }),
+        ];
 
         if (data.groupLinks) {
             data.groupLinks.forEach(({ id: cId, group }) => {

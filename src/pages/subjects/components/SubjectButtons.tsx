@@ -19,7 +19,7 @@ import {
 } from 'react-admin';
 import { useState } from 'react';
 import { MAPPING } from 'provider/mapping';
-import { Subject, SubjectDoc, SubjectSemester } from 'types/models/subject';
+import { Subject, SubjectDoc } from 'types/models/subject';
 
 const resource = MAPPING.SUBJECT;
 

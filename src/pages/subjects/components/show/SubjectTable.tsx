@@ -23,7 +23,7 @@ import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { useState } from 'react';
-import { Dialog, IconButton, Tooltip } from '@mui/material';
+import { Dialog, Tooltip } from '@mui/material';
 import { MAPPING } from 'provider/mapping';
 import { CustomSubjectBulkDeleteButton } from '../CustomButtons';
 import { noSpaceValidation } from 'Utils/validations';
