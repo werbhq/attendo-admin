@@ -23,6 +23,7 @@ import EmptySingleDisplay from 'components/ui/EmptySingleField';
 import { useState } from 'react';
 import EditClassroom from '../components/classroom/Edit';
 import { ClassroomFrontend } from 'types/frontend/classroom';
+import { AUITag } from 'components/ui/AUIComponents/aui_tag';
 
 const SummaryTab = ({ label, ...rest }: { label: string }) => {
     const record: ClassroomFrontend = useRecordContext();
@@ -31,7 +32,7 @@ const SummaryTab = ({ label, ...rest }: { label: string }) => {
     const hasGroup = record.isDerived && record.group;
 
     return (
-        <Tab {...rest} label={label}>
+        <Tab {...rest} label={label} sx={{ boxShadow: 'none' }}>
             <SimpleShowLayout>
                 <TextField source={SK.CLASSROOM('id')} />
                 <FunctionField
@@ -80,7 +81,7 @@ const SummaryTab = ({ label, ...rest }: { label: string }) => {
                         sx={{ margin: '10px 0px' }}
                     >
                         <SingleFieldList linkType="show">
-                            <ChipField source={SK.CLASSROOM('id')} />
+                            <AUITag source={SK.CLASSROOM('id')} />
                         </SingleFieldList>
                         <EmptySingleDisplay fieldName={SK.CLASSROOM('parentClasses')} />
                     </ReferenceArrayField>
