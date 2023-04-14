@@ -11,15 +11,20 @@ import AuthTeachers from './pages/authTeachers';
 import { authProvider, dataProvider, isProd } from './provider/firebase';
 import { CustomLayout } from './components/ui/Layout';
 import { customQueryClient } from './provider/queryClient';
+import AUIColours from 'components/ui/AUIComponents/colours';
 
 const myTheme = {
     ...defaultTheme,
     palette: {
+        background: {
+            default: AUIColours.backgroundDay,
+        },
         primary: {
-            main: '#179F97',
+            main: AUIColours.primary1Day,
+            contrastText: AUIColours.onSurfaceDay,
         },
         secondary: {
-            main: isProd ? '#179F97' : '#000',
+            main: AUIColours.backgroundDay,
         },
         error: red,
         contrastThreshold: 3,
@@ -27,6 +32,33 @@ const myTheme = {
     },
     typography: {
         fontFamily: ['Poppins', 'sans-serif'].join(','),
+    },
+    overrides: {
+        MuiButtonBase: {
+            root: {
+                backgroundColor: red, // set the background color
+                color: '#FFFFFF',
+                borderRadius: 16,
+                boxShadow: 'none',
+                textTransform: 'none', // set the text color
+            },
+        },
+        MuiFilledInput: {
+            root: {
+                backgroundColor: red,
+            },
+            underline: {
+                '&:before': {
+                    borderBottomColor: '#ddd',
+                },
+                '&:hover:not(.Mui-disabled):before': {
+                    borderBottomColor: '#aaa',
+                },
+                '&:after': {
+                    borderBottomColor: '#777',
+                },
+            },
+        },
     },
     components: {
         ...defaultTheme.components,
