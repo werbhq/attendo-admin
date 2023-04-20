@@ -37,7 +37,7 @@ export interface AttendanceMini {
 export interface SubjectAttendance {
     id: string;
     classroom: ClassroomShort;
-    teachers: TeacherShort[];
+    teachers: { [id: string]: TeacherShort };
     subject: Subject;
     semester: number;
     attendances: { [id: string]: AttendanceMini };
@@ -84,7 +84,7 @@ export function SubjectAttendanceToAttendances(data: SubjectAttendance) {
             unrecognisedNames: doc.unrecognisedNames ?? [],
             lateComers: doc.lateComers ?? [],
             leaves: doc.leaves ?? [],
-            teacher: teachers?.find((e) => e.id === teacherId) ?? {
+            teacher: teachers[teacherId] ?? {
                 id: teacherId,
                 emailId: teacherId,
                 name: teacherId,
