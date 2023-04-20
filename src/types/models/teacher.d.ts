@@ -50,3 +50,9 @@ export interface AuthorizedTeacherIndex {
         [email: string]: AuthorizedTeacher;
     };
 }
+
+export interface TeachersIndex {
+    teachers: {
+        [key: string]: TeacherShort;
+    };
+}
