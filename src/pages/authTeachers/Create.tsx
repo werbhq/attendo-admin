@@ -13,6 +13,7 @@ import {
 import { MAPPING } from 'provider/mapping';
 import { defaultParams } from 'provider/firebase';
 import { validateName } from 'Utils/helpers';
+import SK from 'pages/source-keys';
 
 const url = MAPPING.AUTH_TEACHERS;
 
@@ -52,9 +53,9 @@ const AuthorizedTeacherCreate = () => {
     return (
         <Create>
             <SimpleForm style={{ alignItems: 'stretch' }} onSubmit={onSubmit}>
-                <TextInput source="email" validate={[required(), email()]} />
-                <TextInput source="userName" label="Name" validate={[required(), validateName]} />
-                <TextInput source="branch" validate={required()} />
+                <TextInput source={SK.AUTH_TEACHERS("email")} validate={[required(), email()]} />
+                <TextInput source={SK.AUTH_TEACHERS("userName")} label="name" validate={[required(), validateName]}/>
+                <TextInput source={SK.AUTH_TEACHERS("branch")} validate={required()} />
             </SimpleForm>
         </Create>
     );

@@ -18,6 +18,7 @@ import { Course } from 'types/models/courses';
 import { defaultParams } from 'provider/firebase';
 import { useEffect, useState } from 'react';
 import { convertSingleValueListToSelectList } from 'Utils/helpers';
+import SK from 'pages/source-keys';
 
 const url = MAPPING.SUBJECT;
 
@@ -54,18 +55,18 @@ const SubjectCreate = () => {
         <Create>
             <SimpleForm onSubmit={onSubmit}>
                 <TextInput
-                    source="organization"
+                    source={SK.SYLLABUS("organization")}
                     format={(props) => props?.toUpperCase() ?? ''}
                     validate={[required(), noSpaceValidation]}
                 />
                 <NumberInput
-                    source="year"
+                    source={SK.SYLLABUS("year")}
                     onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
                     validate={[required(), number('Number Required')]}
                     label="Year"
                 />
                 <SelectInput
-                    source="course"
+                    source={SK.SYLLABUS("course")}
                     choices={courseChoices}
                     validate={[required(), noSpaceValidation]}
                     label="Course"

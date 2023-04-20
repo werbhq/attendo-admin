@@ -21,6 +21,7 @@ import { autoCapitalize } from 'Utils/helpers';
 import { Schemes } from 'Utils/Schemes';
 import { SubjectDoc } from 'types/models/subject';
 import { defaultParams } from 'provider/firebase';
+import SK from 'pages/source-keys';
 
 const resource = MAPPING.BATCHES;
 
@@ -86,14 +87,14 @@ function EditSummary({
                         resource={resource}
                         onSubmit={handleSave}
                     >
-                        <TextInput source="name" format={autoCapitalize} disabled={true} />
+                        <TextInput source={SK.BATCHES("name")} format={autoCapitalize} disabled={true} />
                         <SelectInput
-                            source="semester"
+                            source={SK.BATCHES("semester")}
                             choices={getSemesters(record.schemeId)}
                             required
                         />
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <BooleanInput source="running" validate={[required()]} />
+                            <BooleanInput source={SK.BATCHES("running")} validate={[required()]} />
                         </Box>
                         <Stack direction="row" spacing={2}>
                             <SaveButton label="Save" />

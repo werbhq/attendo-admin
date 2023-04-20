@@ -10,6 +10,7 @@ import {
 import { CustomSemesterField } from './components/CustomFields';
 import { SubjectDoc } from 'types/models/subject';
 import { MAPPING } from 'provider/mapping';
+import SK from 'pages/source-keys';
 
 const filters = [
     <SearchInput source="id" alwaysOn resettable />,
@@ -21,10 +22,10 @@ const filters = [
 const SubjectList = () => (
     <List exporter={false} filters={filters}>
         <Datagrid rowClick="show">
-            <TextField source="id" />
-            <TextField source="organization" />
-            <ReferenceField source="course" reference={MAPPING.COURSES} link="show" />
-            <TextField source="year" />
+            <TextField source={SK.SYLLABUS("id")} />
+            <TextField source={SK.SYLLABUS("organization")} />
+            <ReferenceField source={SK.SYLLABUS("course")} reference={MAPPING.COURSES} link="show" />
+            <TextField source={SK.SYLLABUS("year")} />
             <FunctionField
                 label="Semester"
                 render={(record: SubjectDoc) => <CustomSemesterField record={record} />}

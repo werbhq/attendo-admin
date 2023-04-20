@@ -25,6 +25,7 @@ import { ImportButton } from './components/Button';
 import jsonExport from 'jsonexport/dist';
 import { MAPPING } from 'provider/mapping';
 import { AuthorizedTeacher } from 'types/models/teacher';
+import SK from 'pages/source-keys';
 
 const filters = [
     <SearchInput source="id" alwaysOn resettable />,
@@ -84,10 +85,10 @@ const AuthorizedTeacherList = () => {
             actions={<TopToolBar />}
         >
             <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons />}>
-                <EmailField source="email" />
-                <TextField source="userName" label="Name" />
-                <BooleanField source="created" looseValue sortable={false} />
-                <TextField source="branch" />
+                <EmailField source={SK.AUTH_TEACHERS('email')} />
+                <TextField source={SK.AUTH_TEACHERS('userName')} label="Name" />
+                <BooleanField source={SK.AUTH_TEACHERS('created')} looseValue sortable={false} />
+                <TextField source={SK.AUTH_TEACHERS('branch')} />
             </Datagrid>
         </List>
     );
