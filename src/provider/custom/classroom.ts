@@ -44,7 +44,6 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
         }
 
         const ref = db.collection(MAPPING.CLASSROOMS);
-        console.log('Updating classroom doc');
         const promises = [
             ref.doc(data.id).update({ ...data, 'meta.lastUpdated': FieldValue.serverTimestamp() }),
         ];

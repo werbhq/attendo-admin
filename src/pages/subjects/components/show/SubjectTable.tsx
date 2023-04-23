@@ -18,6 +18,7 @@ import {
 import InputLabel from '@mui/material/InputLabel';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
@@ -136,8 +137,8 @@ const SubjectTable = () => {
         handleClose();
     };
     const handleSemDelete = async (record: SubjectSemester) => {
-        const semesterIndex = data.semesters.findIndex((e) => e.semester === record.semester); //0
-        const currentSemIndex = semesterIndex - 1 >= 0 ? semesterIndex - 1 : 0; //0
+        const semesterIndex = data.semesters.findIndex((e) => e.semester === record.semester);
+        const currentSemIndex = semesterIndex - 1 >= 0 ? semesterIndex - 1 : 0;
         if (semesterIndex !== -1) {
             const updatedData = {
                 ...data,
@@ -145,7 +146,7 @@ const SubjectTable = () => {
             };
             let semester = newSemesterRecord as SubjectSemester;
             if (updatedData.semesters.length > 0) {
-                semester = updatedData.semesters[currentSemIndex] as SubjectSemester; //8
+                semester = updatedData.semesters[currentSemIndex] as SubjectSemester;
                 setSemesterData(semester);
                 setBranchData(semester.branchSubs[0].branch);
             } else {
@@ -250,18 +251,7 @@ const SubjectTable = () => {
                                         });
                                     }}
                                 >
-                                    <AddIcon
-                                        style={{
-                                            color: '#2196f3',
-                                            width: 15,
-                                            height: 15,
-                                            borderRadius: '50%',
-                                            border: '2px solid #2196f3',
-                                            borderColor: '#2196f3',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                    />
+                                    <AddCircleOutlineIcon style={{ color: '#2196f3' }} />
                                 </MenuItem>
                             </Tooltip>
                         }
@@ -301,18 +291,7 @@ const SubjectTable = () => {
                                         });
                                     }}
                                 >
-                                    <AddIcon
-                                        style={{
-                                            color: '#2196f3',
-                                            width: 15,
-                                            height: 15,
-                                            borderRadius: '50%',
-                                            border: '2px solid #2196f3',
-                                            borderColor: '#2196f3',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                    />
+                                    <AddCircleOutlineIcon style={{ color: '#2196f3' }} />
                                 </MenuItem>
                             </Tooltip>
                         }
@@ -375,8 +354,8 @@ const SubjectTable = () => {
                         />
                     }
                 >
-                    <TextField source={SK.SUBJECT("code")} />
-                    <TextField source={SK.SUBJECT("name")} />
+                    <TextField source={SK.SUBJECT('code')} />
+                    <TextField source={SK.SUBJECT('name')} />
                     <FunctionField
                         render={(record: Subject) => (
                             <Button
@@ -400,14 +379,14 @@ const SubjectTable = () => {
             <Dialog open={addSubject.open} onClose={handleClose} fullWidth={true}>
                 <SimpleForm record={addSubject.record} onSubmit={handleSubmit} toolbar={false}>
                     <TextInput
-                        source={SK.SUBJECT("code")}
+                        source={SK.SUBJECT('code')}
                         label="Code"
                         fullWidth={true}
                         format={(props) => props?.toUpperCase() ?? ''}
                         validate={[required(), noSpaceValidation]}
                     />
                     <TextInput
-                        source={SK.SUBJECT("name")}
+                        source={SK.SUBJECT('name')}
                         label="Name"
                         format={(props) => props && titleCase(props)}
                         fullWidth={true}

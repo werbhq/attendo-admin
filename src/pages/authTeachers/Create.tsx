@@ -27,7 +27,6 @@ const AuthorizedTeacherCreate = () => {
         let isUpdate;
         data = { ...data, id: data.email, created: false };
         dataProvider.getList(url, defaultParams).then((e) => {
-            console.log(e.data.includes(data));
             if (e.data.includes(data)) isUpdate = false;
             else isUpdate = true;
         });

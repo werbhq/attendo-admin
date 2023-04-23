@@ -25,13 +25,14 @@ import { Subject } from 'types/models/subject';
 const AuthorizedTeacherShow = () => {
     const notify = useNotify();
     const refresh = useRefresh();
-    const record = useShowController().record as AuthorizedTeacher;
+    const { record } = useShowController();
+    const authorizedTeacher = record as AuthorizedTeacher;
     const [loading, setLoading] = useState(false);
     const [classroomData, setClassroomData] = useState<TeacherClassroom[]>([]);
     const [subjectData, setSubjectData] = useState<Subject[]>([]);
 
     const fetchData = () => {
-        dataProvider.getOne<Teacher>(MAPPING.TEACHERS, { id: record?.id }).then((e) => {
+        dataProvider.getOne<Teacher>(MAPPING.TEACHERS, { id: authorizedTeacher?.id }).then((e) => {
             setClassroomData(Object.values(e.data.classrooms));
             setSubjectData(Object.values(e.data.classrooms).map((f) => f.subject));
         });
@@ -59,9 +60,9 @@ const AuthorizedTeacherShow = () => {
 
     return (
         <Show>
-            {loading ? (
-                <>Loading...</>
-            ) : (
+            if(loading) return <>Loading...</>
+            return
+            <>
                 <SimpleShowLayout>
                     <TextField source={SK.AUTH_TEACHERS('id')} />
                     <EmailField source={SK.AUTH_TEACHERS('email')} />
@@ -141,7 +142,7 @@ const AuthorizedTeacherShow = () => {
                         }
                     />
                 </SimpleShowLayout>
-            )}
+            </>
         </Show>
     );
 };

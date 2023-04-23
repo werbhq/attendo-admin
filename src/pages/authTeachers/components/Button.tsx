@@ -28,21 +28,22 @@ export const ImportButton = ({ csvExportHeaders, ...rest }: { csvExportHeaders: 
             return notify(message, { type: 'error' });
         } else {
             filteredData = data.filter((e) => {
-                let matchingRecord = record.find((value: { id: string }) => value.id === e.id);
-                if (matchingRecord) {
-                    refresh();
-                    notify(`Updated data of ${e.userName} teacher`, {
-                        type: 'success',
-                    });
-                    return e; // replace with element from data
-                } else {
-                    refresh();
-                    notify(`Updated ${data.length} Teachers`, {
-                        type: 'success',
-                    });
-                    return !record.some((value: { id: string }) => value.id === e.id); // exclude if not in record
-                }
-            });
+                const matchingRecord = record.find(({ id }) => id === e.id);
+                const { id, userName } = e;
+                const message = matchingRecord
+                  ? `Updated data of ${userName} teacher`
+                  : `Updated ${data.length} Teachers`;
+              
+                const shouldInclude = matchingRecord ? e : !record.some(({ id: recordId }) => recordId === id);
+                
+                refresh();
+                notify(message, {
+                  type: 'success',
+                });
+                
+                return shouldInclude;
+              });              
+            
         }
         filteredData.forEach((e) => update(resource, { id: e.id, data: e }));
     };
