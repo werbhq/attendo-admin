@@ -118,6 +118,7 @@ export const DeleteButtonDialog = ({
         <>
             <Button
                 label="Delete"
+                color="inherit"
                 startIcon={<DeleteIcon sx={{ verticalAlign: 'text-top' }} />}
                 variant="outlined"
                 size="medium"
