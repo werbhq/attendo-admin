@@ -84,7 +84,7 @@ export function SubjectAttendanceToAttendances(data: SubjectAttendance) {
             unrecognisedNames: doc.unrecognisedNames ?? [],
             lateComers: doc.lateComers ?? [],
             leaves: doc.leaves ?? [],
-            teacher: teachers[teacherId] ?? {
+            teacher: Object.values(teachers)?.find((e) => e.id === teacherId) ?? {
                 id: teacherId,
                 emailId: teacherId,
                 name: teacherId,
