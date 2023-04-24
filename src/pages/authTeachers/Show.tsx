@@ -60,7 +60,7 @@ const AuthorizedTeacherShow = () => {
 
     return (
         <Show>
-            if(loading) return <>Loading...</>
+            if(loading) return (<>Loading...</>) 
             return
             <>
                 <SimpleShowLayout>
