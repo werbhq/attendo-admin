@@ -58,10 +58,10 @@ const AuthorizedTeacherShow = () => {
         refresh();
     };
 
-    return (
+    return loading ? (
+        <></>
+    ) : (
         <Show>
-            if(loading) return (<>Loading...</>) 
-            return
             <>
                 <SimpleShowLayout>
                     <TextField source={SK.AUTH_TEACHERS('id')} />
