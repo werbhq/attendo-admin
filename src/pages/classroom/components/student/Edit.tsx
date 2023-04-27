@@ -10,10 +10,12 @@ import {
     useRefresh,
     useNotify,
     SaveButton,
+    required,
+    email,
 } from 'react-admin';
 import { MAPPING } from 'provider/mapping';
 import { DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
-import { autoCapitalize } from 'Utils/helpers';
+import { autoCapitalize, validateName } from 'Utils/helpers';
 import { useState } from 'react';
 import { StudentShort as Student } from 'types/models/student';
 import { Classroom } from 'types/models/classroom';
@@ -164,8 +166,8 @@ export default function EditStudent({
                     required
                     format={(props) => props && autoCapitalize(props)}
                 />
-                <TextInput source={SK.STUDENT('name')} label="Name" sx={style} required />
-                <TextInput source={SK.STUDENT('email')} label="Email" sx={style} required />
+                <TextInput source={SK.STUDENT('name')} label="Name" sx={style} validate={[required(), validateName]}  />
+                <TextInput source={SK.STUDENT('email')} label="Email" sx={style} validate={[required(), email()]}  />
                 <TextInput source={SK.STUDENT('userName')} label="User Name" sx={style} />
                 <Stack direction="row" spacing={3}>
                     <SaveButton label={dialog.add ? 'Add' : 'Save'} />

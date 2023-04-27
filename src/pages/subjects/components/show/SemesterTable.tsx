@@ -70,16 +70,6 @@ const SemesterTable = () => {
 
     return (
         <div>
-            {tableData.data.length === 0 && (
-                <Button
-                    variant="contained"
-                    onClick={() => {
-                        redirect('edit', url, data.id);
-                    }}
-                >
-                    Add Semester
-                </Button>
-            )}
             <ListContextProvider value={tableData}>
                 <Datagrid bulkActionButtons={false}>
                     <TextField source="semester" />

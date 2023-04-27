@@ -20,6 +20,7 @@ import { Batch } from 'types/models/batch';
 import { SubjectDoc } from 'types/models/subject';
 import { Course } from 'types/models/courses';
 import { convertSingleValueListToSelectList } from 'Utils/helpers';
+import SK from 'pages/source-keys';
 
 const url = MAPPING.BATCHES;
 
@@ -97,40 +98,40 @@ const BatchesCreate = () => {
         <Create>
             <SimpleForm onSubmit={onSubmit} validate={validateBatches}>
                 <TextInput
-                    source="name"
+                    source={SK.BATCHES("name")}
                     label="Batch Name"
                     format={(e) => e?.toUpperCase() ?? ''}
                     isRequired
                 />
                 <SelectInput
-                    source="course"
+                    source={SK.BATCHES("course")}
                     label="Course"
                     choices={courseChoices}
                     onChange={(e) => setCurrentData({ ...currentData, course: e.target.value })}
                     isRequired
                 />
                 <SelectInput
-                    source="schemeId"
+                    source={SK.BATCHES("schemeId")}
                     choices={schemeChoices}
                     onChange={(e) => setCurrentData({ ...currentData, scheme: e.target.value })}
                     disabled={schemeChoices.length === 0 ? true : false}
                     required
                 />
                 <NumberInput
-                    source="yearOfJoining"
+                    source={SK.BATCHES("yearOfJoining")}
                     onWheel={(e) => e.target instanceof HTMLElement && e.target.blur()}
                     validate={[required(), number('Number Required')]}
                     label="Year Of Joining"
                 />
                 <SelectInput
-                    source="semester"
+                    source={SK.BATCHES("semester")}
                     choices={getSemesters(currentData.scheme ?? '')}
                     onChange={(e) => setCurrentData({ ...currentData, semester: e.target.value })}
                     disabled={getSemesters(currentData.scheme ?? '').length === 0 ? true : false}
                     required
                 />
 
-                <BooleanInput source="running" validate={[required()]} />
+                <BooleanInput source={SK.BATCHES("running")} validate={[required()]} />
             </SimpleForm>
         </Create>
     );

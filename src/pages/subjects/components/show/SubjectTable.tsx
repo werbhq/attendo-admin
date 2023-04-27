@@ -12,22 +12,27 @@ import {
     useRefresh,
     useNotify,
     required,
+    NumberInput,
+    Confirm,
 } from 'react-admin';
 import InputLabel from '@mui/material/InputLabel';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { useState } from 'react';
-import { Dialog } from '@mui/material';
+import { Dialog, Tooltip } from '@mui/material';
 import { MAPPING } from 'provider/mapping';
 import { CustomSubjectBulkDeleteButton } from '../CustomButtons';
 import { noSpaceValidation } from 'Utils/validations';
 import Button from '@mui/material/Button';
-import { titleCase } from 'Utils/helpers';
+import { titleCase, validateName } from 'Utils/helpers';
 import { Subject, SubjectDoc, SubjectSemester } from 'types/models/subject';
 import { DeleteButtonDialog } from '../SubjectButtons';
+import SK from 'pages/source-keys';
 
 const url = MAPPING.SUBJECT;
 
@@ -37,10 +42,18 @@ const SubjectTable = () => {
     const notify = useNotify();
     const dataProvider = useDataProvider();
 
-    const newSubjectRecord = {
+    type SubjectSemesterCustom = Omit<SubjectSemester, 'semester'> & {
+        semester: number | undefined;
+    };
+
+    const defaultSubjectRecord = {
         id: '',
         code: '',
         name: '',
+    };
+    const defaultSemesterRecord = {
+        semester: undefined,
+        branchSubs: [{ branch: '', subjects: [] }],
     };
 
     const [addSubject, setAddSubject] = useState<{
@@ -50,13 +63,24 @@ const SubjectTable = () => {
     }>({
         open: false,
         add: false,
-        record: newSubjectRecord,
+        record: defaultSubjectRecord,
     });
 
-    const [semesterData, setSemesterData] = useState<SubjectSemester | undefined>(
-        data.semesters.length !== 0 ? data.semesters[0] : undefined
+    const [semesterData, setSemesterData] = useState<SubjectSemesterCustom>(
+        data.semesters.length !== 0 ? data.semesters[0] : defaultSemesterRecord
     );
-    const [branchData, setBranchData] = useState(semesterData?.branchSubs[0]?.branch || undefined);
+
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [branchSemesterDialogData, setBranchSemesterDialog] = useState<{
+        open: boolean;
+        semEnable: boolean;
+        record: SubjectSemesterCustom;
+    }>({
+        open: false,
+        semEnable: false,
+        record: defaultSemesterRecord,
+    });
+    const [branchData, setBranchData] = useState(semesterData?.branchSubs[0]?.branch || '');
 
     const subjectsTableData = useList({
         data: semesterData?.branchSubs.find((e) => e.branch === branchData)?.subjects || [],
@@ -122,6 +146,86 @@ const SubjectTable = () => {
         handleClose();
     };
 
+    const handleSemDelete = async (record: SubjectSemester) => {
+        const currentData=data;
+        const semesterIndex = currentData.semesters.findIndex((e) => e.semester === record.semester);
+        const currentSemIndex = semesterIndex - 1 >= 0 ? semesterIndex - 1 : 0;
+        if (semesterIndex !== -1) {
+            const updatedData = {
+                ...currentData,
+                semesters: currentData.semesters.filter((e) => e.semester !== record.semester),
+            };
+            let semester = defaultSemesterRecord as SubjectSemesterCustom;
+            if (updatedData.semesters.length > 0) {
+                semester = updatedData.semesters[currentSemIndex] as SubjectSemester;
+                setSemesterData(semester);
+                setBranchData(semester.branchSubs[0].branch);
+            } else {
+                setSemesterData(semester);
+                setBranchData('');
+            }
+            await dataProvider.update(url, { id: currentData.id, data: updatedData, previousData: data });
+            notify(`Semester ${record.semester} and its contents are deleted permanently`);
+            refresh();
+            handleSemClose();
+        }
+    };
+
+    const handleSemClose = () => {
+        setBranchSemesterDialog({ ...branchSemesterDialogData, open: false });
+    };
+
+    const handleSemSubmit = async (e: any) => {
+        const currentData=data;
+        let semesterIndex = currentData.semesters.findIndex(
+            (semester) => semester.semester === e.semester
+        );
+        let branchIndex = -1;
+        if (semesterIndex === -1) {
+            currentData.semesters.push({
+                semester: e.semester,
+                branchSubs: [{ branch: e.branch, subjects: [] }],
+            });
+            semesterIndex = currentData.semesters.length - 1;
+            branchIndex = 0;
+            notify(`Semester ${e.semester} Updated`);
+        } else {
+            branchIndex = currentData.semesters[semesterIndex].branchSubs.findIndex(
+                (branch) => branch.branch === e.branch
+            );
+            if (branchIndex !== -1) {
+                notify(`Branch ${e.branch} is already present`);
+            } else {
+                notify(`Semester ${e.semester} is already present`);
+                currentData.semesters[semesterIndex].branchSubs.push({ branch: e.branch, subjects: [] });
+                branchIndex = currentData.semesters[semesterIndex].branchSubs.length - 1;
+                notify(`Branch ${e.branch} will be added to S${e.semester}`);
+            }
+        }
+
+        await dataProvider.update(url, { id: currentData.id, data:currentData, previousData: data });
+        const semester = currentData.semesters[semesterIndex] as SubjectSemester;
+        refresh();
+        setSemesterData(semester);
+        setBranchData(semester.branchSubs[branchIndex].branch);
+        handleSemClose();
+    };
+
+    const handleConfirmCancel = () => {
+        setShowConfirm(false);
+    };
+
+    const handleConfirm = () => {
+        const record = {} as SubjectSemester;
+        if (semesterData !== undefined) {
+            record.semester = semesterData.semester ?? 0;
+            record.branchSubs = semesterData.branchSubs;
+            branchSemesterDialogData.semEnable = true;
+            handleSemDelete(record);
+        }
+        setShowConfirm(false);
+    };
+
     return (
         <Stack spacing={5}>
             <Stack direction="row" spacing={2}>
@@ -150,6 +254,22 @@ const SubjectTable = () => {
                         ) : (
                             <MenuItem value={undefined}>No Data</MenuItem>
                         )}
+                        {
+                            <Tooltip title="Add Semester">
+                                <MenuItem
+                                    onClick={() => {
+                                        setBranchSemesterDialog({
+                                            ...branchSemesterDialogData,
+                                            open: true,
+                                            semEnable: true,
+                                            record: defaultSemesterRecord,
+                                        });
+                                    }}
+                                >
+                                    <AddCircleOutlineIcon style={{ color: '#2196f3' }} />
+                                </MenuItem>
+                            </Tooltip>
+                        }
                     </Select>
                 </Stack>
 
@@ -174,13 +294,57 @@ const SubjectTable = () => {
                                 </MenuItem>
                             ))
                         )}
+                        {
+                            <Tooltip title="Add Branch">
+                                <MenuItem
+                                    onClick={() => {
+                                        setBranchSemesterDialog({
+                                            ...branchSemesterDialogData,
+                                            open: true,
+                                            semEnable: false,
+                                            record: semesterData,
+                                        });
+                                    }}
+                                >
+                                    <AddCircleOutlineIcon style={{ color: '#2196f3' }} />
+                                </MenuItem>
+                            </Tooltip>
+                        }
                     </Select>
+                </Stack>
+                <Stack>
+                    <Button
+                        variant="outlined"
+                        color="error"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => {
+                            setShowConfirm(true);
+                        }}
+                        disabled={semesterData?.semester === 0}
+                        style={{ marginTop: '20px' }}
+                    >
+                        Delete
+                    </Button>
+                    <Confirm
+                        title={`Delete Semester ${semesterData?.semester}?`}
+                        content="The data selected will Be Permanently removed. It could affect the all the data related to this semester. Are you sure you want to continue"
+                        confirm="Yes"
+                        confirmColor="primary"
+                        cancel="No"
+                        isOpen={showConfirm}
+                        onConfirm={handleConfirm}
+                        onClose={handleConfirmCancel}
+                    />
                 </Stack>
             </Stack>
 
             <Stack direction="row">
                 <Button
-                    disabled={branchData === undefined || semesterData === undefined}
+                    disabled={
+                        branchData === undefined ||
+                        semesterData === undefined ||
+                        branchData.length === 0
+                    }
                     variant="contained"
                     size="medium"
                     startIcon={<AddIcon />}
@@ -189,14 +353,13 @@ const SubjectTable = () => {
                             ...addSubject,
                             open: true,
                             add: true,
-                            record: newSubjectRecord,
+                            record: defaultSubjectRecord,
                         });
                     }}
                 >
                     ADD SUBJECT
                 </Button>
             </Stack>
-
             <ListContextProvider value={subjectsTableData}>
                 <Datagrid
                     bulkActionButtons={
@@ -206,8 +369,8 @@ const SubjectTable = () => {
                         />
                     }
                 >
-                    <TextField source="code" />
-                    <TextField source="name" />
+                    <TextField source={SK.SUBJECT('code')} />
+                    <TextField source={SK.SUBJECT('name')} />
                     <FunctionField
                         render={(record: Subject) => (
                             <Button
@@ -231,14 +394,14 @@ const SubjectTable = () => {
             <Dialog open={addSubject.open} onClose={handleClose} fullWidth={true}>
                 <SimpleForm record={addSubject.record} onSubmit={handleSubmit} toolbar={false}>
                     <TextInput
-                        source="code"
+                        source={SK.SUBJECT('code')}
                         label="Code"
                         fullWidth={true}
                         format={(props) => props?.toUpperCase() ?? ''}
                         validate={[required(), noSpaceValidation]}
                     />
                     <TextInput
-                        source="name"
+                        source={SK.SUBJECT('name')}
                         label="Name"
                         format={(props) => props && titleCase(props)}
                         fullWidth={true}
@@ -252,6 +415,29 @@ const SubjectTable = () => {
                                 handleDelete={handleDelete}
                             />
                         )}
+                    </Stack>
+                </SimpleForm>
+            </Dialog>
+            <Dialog open={branchSemesterDialogData.open} onClose={handleSemClose} fullWidth={true}>
+                <SimpleForm
+                    record={branchSemesterDialogData.record}
+                    onSubmit={handleSemSubmit}
+                    toolbar={false}
+                >
+                    <NumberInput
+                        source="semester"
+                        label="Semester Number"
+                        disabled={!branchSemesterDialogData.semEnable}
+                        validate={[required()]}
+                    />
+                    <TextInput
+                        source="branch"
+                        label="branch"
+                        defaultValue=""
+                        validate={[required(), noSpaceValidation, validateName]}
+                    />
+                    <Stack direction="row" spacing={3}>
+                        <SaveButton label={'Add'} />
                     </Stack>
                 </SimpleForm>
             </Dialog>

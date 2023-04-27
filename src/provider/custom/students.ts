@@ -1,6 +1,6 @@
 import { DataProviderCustom } from 'types/DataProvider';
 import { StudentShort } from 'types/models/student';
-import { db } from '../firebase';
+import { FieldValue, db } from '../firebase';
 import { MAPPING } from '../mapping';
 import { Classroom } from 'types/models/classroom';
 
@@ -22,7 +22,7 @@ const StudentsProvider: DataProviderCustom<StudentShort[]> = {
         await db
             .collection(MAPPING.CLASSROOMS)
             .doc(id as string)
-            .update({ students: studentMap });
+            .update({ students: studentMap, "meta.lastUpdated": FieldValue.serverTimestamp()});
 
         return { data: { id, ...record }, status: 200 };
     },
@@ -37,7 +37,7 @@ const StudentsProvider: DataProviderCustom<StudentShort[]> = {
         await db
             .collection(MAPPING.CLASSROOMS)
             .doc(classId as string)
-            .update({ students: studentMap });
+            .update({ students: studentMap,"meta.lastUpdated": FieldValue.serverTimestamp() });
 
         return { data, status: 200 };
     },

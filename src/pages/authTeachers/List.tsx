@@ -6,7 +6,6 @@ import {
     TextInput,
     EmailField,
     BooleanField,
-    BulkDeleteButton,
     BulkUpdateButton,
     useNotify,
     BulkActionProps,
@@ -17,6 +16,7 @@ import {
     ExportButton,
     FilterButton,
     CreateButton,
+    BulkDeleteWithConfirmButton,
 } from 'react-admin';
 import AddIcon from '@mui/icons-material/Add';
 import QuickFilter from 'components/ui/QuickFilter';
@@ -25,6 +25,7 @@ import { ImportButton } from './components/Button';
 import jsonExport from 'jsonexport/dist';
 import { MAPPING } from 'provider/mapping';
 import { AuthorizedTeacher } from 'types/models/teacher';
+import SK from 'pages/source-keys';
 
 const filters = [
     <SearchInput source="id" alwaysOn resettable />,
@@ -52,14 +53,15 @@ const AuthorizedTeacherList = () => {
                     }
                 />
                 <BulkUpdateButton />
-                <BulkDeleteButton />
+                <BulkDeleteWithConfirmButton mutationMode='optimistic'/>
             </>
         );
     };
 
     const teachersExporter = (data: AuthorizedTeacher[]) => {
         const dataForExport = data;
-        jsonExport(dataForExport, { headers: csvExportHeaders }, (err, csv) => {
+        const dataForExportWithoutCreated = dataForExport.map(({ created, ...rest }) => rest); // created parameter wont be presented
+        jsonExport(dataForExportWithoutCreated, { headers: csvExportHeaders }, (err, csv) => {
             downloadCSV(csv, `Teachers`);
         });
     };
@@ -83,10 +85,10 @@ const AuthorizedTeacherList = () => {
             actions={<TopToolBar />}
         >
             <Datagrid rowClick="show" bulkActionButtons={<PostBulkActionButtons />}>
-                <EmailField source="email" />
-                <TextField source="userName" label="Name" />
-                <BooleanField source="created" looseValue sortable={false} />
-                <TextField source="branch" />
+                <EmailField source={SK.AUTH_TEACHERS('email')} />
+                <TextField source={SK.AUTH_TEACHERS('userName')} label="Name" />
+                <BooleanField source={SK.AUTH_TEACHERS('created')} looseValue sortable={false} />
+                <TextField source={SK.AUTH_TEACHERS('branch')} />
             </Datagrid>
         </List>
     );
