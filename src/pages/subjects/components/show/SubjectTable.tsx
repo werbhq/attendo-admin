@@ -42,12 +42,19 @@ const SubjectTable = () => {
     const notify = useNotify();
     const dataProvider = useDataProvider();
 
-    const newSubjectRecord = {
+    type SubjectSemesterCustom = Omit<SubjectSemester, 'semester'> & {
+        semester: number | undefined;
+    };
+
+    const defaultSubjectRecord = {
         id: '',
         code: '',
         name: '',
     };
-    const newSemesterRecord = { semester: 0, branchSubs: [{ branch: '', subjects: [] }] };
+    const defaultSemesterRecord = {
+        semester: undefined,
+        branchSubs: [{ branch: '', subjects: [] }],
+    };
 
     const [addSubject, setAddSubject] = useState<{
         open: boolean;
@@ -56,21 +63,22 @@ const SubjectTable = () => {
     }>({
         open: false,
         add: false,
-        record: newSubjectRecord,
+        record: defaultSubjectRecord,
     });
 
-    const [semesterData, setSemesterData] = useState<SubjectSemester | undefined>(
-        data.semesters.length !== 0 ? data.semesters[0] : newSemesterRecord
+    const [semesterData, setSemesterData] = useState<SubjectSemesterCustom>(
+        data.semesters.length !== 0 ? data.semesters[0] : defaultSemesterRecord
     );
+
     const [showConfirm, setShowConfirm] = useState(false);
-    const [addSemester, setAddSemester] = useState<{
+    const [branchSemesterDialogData, setBranchSemesterDialog] = useState<{
         open: boolean;
         semEnable: boolean;
-        record: SubjectSemester | undefined;
+        record: SubjectSemesterCustom;
     }>({
         open: false,
         semEnable: false,
-        record: newSemesterRecord,
+        record: defaultSemesterRecord,
     });
     const [branchData, setBranchData] = useState(semesterData?.branchSubs[0]?.branch || '');
 
@@ -102,6 +110,7 @@ const SubjectTable = () => {
         handleClose();
         refresh();
     };
+
     const handleSubmit = async (e: any) => {
         const newRecord = e as Subject;
         newRecord.name = titleCase(newRecord.name);
@@ -136,15 +145,17 @@ const SubjectTable = () => {
         notify('Classroom Subject Updated');
         handleClose();
     };
+
     const handleSemDelete = async (record: SubjectSemester) => {
-        const semesterIndex = data.semesters.findIndex((e) => e.semester === record.semester);
+        const currentData=data;
+        const semesterIndex = currentData.semesters.findIndex((e) => e.semester === record.semester);
         const currentSemIndex = semesterIndex - 1 >= 0 ? semesterIndex - 1 : 0;
         if (semesterIndex !== -1) {
             const updatedData = {
-                ...data,
-                semesters: data.semesters.filter((e) => e.semester !== record.semester),
+                ...currentData,
+                semesters: currentData.semesters.filter((e) => e.semester !== record.semester),
             };
-            let semester = newSemesterRecord as SubjectSemester;
+            let semester = defaultSemesterRecord as SubjectSemesterCustom;
             if (updatedData.semesters.length > 0) {
                 semester = updatedData.semesters[currentSemIndex] as SubjectSemester;
                 setSemesterData(semester);
@@ -153,59 +164,63 @@ const SubjectTable = () => {
                 setSemesterData(semester);
                 setBranchData('');
             }
-            await dataProvider.update(url, { id: data.id, data: updatedData, previousData: data });
-            notify(`Sem ${record.semester} and its contents are deleted permanently`);
+            await dataProvider.update(url, { id: currentData.id, data: updatedData, previousData: data });
+            notify(`Semester ${record.semester} and its contents are deleted permanently`);
             refresh();
             handleSemClose();
         }
     };
+
     const handleSemClose = () => {
-        setAddSemester({ ...addSemester, open: false });
+        setBranchSemesterDialog({ ...branchSemesterDialogData, open: false });
     };
+
     const handleSemSubmit = async (e: any) => {
-        let semesterIndex = data.semesters.findIndex(
+        const currentData=data;
+        let semesterIndex = currentData.semesters.findIndex(
             (semester) => semester.semester === e.semester
         );
         let branchIndex = -1;
         if (semesterIndex === -1) {
-            data.semesters.push({
+            currentData.semesters.push({
                 semester: e.semester,
                 branchSubs: [{ branch: e.branch, subjects: [] }],
             });
-            semesterIndex = data.semesters.length - 1;
+            semesterIndex = currentData.semesters.length - 1;
             branchIndex = 0;
-            notify('Sem Updated');
+            notify(`Semester ${e.semester} Updated`);
         } else {
-            branchIndex = data.semesters[semesterIndex].branchSubs.findIndex(
+            branchIndex = currentData.semesters[semesterIndex].branchSubs.findIndex(
                 (branch) => branch.branch === e.branch
             );
             if (branchIndex !== -1) {
                 notify(`Branch ${e.branch} is already present`);
             } else {
-                notify(`Sem ${e.semester} is already present`);
-                data.semesters[semesterIndex].branchSubs.push({ branch: e.branch, subjects: [] });
-                branchIndex = data.semesters[semesterIndex].branchSubs.length - 1;
+                notify(`Semester ${e.semester} is already present`);
+                currentData.semesters[semesterIndex].branchSubs.push({ branch: e.branch, subjects: [] });
+                branchIndex = currentData.semesters[semesterIndex].branchSubs.length - 1;
                 notify(`Branch ${e.branch} will be added to S${e.semester}`);
             }
         }
 
-        await dataProvider.update(url, { id: data.id, data, previousData: data });
-        const semester = data.semesters[semesterIndex] as SubjectSemester;
+        await dataProvider.update(url, { id: currentData.id, data:currentData, previousData: data });
+        const semester = currentData.semesters[semesterIndex] as SubjectSemester;
+        refresh();
         setSemesterData(semester);
         setBranchData(semester.branchSubs[branchIndex].branch);
-        refresh();
         handleSemClose();
     };
 
     const handleConfirmCancel = () => {
         setShowConfirm(false);
     };
+
     const handleConfirm = () => {
         const record = {} as SubjectSemester;
         if (semesterData !== undefined) {
-            record.semester = semesterData.semester;
+            record.semester = semesterData.semester ?? 0;
             record.branchSubs = semesterData.branchSubs;
-            addSemester.semEnable = true;
+            branchSemesterDialogData.semEnable = true;
             handleSemDelete(record);
         }
         setShowConfirm(false);
@@ -243,11 +258,11 @@ const SubjectTable = () => {
                             <Tooltip title="Add Semester">
                                 <MenuItem
                                     onClick={() => {
-                                        setAddSemester({
-                                            ...addSemester,
+                                        setBranchSemesterDialog({
+                                            ...branchSemesterDialogData,
                                             open: true,
                                             semEnable: true,
-                                            record: semesterData,
+                                            record: defaultSemesterRecord,
                                         });
                                     }}
                                 >
@@ -283,8 +298,8 @@ const SubjectTable = () => {
                             <Tooltip title="Add Branch">
                                 <MenuItem
                                     onClick={() => {
-                                        setAddSemester({
-                                            ...addSemester,
+                                        setBranchSemesterDialog({
+                                            ...branchSemesterDialogData,
                                             open: true,
                                             semEnable: false,
                                             record: semesterData,
@@ -338,7 +353,7 @@ const SubjectTable = () => {
                             ...addSubject,
                             open: true,
                             add: true,
-                            record: newSubjectRecord,
+                            record: defaultSubjectRecord,
                         });
                     }}
                 >
@@ -403,18 +418,16 @@ const SubjectTable = () => {
                     </Stack>
                 </SimpleForm>
             </Dialog>
-            <Dialog open={addSemester.open} onClose={handleSemClose} fullWidth={true}>
+            <Dialog open={branchSemesterDialogData.open} onClose={handleSemClose} fullWidth={true}>
                 <SimpleForm
-                    record={addSemester.record}
+                    record={branchSemesterDialogData.record}
                     onSubmit={handleSemSubmit}
                     toolbar={false}
-                    defaultValues={{}}
                 >
                     <NumberInput
                         source="semester"
                         label="Semester Number"
-                        disabled={!addSemester.semEnable}
-                        min={1}
+                        disabled={!branchSemesterDialogData.semEnable}
                         validate={[required()]}
                     />
                     <TextInput
