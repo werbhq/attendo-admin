@@ -11,7 +11,6 @@ const AttendanceList = () => {
                     reference={MAPPING.CLASSROOMS}
                     link="show"
                 >
-                    {' '}
                     <TextField source="id" />
                 </ReferenceField>
                 <TextField source="attendance.date" label="Date" />
