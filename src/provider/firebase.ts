@@ -17,7 +17,14 @@ export const FieldPath = firebase.firestore.FieldPath;
 const env = process.env.REACT_APP_ENV;
 export const isProd = kMode === MODE.PROD || env === 'production';
 
+const authOptions = {};
+
+export const authProvider = isProd
+    ? FirebaseAuthProvider(configProd, authOptions)
+    : FirebaseAuthProvider(configDev, authOptions);
+
 const options: RAFirebaseOptions = {
+    rootRef: `institutes/mbcet`,
     // TODO: Enable when lazyLoading supports filtering
     // lazyLoading: { enabled: true },
     // firestoreCostsLogger: { enabled: isProd ? false : true },
@@ -26,10 +33,6 @@ const options: RAFirebaseOptions = {
 export const dataProviderLegacy = isProd
     ? FirebaseDataProvider(configProd, options)
     : FirebaseDataProvider(configDev, options);
-
-export const authProvider = isProd
-    ? FirebaseAuthProvider(configProd, options)
-    : FirebaseAuthProvider(configDev, options);
 
 export const db = dataProviderLegacy.app.firestore();
 export const cloudFunctions = getFunctions();

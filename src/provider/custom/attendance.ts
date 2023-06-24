@@ -44,9 +44,13 @@ const AttendanceProvider: DataProviderCustom<AttendanceFrontEnd> = {
             resource,
             defaultParams
         );
-        const { data: classrooms } = await dataProvider.getMany<Classroom>(MAPPING.CLASSROOMS, {
-            ids: data.map((e) => e.classroom.id),
-        });
+
+        const { data: classrooms } = await dataProviderLegacy.getMany<Classroom>(
+            MAPPING.CLASSROOMS,
+            {
+                ids: data.map((e) => e.classroom.id),
+            }
+        );
 
         const attendances: AttendanceFrontEnd[] = [];
 
