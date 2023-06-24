@@ -11,7 +11,6 @@ import {
     useList,
     useRefresh,
     useNotify,
-    useRedirect,
     required,
 } from 'react-admin';
 import { useState } from 'react';
@@ -35,7 +34,6 @@ const SemesterTable = () => {
 
     const refresh = useRefresh();
     const notify = useNotify();
-    const redirect = useRedirect();
     const [showDialog, setShowDialog] = useState(false);
 
     const editButtonHandle = (record: SubjectSemester) => {

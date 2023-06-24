@@ -10,7 +10,7 @@ import { defaultParams } from 'provider/firebase';
 const resource = MAPPING.AUTH_TEACHERS;
 
 export const ImportButton = ({ csvExportHeaders, ...rest }: { csvExportHeaders: string[] }) => {
-    const importRef = useRef<HTMLInputElement>(null);
+    const importRef = useRef<HTMLInputElement | null>(null);
     const notify = useNotify();
     const refresh = useRefresh();
     const dataProvider = useDataProvider();
@@ -65,7 +65,9 @@ export const ImportButton = ({ csvExportHeaders, ...rest }: { csvExportHeaders: 
                     dynamicTyping: true,
                     skipEmptyLines: true,
                 }}
-                inputRef={importRef}
+                inputRef={(ref: HTMLInputElement) => {
+                    importRef.current = ref;
+                  }}
                 inputStyle={{ display: 'none' }}
                 onFileLoaded={fileLoadHandler}
                 onError={() => notify(`Error Importing CSV`, { type: 'error' })}

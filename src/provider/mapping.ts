@@ -1,12 +1,12 @@
 export const MAPPING = {
     SUBJECT: 'subjects',
-    TEACHERS: 'teachers',
-    CLASSROOMS: 'classrooms',
+    TEACHERS: 'institutes/mbcet/teachers',
+    CLASSROOMS: 'institutes/mbcet/classrooms',
     STUDENTS: 'classrooms/students',
     COURSES: 'courses',
-    DATA: 'data',
+    DATA: 'institutes/mbcet/data',
     AUTH_TEACHERS: 'authorized_teachers',
     REPORTS: 'reports', // Not an actual collection. Only for resource
     BATCHES: 'batches',
-    ATTENDANCES: 'attendance',
+    ATTENDANCES: 'institutes/mbcet/attendance',
 };

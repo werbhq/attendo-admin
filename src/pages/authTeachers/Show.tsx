@@ -32,10 +32,14 @@ const AuthorizedTeacherShow = () => {
     const [subjectData, setSubjectData] = useState<Subject[]>([]);
 
     const fetchData = () => {
-        dataProvider.getOne<Teacher>(MAPPING.TEACHERS, { id: authorizedTeacher?.id }).then((e) => {
-            setClassroomData(Object.values(e.data.classrooms));
-            setSubjectData(Object.values(e.data.classrooms).map((f) => f.subject));
-        });
+        if (authorizedTeacher) {
+            dataProvider
+                .getOne<Teacher>(MAPPING.TEACHERS, { id: authorizedTeacher?.id })
+                .then((e) => {
+                    setClassroomData(Object.values(e.data.classrooms));
+                    setSubjectData(Object.values(e.data.classrooms).map((f) => f.subject));
+                });
+        }
     };
 
     useEffect(() => {
@@ -86,6 +90,7 @@ const AuthorizedTeacherShow = () => {
                                         )
                                         .map((e) => (
                                             <ReferenceField
+                                                key={e.classroom.id}
                                                 record={e.classroom}
                                                 reference={MAPPING.CLASSROOMS}
                                                 source="id"
