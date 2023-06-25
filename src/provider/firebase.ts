@@ -18,7 +18,7 @@ export const dataProviderOptions: RAFirebaseOptions = {
     // firestoreCostsLogger: { enabled: isProd ? false : true },
 };
 
-const authProvider = isProd
+export const authProviderLegacy = isProd
     ? FirebaseAuthProvider(configProd, authProviderOptions)
     : FirebaseAuthProvider(configDev, authProviderOptions);
 
@@ -30,10 +30,10 @@ export const getRootRef = (permission: { [key: string]: string }) => {
 export const getCustomAuthProvider = (
     initializeDataProvider: (authProvider: ReactAdminFirebaseAuthProvider) => void
 ) => ({
-    ...authProvider,
+    ...authProviderLegacy,
     login: async (data: { username: string; password: string }) => {
-        await authProvider.login(data);
-        initializeDataProvider(authProvider);
+        await authProviderLegacy.login(data);
+        initializeDataProvider(authProviderLegacy);
     },
 });
 
