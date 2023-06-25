@@ -1,7 +1,7 @@
 import { DataProviderCustom } from 'types/DataProvider';
 import { SubjectAttendance } from 'types/models/attendance';
 import { Classroom } from 'types/models/classroom';
-import { FieldPath, dataProvider, dataProviderLegacy, db, defaultParams } from '../firebase';
+import { FieldPath, defaultParams } from '../firebase';
 import { paginateSingleDoc } from '../helpers/pagination';
 import { MAPPING } from '../mapping';
 import { AttendanceFrontEnd } from 'types/frontend/attendance';
@@ -39,7 +39,8 @@ const convertAttendanceMini = (id: string, doc: SubjectAttendance, classrooms: C
 const AttendanceProvider: DataProviderCustom<AttendanceFrontEnd> = {
     resource: MAPPING.ATTENDANCES,
 
-    getList: async (resource, params) => {
+    getList: async (resource, params, config) => {
+        const { dataProviderLegacy } = config;
         const { data } = await dataProviderLegacy.getList<SubjectAttendance>(
             resource,
             defaultParams
@@ -63,18 +64,25 @@ const AttendanceProvider: DataProviderCustom<AttendanceFrontEnd> = {
         return { data: paginateSingleDoc(params, attendances), total: attendances.length };
     },
 
-    getOne: async (resource, params) => {
+    getOne: async (resource, params, config) => {
+        const { dataProviderCustom, firestore } = config;
         const { id } = params;
 
         const fieldPath = new FieldPath(`attendances`, id as string, 'id');
-        const { docs } = await db.collection(MAPPING.ATTENDANCES).where(fieldPath, '==', id).get();
+        const { docs } = await firestore
+            .collection(MAPPING.ATTENDANCES)
+            .where(fieldPath, '==', id)
+            .get();
 
         if (docs.length === 0) throw Error('Attendance does not exist');
 
         const e = docs[0].data() as SubjectAttendance;
-        const { data: classrooms } = await dataProvider.getMany<Classroom>(MAPPING.CLASSROOMS, {
-            ids: [e.classroom.id],
-        });
+        const { data: classrooms } = await dataProviderCustom.getMany<Classroom>(
+            MAPPING.CLASSROOMS,
+            {
+                ids: [e.classroom.id],
+            }
+        );
 
         const data = convertAttendanceMini(id, e, classrooms);
         return { data, status: 200 };

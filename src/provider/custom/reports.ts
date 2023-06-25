@@ -1,5 +1,5 @@
 import { MAPPING } from '../mapping';
-import { FieldPath, dataProvider, db } from '../firebase';
+import { FieldPath } from '../firebase';
 import { DataProviderCustom } from 'types/DataProvider';
 import { Report, ReportAttendance } from 'types/frontend/report';
 import { SubjectAttendance } from 'types/models/attendance';
@@ -18,12 +18,13 @@ type ReportMap = Omit<Report, 'attendance'> & {
 const ReportsProvider: DataProviderCustom<Report> = {
     resource: MAPPING.REPORTS,
 
-    getList: async (resource, params) => {
+    getList: async (resource, params, config) => {
         const { filter } = params;
         const { semester, classroomId } = filter;
+        const { firestore, dataProviderCustom } = config;
 
         const normalAttendances = (
-            await db
+            await firestore
                 .collection(MAPPING.ATTENDANCES)
                 .where('semester', '==', semester)
                 .where('classroom.id', '==', classroomId)
@@ -32,7 +33,7 @@ const ReportsProvider: DataProviderCustom<Report> = {
 
         const fieldPath = new FieldPath('classroom', 'parentClasses', classroomId, 'id');
         const virtualAttendances = (
-            await db
+            await firestore
                 .collection(MAPPING.ATTENDANCES)
                 .where('semester', '==', semester)
                 .where(fieldPath, '==', classroomId)
@@ -47,13 +48,13 @@ const ReportsProvider: DataProviderCustom<Report> = {
             };
         }
 
-        const { data: classroom } = await dataProvider.getOne<Classroom>(MAPPING.CLASSROOMS, {
+        const { data: classroom } = await dataProviderCustom.getOne<Classroom>(MAPPING.CLASSROOMS, {
             id: classroomId,
         });
 
         const virtualClassIds = virtualAttendances.map((e) => e.classroom.id);
 
-        const { data: classroomsVirtual } = await dataProvider.getMany<Classroom>(
+        const { data: classroomsVirtual } = await dataProviderCustom.getMany<Classroom>(
             MAPPING.CLASSROOMS,
             { ids: virtualClassIds }
         );

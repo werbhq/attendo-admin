@@ -4,7 +4,7 @@ import {
     ClassroomNonVirtualShort,
     ClassroomToClassroomShort,
 } from 'types/models/classroom';
-import { FieldValue, dataProvider, db } from '../firebase';
+import { FieldValue } from '../firebase';
 import { MAPPING } from '../mapping';
 
 /**
@@ -14,15 +14,16 @@ import { MAPPING } from '../mapping';
 const ClassroomProvider: DataProviderCustom<Classroom> = {
     resource: MAPPING.CLASSROOMS,
 
-    update: async (resource, params) => {
+    update: async (resource, params, config) => {
         const { id, data } = params;
+        const { firestore, dataProviderCustom } = config;
 
         if (data.isDerived) {
             const parentClasses: { [classId: string]: ClassroomNonVirtualShort } = {};
             await Promise.all(
                 Array.isArray(data.parentClasses)
                     ? data.parentClasses.map(async (e) => {
-                          const { data } = await dataProvider.getOne<Classroom>(resource, {
+                          const { data } = await dataProviderCustom.getOne<Classroom>(resource, {
                               id: e,
                           });
                           parentClasses[data.id] = ClassroomToClassroomShort(
@@ -43,7 +44,7 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             delete data.subjectId;
         }
 
-        const ref = db.collection(MAPPING.CLASSROOMS);
+        const ref = firestore.collection(MAPPING.CLASSROOMS);
         const promises = [
             ref.doc(data.id).update({ ...data, 'meta.lastUpdated': FieldValue.serverTimestamp() }),
         ];
@@ -70,10 +71,11 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
         return { data: { ...data, id }, status: 200 };
     },
 
-    create: async (resource, params) => {
+    create: async (resource, params, config) => {
         const { data } = params;
+        const { firestore, dataProviderCustom } = config;
 
-        const { exists: documentExists } = await db
+        const { exists: documentExists } = await firestore
             .collection(MAPPING.CLASSROOMS)
             .doc(data.id)
             .get();
@@ -86,7 +88,7 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             if (Array.isArray(data.parentClasses)) {
                 await Promise.all(
                     data.parentClasses.map(async (e) => {
-                        const { data } = await dataProvider.getOne<Classroom>(resource, {
+                        const { data } = await dataProviderCustom.getOne<Classroom>(resource, {
                             id: e,
                         });
 
@@ -107,7 +109,7 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             delete data.groupLinks;
             delete data.subjectId;
         }
-        const ref = db.collection(MAPPING.CLASSROOMS);
+        const ref = firestore.collection(MAPPING.CLASSROOMS);
         const promises = [
             ref.doc(data.id).set({
                 ...data,
