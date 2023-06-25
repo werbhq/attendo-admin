@@ -11,8 +11,8 @@ import { MAPPING } from '../mapping';
 const CoursesProvider: DataProviderCustom<Course> = {
     resource: MAPPING.COURSES,
 
-    getList: async (resource, params, config) => {
-        const { dataProviderLegacy } = config;
+    getList: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.COURSES,
         });
@@ -20,16 +20,16 @@ const CoursesProvider: DataProviderCustom<Course> = {
         return { data: paginateSingleDoc(params, values), total: values.length };
     },
 
-    getOne: async (resource, params, config) => {
-        const { dataProviderLegacy } = config;
+    getOne: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.COURSES,
         });
         return { data: data.courses[params.id], status: 200 };
     },
 
-    getMany: async (resource, params, config) => {
-        const { dataProviderLegacy } = config;
+    getMany: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { ids } = params;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.COURSES,
@@ -40,9 +40,10 @@ const CoursesProvider: DataProviderCustom<Course> = {
         return { data: dataResult, status: 200 };
     },
 
-    create: async (resource, params, config) => {
+    create: async (resource, params, providers) => {
         const { data } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const fieldPath = new FieldPath('courses', data.id);
         await firestore.collection(MAPPING.DATA).doc(MAPPING.COURSES).update(fieldPath, data);
@@ -50,9 +51,10 @@ const CoursesProvider: DataProviderCustom<Course> = {
         return { data: data, status: 200 };
     },
 
-    update: async (resource, params, config) => {
+    update: async (resource, params, providers) => {
         const { id, data } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const fieldPath = new FieldPath('courses', id as string);
         await firestore.collection(MAPPING.DATA).doc(MAPPING.COURSES).update(fieldPath, data);
@@ -60,9 +62,10 @@ const CoursesProvider: DataProviderCustom<Course> = {
         return { data, status: 200 };
     },
 
-    delete: async (resource, params, config) => {
+    delete: async (resource, params, providers) => {
         const { id } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const fieldPath = new FieldPath('courses', id);
         await firestore
@@ -73,9 +76,9 @@ const CoursesProvider: DataProviderCustom<Course> = {
         return { data: { id }, status: 200 };
     },
 
-    deleteMany: async (resource, params, config) => {
+    deleteMany: async (resource, params, providers) => {
         const { ids } = params;
-        const { dataProviderCustom } = config;
+        const { dataProviderCustom } = providers;
         for (const id of ids) await dataProviderCustom.delete(resource, { id });
         return { data: ids, status: 200 };
     },

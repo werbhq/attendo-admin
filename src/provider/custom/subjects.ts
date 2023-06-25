@@ -13,8 +13,8 @@ type SubjectIndexCustom = SubjectIndex & { id: string };
 const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
     resource: MAPPING.SUBJECT,
 
-    getList: async (resource, params, config) => {
-        const { dataProviderLegacy } = config;
+    getList: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.SUBJECT,
         });
@@ -22,8 +22,8 @@ const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
         return { data: paginateSingleDoc(params, values), total: values.length, status: 200 };
     },
 
-    getOne: async (resource, params, config) => {
-        const { dataProviderLegacy } = config;
+    getOne: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne<SubjectIndexCustom>(MAPPING.DATA, {
             id: MAPPING.SUBJECT,
         });
@@ -31,9 +31,9 @@ const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
         return { data: data.schemes[params.id], status: 200 };
     },
 
-    getMany: async (resource, params, config) => {
+    getMany: async (resource, params, providers) => {
         const { ids } = params;
-        const { dataProviderLegacy } = config;
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne<SubjectIndexCustom>(MAPPING.DATA, {
             id: MAPPING.SUBJECT,
         });
@@ -42,9 +42,10 @@ const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
         return { data: result, status: 200 };
     },
 
-    update: async (resource, params, config) => {
+    update: async (resource, params, providers) => {
         const { id, data } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const fieldPath = new FieldPath('schemes', id as string);
         await firestore.collection(MAPPING.DATA).doc(MAPPING.SUBJECT).update(fieldPath, data);
@@ -52,9 +53,10 @@ const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
         return { data, status: 200 };
     },
 
-    delete: async (resource, params, config) => {
+    delete: async (resource, params, providers) => {
         const { id } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const fieldPath = new FieldPath('schemes', id as string);
         await firestore
@@ -65,9 +67,11 @@ const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
         return { data: { id }, status: 200 };
     },
 
-    create: async (resource, params, config) => {
+    create: async (resource, params, providers) => {
         const { data, meta } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
+
         const id = meta.id;
 
         const { schemes } = (
@@ -82,9 +86,9 @@ const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
         return { data: { ...data, id }, status: 200 };
     },
 
-    deleteMany: async (resource, params, config) => {
+    deleteMany: async (resource, params, providers) => {
         const { ids } = params;
-        const { dataProviderLegacy } = config;
+        const { dataProviderLegacy } = providers;
         for (const id of ids) await dataProviderLegacy.delete(resource, { id });
         return { data: ids, status: 200 };
     },

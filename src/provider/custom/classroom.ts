@@ -14,9 +14,10 @@ import { MAPPING } from '../mapping';
 const ClassroomProvider: DataProviderCustom<Classroom> = {
     resource: MAPPING.CLASSROOMS,
 
-    update: async (resource, params, config) => {
+    update: async (resource, params, providers) => {
         const { id, data } = params;
-        const { firestore, dataProviderCustom } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         if (data.isDerived) {
             const parentClasses: { [classId: string]: ClassroomNonVirtualShort } = {};
@@ -71,9 +72,10 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
         return { data: { ...data, id }, status: 200 };
     },
 
-    create: async (resource, params, config) => {
+    create: async (resource, params, providers) => {
         const { data } = params;
-        const { firestore, dataProviderCustom } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const { exists: documentExists } = await firestore
             .collection(MAPPING.CLASSROOMS)

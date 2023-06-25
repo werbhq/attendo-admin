@@ -1,4 +1,3 @@
-import { Functions } from 'firebase/functions';
 import {
     CreateParams,
     CreateResult,
@@ -20,14 +19,11 @@ import {
     DeleteManyResult,
     GetListParams,
 } from 'react-admin';
-import { FireStore } from 'react-admin-firebase/dist/misc/firebase-models';
 import { IDataProvider } from 'react-admin-firebase/dist/providers/DataProvider';
 
-interface Configuration {
-    firestore: FireStore;
+interface Providers {
     dataProviderCustom: IDataProvider;
     dataProviderLegacy: IDataProvider;
-    cloudFunctions: Functions;
 }
 
 export interface DataProviderCustom<T> extends DataProvider {
@@ -35,46 +31,46 @@ export interface DataProviderCustom<T> extends DataProvider {
     create?: (
         resource: string,
         params: CreateParams<T>,
-        config: Configuration
+        providers: Providers
     ) => Promise<CreateResult<T>>;
     delete?: (
         resource: string,
         params: DeleteParams<T>,
-        config: Configuration
+        providers: Providers
     ) => Promise<DeleteResult>; // Disable type
     deleteMany?: (
         resource: string,
         params: DeleteManyParams<T>,
-        config: Configuration
+        providers: Providers
     ) => Promise<DeleteManyResult<T>>;
     getList?: (
         resource: string,
         params: GetListParams<T>,
-        config: Configuration
+        providers: Providers
     ) => Promise<GetListResult<T>>;
     getOne?: (
         resource: string,
         params: GetOneParams<T>,
-        config: Configuration
+        providers: Providers
     ) => Promise<GetOneResult<T>>;
     getMany?: (
         resource: string,
         params: GetManyParams,
-        config: Configuration
+        providers: Providers
     ) => Promise<GetManyResult<T>>; // Get Many has no extension
     getManyReference?: (
         resource: string,
         params: GetManyReferenceParams<T>,
-        config: Configuration
+        providers: Providers
     ) => Promise<GetManyReferenceResult<T>>;
     update?: (
         resource: string,
         params: UpdateParams<T>,
-        config: Configuration
+        providers: Providers
     ) => Promise<UpdateResult>; // Disable type
     updateMany?: (
         resource: string,
         params: UpdateManyParams<T>,
-        config: Configuration
+        providers: Providers
     ) => Promise<UpdateManyResult<T>>;
 }

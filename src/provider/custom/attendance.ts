@@ -39,8 +39,8 @@ const convertAttendanceMini = (id: string, doc: SubjectAttendance, classrooms: C
 const AttendanceProvider: DataProviderCustom<AttendanceFrontEnd> = {
     resource: MAPPING.ATTENDANCES,
 
-    getList: async (resource, params, config) => {
-        const { dataProviderLegacy } = config;
+    getList: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getList<SubjectAttendance>(
             resource,
             defaultParams
@@ -64,8 +64,9 @@ const AttendanceProvider: DataProviderCustom<AttendanceFrontEnd> = {
         return { data: paginateSingleDoc(params, attendances), total: attendances.length };
     },
 
-    getOne: async (resource, params, config) => {
-        const { dataProviderCustom, firestore } = config;
+    getOne: async (resource, params, providers) => {
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
         const { id } = params;
 
         const fieldPath = new FieldPath(`attendances`, id as string, 'id');

@@ -11,8 +11,8 @@ import { MAPPING } from '../mapping';
 const BatchesProvider: DataProviderCustom<Batch> = {
     resource: MAPPING.BATCHES,
 
-    getList: async (resource, params, config) => {
-        const { dataProviderLegacy } = config;
+    getList: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.BATCHES,
         });
@@ -20,17 +20,17 @@ const BatchesProvider: DataProviderCustom<Batch> = {
         return { data: paginateSingleDoc(params, values), total: values.length };
     },
 
-    getOne: async (resource, params, config) => {
-        const { dataProviderLegacy } = config;
+    getOne: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.BATCHES,
         });
         return { data: data.batches[params.id], status: 200 };
     },
 
-    getMany: async (resource, params, config) => {
+    getMany: async (resource, params, providers) => {
         const { ids } = params;
-        const { dataProviderLegacy } = config;
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.BATCHES,
         });
@@ -40,9 +40,10 @@ const BatchesProvider: DataProviderCustom<Batch> = {
         return { data: dataResult, status: 200 };
     },
 
-    create: async (resource, params, config) => {
+    create: async (resource, params, providers) => {
         const { meta, data } = params;
-        const { dataProviderLegacy, firestore } = config;
+        const { dataProviderLegacy } = providers;
+        const firestore = dataProviderLegacy.app.firestore();
         const { id } = meta;
 
         const { data: exists } = await dataProviderLegacy.getOne<Batch>(resource, { id });
@@ -54,9 +55,10 @@ const BatchesProvider: DataProviderCustom<Batch> = {
         return { data: { ...data, id: meta.id }, status: 200 };
     },
 
-    update: async (resource, params, config) => {
+    update: async (resource, params, providers) => {
         const { id, data } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const fieldPath = new FieldPath('batches', id as string);
         await firestore.collection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
@@ -64,9 +66,10 @@ const BatchesProvider: DataProviderCustom<Batch> = {
         return { data, status: 200 };
     },
 
-    delete: async (resource, params, config) => {
+    delete: async (resource, params, providers) => {
         const { id } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const fieldPath = new FieldPath('batches', id);
         await firestore
@@ -77,9 +80,9 @@ const BatchesProvider: DataProviderCustom<Batch> = {
         return { data: { id }, status: 200 };
     },
 
-    deleteMany: async (resource, params, config) => {
+    deleteMany: async (resource, params, providers) => {
         const { ids } = params;
-        const { dataProviderLegacy } = config;
+        const { dataProviderLegacy } = providers;
         for (const id of ids) await dataProviderLegacy.delete(resource, { id });
         return { data: ids, status: 200 };
     },

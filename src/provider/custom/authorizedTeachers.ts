@@ -13,8 +13,8 @@ import { getFunctions } from 'firebase/functions';
 const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
     resource: MAPPING.AUTH_TEACHERS,
 
-    getList: async (resource, params, config) => {
-        const { dataProviderCustom } = config;
+    getList: async (resource, params, providers) => {
+        const { dataProviderCustom } = providers;
         const { data } = await dataProviderCustom.getOne(MAPPING.DATA, {
             id: MAPPING.AUTH_TEACHERS,
         });
@@ -22,16 +22,16 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
         return { data: paginateSingleDoc(params, values), total: values.length, status: 200 };
     },
 
-    getOne: async (resource, params, config) => {
-        const { dataProviderCustom } = config;
+    getOne: async (resource, params, providers) => {
+        const { dataProviderCustom } = providers;
         const { data } = await dataProviderCustom.getOne(MAPPING.DATA, {
             id: MAPPING.AUTH_TEACHERS,
         });
         return { data: data.teachers[params.id], status: 200 };
     },
 
-    getMany: async (resource, params, config) => {
-        const { dataProviderCustom } = config;
+    getMany: async (resource, params, providers) => {
+        const { dataProviderCustom } = providers;
         const { ids } = params;
         const { data } = await dataProviderCustom.getList<AuthorizedTeacher>(
             resource,
@@ -41,9 +41,9 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
         return { data: finalData, status: 200 };
     },
 
-    getManyReference: async (resource, params, config) => {
+    getManyReference: async (resource, params, providers) => {
         const { ids } = params;
-        const { dataProviderCustom } = config;
+        const { dataProviderCustom } = providers;
         const { data } = await dataProviderCustom.getList<AuthorizedTeacher>(
             resource,
             defaultParams
@@ -52,9 +52,10 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
         return { data: finalData, status: 200 };
     },
 
-    update: async (resource, params, config) => {
+    update: async (resource, params, providers) => {
         const { id, data } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const fieldPath = new FieldPath('teachers', id as string);
         await firestore.collection(MAPPING.DATA).doc(MAPPING.AUTH_TEACHERS).update(fieldPath, data);
@@ -62,9 +63,9 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
         return { data, status: 200 };
     },
 
-    updateMany: async (resource, params, config) => {
+    updateMany: async (resource, params, providers) => {
         const { ids, data } = params;
-        const { dataProviderCustom } = config;
+        const { dataProviderCustom } = providers;
 
         await Promise.all(
             ids.map((e) => {
@@ -79,9 +80,10 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
         return { data: ids as string[], status: 200 };
     },
 
-    delete: async (resource, params, config) => {
+    delete: async (resource, params, providers) => {
         const { id } = params;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const fieldPath = new FieldPath('teachers', id);
         await firestore
@@ -92,8 +94,8 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
         return { data: { id }, status: 200 };
     },
 
-    deleteMany: async (resource, params, config) => {
-        const { dataProviderCustom } = config;
+    deleteMany: async (resource, params, providers) => {
+        const { dataProviderCustom } = providers;
         const { ids } = params;
         for (const id of ids) await dataProviderCustom.delete(resource, { id });
         return { data: ids, status: 200 };

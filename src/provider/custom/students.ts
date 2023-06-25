@@ -11,10 +11,12 @@ import { Classroom } from 'types/models/classroom';
 const StudentsProvider: DataProviderCustom<StudentShort[]> = {
     resource: MAPPING.STUDENTS,
 
-    update: async (resource, params, config) => {
+    update: async (resource, params, providers) => {
         const { id, data, meta } = params;
         const { record } = meta;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
+
         const studentMap: Classroom['students'] = {};
         data.forEach((e) => {
             studentMap[e?.id as string] = e as StudentShort;
@@ -28,10 +30,11 @@ const StudentsProvider: DataProviderCustom<StudentShort[]> = {
         return { data: { id, ...record }, status: 200 };
     },
 
-    updateMany: async (resource, params, config) => {
+    updateMany: async (resource, params, providers) => {
         const { data, meta } = params;
         const { classId } = meta;
-        const { firestore } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
         const studentMap: Classroom['students'] = {};
         data.forEach((e) => {
             studentMap[e?.id as string] = e as StudentShort;

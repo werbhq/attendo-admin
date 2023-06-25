@@ -18,10 +18,11 @@ type ReportMap = Omit<Report, 'attendance'> & {
 const ReportsProvider: DataProviderCustom<Report> = {
     resource: MAPPING.REPORTS,
 
-    getList: async (resource, params, config) => {
+    getList: async (resource, params, providers) => {
         const { filter } = params;
         const { semester, classroomId } = filter;
-        const { firestore, dataProviderCustom } = config;
+        const { dataProviderCustom } = providers;
+        const firestore = dataProviderCustom.app.firestore();
 
         const normalAttendances = (
             await firestore

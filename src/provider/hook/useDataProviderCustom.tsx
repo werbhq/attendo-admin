@@ -31,7 +31,6 @@ const useDataProviderCustom = (
                 ? FirebaseDataProvider(configProd, newOptions)
                 : FirebaseDataProvider(configDev, newOptions);
 
-            const db = dataProviderLegacy.app.firestore();
             const cloudFunctions = getFunctions();
 
             const customConvertor = async (
@@ -43,7 +42,7 @@ const useDataProviderCustom = (
 
                 if (providerCustom) {
                     if (providerCustom[method] !== undefined)
-                        return providerCustom[method](resource, params, config);
+                        return providerCustom[method](resource, params, providers);
                     else if (!isProd) {
                         console.warn(
                             `${method}() Not Implemented For ${resource}. Using legacy call. Ignore if intended`
@@ -53,7 +52,7 @@ const useDataProviderCustom = (
                 return dataProviderLegacy[method](resource, params);
             };
 
-            const DataProviderCustom: IDataProvider = {
+            const dataProviderCustom: IDataProvider = {
                 app: dataProviderLegacy.app,
 
                 create: async (resource, params) => customConvertor(resource, params, 'create'),
@@ -79,11 +78,9 @@ const useDataProviderCustom = (
             };
 
             // Define it here even though its used early
-            const config = {
-                firebase: db,
-                cloudFunctions,
+            const providers = {
                 dataProviderLegacy,
-                dataProviderCustom: DataProviderCustom,
+                dataProviderCustom,
             };
 
             if (
@@ -97,7 +94,7 @@ const useDataProviderCustom = (
                 //firebase.storage().useEmulator("localhost", 9199);
             }
 
-            setDataProvider(DataProviderCustom);
+            setDataProvider(dataProviderCustom);
             // Invalidate Query Cache to refetch data
             queryClient.clear();
             queryClient.invalidateQueries().then((_) => {});
