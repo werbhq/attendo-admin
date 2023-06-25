@@ -1,6 +1,6 @@
 {
   "name": "attendo-admin",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@mui/lab": "^5.0.0-alpha.120",
