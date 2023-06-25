@@ -21,12 +21,10 @@ const ReportsProvider: DataProviderCustom<Report> = {
     getList: async (resource, params, providers) => {
         const { filter } = params;
         const { semester, classroomId } = filter;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { dataProviderCustom, firebaseCollection } = providers;
 
         const normalAttendances = (
-            await firestore
-                .collection(MAPPING.ATTENDANCES)
+            await firebaseCollection(MAPPING.ATTENDANCES)
                 .where('semester', '==', semester)
                 .where('classroom.id', '==', classroomId)
                 .get()
@@ -34,8 +32,7 @@ const ReportsProvider: DataProviderCustom<Report> = {
 
         const fieldPath = new FieldPath('classroom', 'parentClasses', classroomId, 'id');
         const virtualAttendances = (
-            await firestore
-                .collection(MAPPING.ATTENDANCES)
+            await firebaseCollection(MAPPING.ATTENDANCES)
                 .where('semester', '==', semester)
                 .where(fieldPath, '==', classroomId)
                 .get()

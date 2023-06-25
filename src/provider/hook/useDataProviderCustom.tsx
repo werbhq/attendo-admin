@@ -78,6 +78,10 @@ const useDataProviderCustom = (queryClient: QueryClient) => {
             const providers = {
                 dataProviderLegacy,
                 dataProviderCustom,
+                firebaseCollection: (path: string) =>
+                    dataProviderCustom.app
+                        .firestore()
+                        .collection(`${getRootRef(permission)}/${path}`),
             };
 
             if (

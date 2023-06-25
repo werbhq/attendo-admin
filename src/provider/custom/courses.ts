@@ -42,34 +42,30 @@ const CoursesProvider: DataProviderCustom<Course> = {
 
     create: async (resource, params, providers) => {
         const { data } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('courses', data.id);
-        await firestore.collection(MAPPING.DATA).doc(MAPPING.COURSES).update(fieldPath, data);
+        await firebaseCollection(MAPPING.DATA).doc(MAPPING.COURSES).update(fieldPath, data);
 
         return { data: data, status: 200 };
     },
 
     update: async (resource, params, providers) => {
         const { id, data } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('courses', id as string);
-        await firestore.collection(MAPPING.DATA).doc(MAPPING.COURSES).update(fieldPath, data);
+        await firebaseCollection(MAPPING.DATA).doc(MAPPING.COURSES).update(fieldPath, data);
 
         return { data, status: 200 };
     },
 
     delete: async (resource, params, providers) => {
         const { id } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('courses', id);
-        await firestore
-            .collection(MAPPING.DATA)
+        await firebaseCollection(MAPPING.DATA)
             .doc(MAPPING.COURSES)
             .update(fieldPath, FieldValue.delete());
 

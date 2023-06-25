@@ -65,13 +65,11 @@ const AttendanceProvider: DataProviderCustom<AttendanceFrontEnd> = {
     },
 
     getOne: async (resource, params, providers) => {
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection, dataProviderCustom } = providers;
         const { id } = params;
 
         const fieldPath = new FieldPath(`attendances`, id as string, 'id');
-        const { docs } = await firestore
-            .collection(MAPPING.ATTENDANCES)
+        const { docs } = await firebaseCollection(MAPPING.ATTENDANCES)
             .where(fieldPath, '==', id)
             .get();
 

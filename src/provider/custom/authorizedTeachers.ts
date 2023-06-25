@@ -54,11 +54,9 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
 
     update: async (resource, params, providers) => {
         const { id, data } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
-
+        const { firebaseCollection } = providers;
         const fieldPath = new FieldPath('teachers', id as string);
-        await firestore.collection(MAPPING.DATA).doc(MAPPING.AUTH_TEACHERS).update(fieldPath, data);
+        await firebaseCollection(MAPPING.DATA).doc(MAPPING.AUTH_TEACHERS).update(fieldPath, data);
 
         return { data, status: 200 };
     },
@@ -82,12 +80,10 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
 
     delete: async (resource, params, providers) => {
         const { id } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('teachers', id);
-        await firestore
-            .collection(MAPPING.DATA)
+        await firebaseCollection(MAPPING.DATA)
             .doc(MAPPING.AUTH_TEACHERS)
             .update(fieldPath, FieldValue.delete());
 
@@ -103,7 +99,6 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
 };
 
 export const AuthTeachersProviderExtended = {
-    //TODO: FIXME
     createEmails: async (selectedIds: string[]) => {
         const cloudFunctions = getFunctions();
         const createAccountApi = httpsCallable(cloudFunctions, 'createAccounts');

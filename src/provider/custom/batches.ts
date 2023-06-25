@@ -42,38 +42,34 @@ const BatchesProvider: DataProviderCustom<Batch> = {
 
     create: async (resource, params, providers) => {
         const { meta, data } = params;
-        const { dataProviderLegacy } = providers;
-        const firestore = dataProviderLegacy.app.firestore();
+        const { dataProviderLegacy, firebaseCollection } = providers;
         const { id } = meta;
 
         const { data: exists } = await dataProviderLegacy.getOne<Batch>(resource, { id });
         if (exists) throw new Error(`${id} batch already exists`);
 
         const fieldPath = new FieldPath('batches', id);
-        await firestore.collection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
+        await firebaseCollection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
 
         return { data: { ...data, id: meta.id }, status: 200 };
     },
 
     update: async (resource, params, providers) => {
         const { id, data } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('batches', id as string);
-        await firestore.collection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
+        await firebaseCollection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
 
         return { data, status: 200 };
     },
 
     delete: async (resource, params, providers) => {
         const { id } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('batches', id);
-        await firestore
-            .collection(MAPPING.DATA)
+        await firebaseCollection(MAPPING.DATA)
             .doc(MAPPING.BATCHES)
             .update(fieldPath, FieldValue.delete());
 

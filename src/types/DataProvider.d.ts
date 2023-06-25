@@ -19,11 +19,13 @@ import {
     DeleteManyResult,
     GetListParams,
 } from 'react-admin';
+import { FireStoreCollectionRef } from 'react-admin-firebase/dist/misc/firebase-models';
 import { IDataProvider } from 'react-admin-firebase/dist/providers/DataProvider';
 
 interface Providers {
     dataProviderCustom: IDataProvider;
     dataProviderLegacy: IDataProvider;
+    firebaseCollection: (path: string) => FireStoreCollectionRef;
 }
 
 export interface DataProviderCustom<T> extends DataProvider {

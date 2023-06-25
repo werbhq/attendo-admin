@@ -44,23 +44,20 @@ const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
 
     update: async (resource, params, providers) => {
         const { id, data } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('schemes', id as string);
-        await firestore.collection(MAPPING.DATA).doc(MAPPING.SUBJECT).update(fieldPath, data);
+        await firebaseCollection(MAPPING.DATA).doc(MAPPING.SUBJECT).update(fieldPath, data);
 
         return { data, status: 200 };
     },
 
     delete: async (resource, params, providers) => {
         const { id } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('schemes', id as string);
-        await firestore
-            .collection(MAPPING.DATA)
+        await firebaseCollection(MAPPING.DATA)
             .doc(MAPPING.SUBJECT)
             .update(fieldPath, FieldValue.delete());
 
@@ -69,19 +66,18 @@ const SubjectsProvider: DataProviderCustom<SubjectDoc> = {
 
     create: async (resource, params, providers) => {
         const { data, meta } = params;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const id = meta.id;
 
         const { schemes } = (
-            await firestore.collection(MAPPING.DATA).doc(MAPPING.SUBJECT).get()
+            await firebaseCollection(MAPPING.DATA).doc(MAPPING.SUBJECT).get()
         ).data() as SubjectIndex;
 
         if (!!schemes[id]) throw new Error(`${id} subject already exists`);
 
         const fieldPath = new FieldPath('schemes', id);
-        await firestore.collection(MAPPING.DATA).doc(MAPPING.SUBJECT).update(fieldPath, data);
+        await firebaseCollection(MAPPING.DATA).doc(MAPPING.SUBJECT).update(fieldPath, data);
 
         return { data: { ...data, id }, status: 200 };
     },

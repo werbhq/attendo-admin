@@ -4,6 +4,8 @@ import { FieldValue } from '../firebase';
 import { MAPPING } from '../mapping';
 import { Classroom } from 'types/models/classroom';
 
+// FIXME
+
 /**
  * Don't call this directly
  * Use dataProvider
@@ -14,16 +16,14 @@ const StudentsProvider: DataProviderCustom<StudentShort[]> = {
     update: async (resource, params, providers) => {
         const { id, data, meta } = params;
         const { record } = meta;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
 
         const studentMap: Classroom['students'] = {};
         data.forEach((e) => {
             studentMap[e?.id as string] = e as StudentShort;
         });
 
-        await firestore
-            .collection(MAPPING.CLASSROOMS)
+        await firebaseCollection(MAPPING.CLASSROOMS)
             .doc(id as string)
             .update({ students: studentMap, 'meta.lastUpdated': FieldValue.serverTimestamp() });
 
@@ -33,14 +33,13 @@ const StudentsProvider: DataProviderCustom<StudentShort[]> = {
     updateMany: async (resource, params, providers) => {
         const { data, meta } = params;
         const { classId } = meta;
-        const { dataProviderCustom } = providers;
-        const firestore = dataProviderCustom.app.firestore();
+        const { firebaseCollection } = providers;
+
         const studentMap: Classroom['students'] = {};
         data.forEach((e) => {
             studentMap[e?.id as string] = e as StudentShort;
         });
-        await firestore
-            .collection(MAPPING.CLASSROOMS)
+        await firebaseCollection(MAPPING.CLASSROOMS)
             .doc(classId as string)
             .update({ students: studentMap, 'meta.lastUpdated': FieldValue.serverTimestamp() });
 
