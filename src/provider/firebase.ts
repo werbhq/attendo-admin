@@ -10,6 +10,8 @@ export const FieldPath = firebase.firestore.FieldPath;
 
 export const environment = process.env.REACT_APP_ENV;
 export const isProd = kMode === MODE.PROD || environment === 'production';
+export const isEmulator =
+    kMode === MODE.EMULATOR && environment !== 'production' && environment !== 'development';
 
 const authProviderOptions = {};
 export const dataProviderOptions: RAFirebaseOptions = {
@@ -21,6 +23,11 @@ export const dataProviderOptions: RAFirebaseOptions = {
 export const authProviderLegacy = isProd
     ? FirebaseAuthProvider(configProd, authProviderOptions)
     : FirebaseAuthProvider(configDev, authProviderOptions);
+
+if (isEmulator) {
+    firebase.auth().useEmulator('http://localhost:9099/');
+    //firebase.storage().useEmulator("localhost", 9199);
+}
 
 export const getRootRef = (permission: { [key: string]: string }) => {
     if (!permission) return '';

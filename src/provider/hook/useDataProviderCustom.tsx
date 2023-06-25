@@ -5,8 +5,8 @@ import { QueryClient } from 'react-query';
 import {
     authProviderLegacy,
     dataProviderOptions,
-    environment,
     getRootRef,
+    isEmulator,
     isProd,
 } from 'provider/firebase';
 import firebase from 'firebase/compat/app';
@@ -15,8 +15,6 @@ import { IDataProvider } from 'react-admin-firebase/dist/providers/DataProvider'
 import { ReactAdminFirebaseAuthProvider } from 'react-admin-firebase/dist/providers/AuthProvider';
 import configProd from '../config/prod.json';
 import configDev from '../config/dev.json';
-import { kMode } from '../../config';
-import { MODE } from '../../Utils/helpers';
 import CustomProviders from '../customProviders';
 
 export const FieldValue = firebase.firestore.FieldValue;
@@ -85,15 +83,9 @@ const useDataProviderCustom = (queryClient: QueryClient) => {
                 dataProviderCustom.app.firestore().collection(`${getRootRef(permission)}/${path}`),
         };
 
-        if (
-            kMode === MODE.EMULATOR &&
-            environment !== 'production' &&
-            environment !== 'development'
-        ) {
+        if (isEmulator) {
             firebase.firestore().useEmulator('localhost', 8090);
             connectFunctionsEmulator(cloudFunctions, 'localhost', 5001);
-            firebase.auth().useEmulator('http://localhost:9099/');
-            //firebase.storage().useEmulator("localhost", 9199);
         }
 
         setDataProvider(dataProviderCustom);
