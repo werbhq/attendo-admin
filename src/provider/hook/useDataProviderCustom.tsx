@@ -1,17 +1,17 @@
-import { dataProviderOptions, environment, getRootRef, isProd } from 'provider/firebase';
 import { useState, useEffect } from 'react';
 import { FirebaseDataProvider } from 'react-admin-firebase';
-import configProd from '../config/prod.json';
-import configDev from '../config/dev.json';
-import { IDataProvider } from 'react-admin-firebase/dist/providers/DataProvider';
+import { DataProvider } from 'react-admin';
+import { QueryClient } from 'react-query';
+import { dataProviderOptions, environment, getRootRef, isProd } from 'provider/firebase';
 import firebase from 'firebase/compat/app';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
-import { MODE } from '../../Utils/helpers';
-import { kMode } from '../../config';
-import { DataProvider } from 'react-admin';
-import CustomProviders from '../customProviders';
+import { IDataProvider } from 'react-admin-firebase/dist/providers/DataProvider';
 import { ReactAdminFirebaseAuthProvider } from 'react-admin-firebase/dist/providers/AuthProvider';
-import { QueryClient } from 'react-query';
+import configProd from '../config/prod.json';
+import configDev from '../config/dev.json';
+import { kMode } from '../../config';
+import { MODE } from '../../Utils/helpers';
+import CustomProviders from '../customProviders';
 
 export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
