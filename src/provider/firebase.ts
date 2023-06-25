@@ -4,6 +4,7 @@ import configDev from './config/dev.json';
 import firebase from 'firebase/compat/app';
 import { MODE } from '../Utils/helpers';
 import { kMode } from '../config';
+import { ReactAdminFirebaseAuthProvider } from 'react-admin-firebase/dist/providers/AuthProvider';
 export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
@@ -17,7 +18,7 @@ export const dataProviderOptions: RAFirebaseOptions = {
     // firestoreCostsLogger: { enabled: isProd ? false : true },
 };
 
-export const authProvider = isProd
+const authProvider = isProd
     ? FirebaseAuthProvider(configProd, authProviderOptions)
     : FirebaseAuthProvider(configDev, authProviderOptions);
 
@@ -25,6 +26,16 @@ export const getRootRef = (permission: { [key: string]: string }) => {
     if (!permission) return '';
     return `institutes/${permission['institute']}`;
 };
+
+export const getCustomAuthProvider = (
+    initializeDataProvider: (authProvider: ReactAdminFirebaseAuthProvider) => void
+) => ({
+    ...authProvider,
+    login: async (data: { username: string; password: string }) => {
+        await authProvider.login(data);
+        initializeDataProvider(authProvider);
+    },
+});
 
 export const defaultParams = {
     pagination: {

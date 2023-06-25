@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { FirebaseDataProvider } from 'react-admin-firebase';
 import { DataProvider } from 'react-admin';
 import { QueryClient } from 'react-query';
@@ -16,13 +16,10 @@ import CustomProviders from '../customProviders';
 export const FieldValue = firebase.firestore.FieldValue;
 export const FieldPath = firebase.firestore.FieldPath;
 
-const useDataProviderCustom = (
-    authProvider: ReactAdminFirebaseAuthProvider,
-    queryClient: QueryClient
-) => {
+const useDataProviderCustom = (queryClient: QueryClient) => {
     const [dataProvider, setDataProvider] = useState<IDataProvider | undefined>(undefined);
 
-    useEffect(() => {
+    const initializeDataProvider = (authProvider: ReactAdminFirebaseAuthProvider) => {
         authProvider.getPermissions({}).then((permission) => {
             const rootRef = getRootRef(permission);
             const newOptions = { ...dataProviderOptions, rootRef };
@@ -95,13 +92,12 @@ const useDataProviderCustom = (
             }
 
             setDataProvider(dataProviderCustom);
-            // Invalidate Query Cache to refetch data
             queryClient.clear();
             queryClient.invalidateQueries().then((_) => {});
         });
-    }, [authProvider, queryClient]);
+    };
 
-    return dataProvider;
+    return { dataProvider, initializeDataProvider };
 };
 
 export default useDataProviderCustom;

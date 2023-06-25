@@ -8,7 +8,7 @@ import Courses from './pages/courses';
 import Attendance from './pages/attendances/Index';
 import { RaDatagrid, RaList } from 'components/ui/style';
 import AuthTeachers from './pages/authTeachers';
-import { authProvider, isProd } from './provider/firebase';
+import { getCustomAuthProvider, isProd } from './provider/firebase';
 import { CustomLayout } from './components/ui/Layout';
 import { customQueryClient } from './provider/queryClient';
 import useDataProviderCustom from 'provider/hook/useDataProviderCustom';
@@ -37,14 +37,15 @@ const myTheme = {
 };
 
 const App = () => {
-    const dataProviderCustom = useDataProviderCustom(authProvider, customQueryClient);
+    const { dataProvider, initializeDataProvider } = useDataProviderCustom(customQueryClient);
+    const authProvider = getCustomAuthProvider(initializeDataProvider);
 
     return (
         <Admin
             title="Attendo Admin"
             theme={myTheme}
             authProvider={authProvider}
-            dataProvider={dataProviderCustom}
+            dataProvider={dataProvider}
             queryClient={customQueryClient}
             dashboard={DashBoard}
             layout={CustomLayout}
