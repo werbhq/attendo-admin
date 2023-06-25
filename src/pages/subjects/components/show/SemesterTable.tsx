@@ -12,12 +12,12 @@ import {
     useRefresh,
     useNotify,
     required,
+    useDataProvider,
 } from 'react-admin';
 import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import { Button, Dialog } from '@mui/material';
 import { CustomAdd, CustomDelete } from '../CustomButtons';
-import { dataProvider } from 'provider/firebase';
 import { MAPPING } from 'provider/mapping';
 import { CustomBranchField } from '../CustomFields';
 import { noSpaceValidation } from 'Utils/validations';
@@ -34,6 +34,7 @@ const SemesterTable = () => {
 
     const refresh = useRefresh();
     const notify = useNotify();
+    const dataProvider = useDataProvider();
     const [showDialog, setShowDialog] = useState(false);
 
     const editButtonHandle = (record: SubjectSemester) => {

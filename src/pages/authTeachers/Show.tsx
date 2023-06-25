@@ -11,12 +11,12 @@ import {
     FunctionField,
     ReferenceField,
     ChipField,
+    useDataProvider,
 } from 'react-admin';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useState, useEffect } from 'react';
 import { AuthorizedTeacher, Teacher, TeacherClassroom } from 'types/models/teacher';
-import { dataProvider } from 'provider/firebase';
 import { MAPPING } from 'provider/mapping';
 import { Chip } from '@mui/material';
 import SK from 'pages/source-keys';
@@ -30,6 +30,7 @@ const AuthorizedTeacherShow = () => {
     const [loading, setLoading] = useState(false);
     const [classroomData, setClassroomData] = useState<TeacherClassroom[]>([]);
     const [subjectData, setSubjectData] = useState<Subject[]>([]);
+    const dataProvider = useDataProvider();
 
     const fetchData = () => {
         if (authorizedTeacher) {

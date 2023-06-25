@@ -1,6 +1,6 @@
 import { DataProviderCustom } from 'types/DataProvider';
 import { StudentShort } from 'types/models/student';
-import { FieldValue, db } from '../firebase';
+import { FieldValue } from '../firebase';
 import { MAPPING } from '../mapping';
 import { Classroom } from 'types/models/classroom';
 
@@ -11,33 +11,35 @@ import { Classroom } from 'types/models/classroom';
 const StudentsProvider: DataProviderCustom<StudentShort[]> = {
     resource: MAPPING.STUDENTS,
 
-    update: async (resource, params) => {
+    update: async (resource, params, config) => {
         const { id, data, meta } = params;
         const { record } = meta;
+        const { firestore } = config;
         const studentMap: Classroom['students'] = {};
         data.forEach((e) => {
             studentMap[e?.id as string] = e as StudentShort;
         });
 
-        await db
+        await firestore
             .collection(MAPPING.CLASSROOMS)
             .doc(id as string)
-            .update({ students: studentMap, "meta.lastUpdated": FieldValue.serverTimestamp()});
+            .update({ students: studentMap, 'meta.lastUpdated': FieldValue.serverTimestamp() });
 
         return { data: { id, ...record }, status: 200 };
     },
 
-    updateMany: async (resource, params) => {
+    updateMany: async (resource, params, config) => {
         const { data, meta } = params;
         const { classId } = meta;
+        const { firestore } = config;
         const studentMap: Classroom['students'] = {};
         data.forEach((e) => {
             studentMap[e?.id as string] = e as StudentShort;
         });
-        await db
+        await firestore
             .collection(MAPPING.CLASSROOMS)
             .doc(classId as string)
-            .update({ students: studentMap,"meta.lastUpdated": FieldValue.serverTimestamp() });
+            .update({ students: studentMap, 'meta.lastUpdated': FieldValue.serverTimestamp() });
 
         return { data, status: 200 };
     },

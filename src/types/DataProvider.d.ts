@@ -1,3 +1,4 @@
+import { Functions } from 'firebase/functions';
 import {
     CreateParams,
     CreateResult,
@@ -19,19 +20,61 @@ import {
     DeleteManyResult,
     GetListParams,
 } from 'react-admin';
+import { FireStore } from 'react-admin-firebase/dist/misc/firebase-models';
+import { IDataProvider } from 'react-admin-firebase/dist/providers/DataProvider';
+
+interface Configuration {
+    firestore: FireStore;
+    dataProviderCustom: IDataProvider;
+    dataProviderLegacy: IDataProvider;
+    cloudFunctions: Functions;
+}
 
 export interface DataProviderCustom<T> extends DataProvider {
     resource: string;
-    create?: (resource: string, params: CreateParams<T>) => Promise<CreateResult<T>>;
-    delete?: (resource: string, params: DeleteParams<T>) => Promise<DeleteResult>; // Disable type
-    deleteMany?: (resource: string, params: DeleteManyParams<T>) => Promise<DeleteManyResult<T>>;
-    getList?: (resource: string, params: GetListParams<T>) => Promise<GetListResult<T>>;
-    getOne?: (resource: string, params: GetOneParams<T>) => Promise<GetOneResult<T>>;
-    getMany?: (resource: string, params: GetManyParams) => Promise<GetManyResult<T>>; // Get Many has no extension
+    create?: (
+        resource: string,
+        params: CreateParams<T>,
+        config: Configuration
+    ) => Promise<CreateResult<T>>;
+    delete?: (
+        resource: string,
+        params: DeleteParams<T>,
+        config: Configuration
+    ) => Promise<DeleteResult>; // Disable type
+    deleteMany?: (
+        resource: string,
+        params: DeleteManyParams<T>,
+        config: Configuration
+    ) => Promise<DeleteManyResult<T>>;
+    getList?: (
+        resource: string,
+        params: GetListParams<T>,
+        config: Configuration
+    ) => Promise<GetListResult<T>>;
+    getOne?: (
+        resource: string,
+        params: GetOneParams<T>,
+        config: Configuration
+    ) => Promise<GetOneResult<T>>;
+    getMany?: (
+        resource: string,
+        params: GetManyParams,
+        config: Configuration
+    ) => Promise<GetManyResult<T>>; // Get Many has no extension
     getManyReference?: (
         resource: string,
-        params: GetManyReferenceParams<T>
+        params: GetManyReferenceParams<T>,
+        config: Configuration
     ) => Promise<GetManyReferenceResult<T>>;
-    update?: (resource: string, params: UpdateParams<T>) => Promise<UpdateResult>; // Disable type
-    updateMany?: (resource: string, params: UpdateManyParams<T>) => Promise<UpdateManyResult<T>>;
+    update?: (
+        resource: string,
+        params: UpdateParams<T>,
+        config: Configuration
+    ) => Promise<UpdateResult>; // Disable type
+    updateMany?: (
+        resource: string,
+        params: UpdateManyParams<T>,
+        config: Configuration
+    ) => Promise<UpdateManyResult<T>>;
 }

@@ -8,9 +8,10 @@ import Courses from './pages/courses';
 import Attendance from './pages/attendances/Index';
 import { RaDatagrid, RaList } from 'components/ui/style';
 import AuthTeachers from './pages/authTeachers';
-import { authProvider, dataProvider, isProd } from './provider/firebase';
+import { authProvider, isProd } from './provider/firebase';
 import { CustomLayout } from './components/ui/Layout';
 import { customQueryClient } from './provider/queryClient';
+import useDataProviderCustom from 'provider/hook/useDataProviderCustom';
 
 const myTheme = {
     ...defaultTheme,
@@ -35,23 +36,27 @@ const myTheme = {
     },
 };
 
-const App = () => (
-    <Admin
-        title="Attendo Admin"
-        theme={myTheme}
-        dataProvider={dataProvider}
-        authProvider={authProvider}
-        queryClient={customQueryClient}
-        dashboard={DashBoard}
-        layout={CustomLayout}
-    >
-        <Resource {...AuthTeachers} />
-        <Resource {...Courses} />
-        <Resource {...Subject} />
-        <Resource {...Batches} />
-        <Resource {...Classroom} />
-        <Resource {...Attendance} />
-    </Admin>
-);
+const App = () => {
+    const dataProviderCustom = useDataProviderCustom(authProvider, customQueryClient);
+
+    return (
+        <Admin
+            title="Attendo Admin"
+            theme={myTheme}
+            authProvider={authProvider}
+            dataProvider={dataProviderCustom}
+            queryClient={customQueryClient}
+            dashboard={DashBoard}
+            layout={CustomLayout}
+        >
+            <Resource {...AuthTeachers} />
+            <Resource {...Courses} />
+            <Resource {...Subject} />
+            <Resource {...Batches} />
+            <Resource {...Classroom} />
+            <Resource {...Attendance} />
+        </Admin>
+    );
+};
 
 export default App;
