@@ -1,5 +1,5 @@
 import { DataProviderCustom } from 'types/DataProvider';
-import { Batch } from 'types/models/batch';
+import { Batch, BatchList } from 'types/models/batch';
 import { FieldValue, FieldPath } from '../firebase';
 import { paginateSingleDoc } from '../helpers/pagination';
 import { MAPPING } from '../mapping';
@@ -42,11 +42,13 @@ const BatchesProvider: DataProviderCustom<Batch> = {
 
     create: async (resource, params, providers) => {
         const { meta, data } = params;
-        const { dataProviderLegacy, firebaseCollection } = providers;
+        const { firebaseCollection } = providers;
         const { id } = meta;
-
-        const { data: exists } = await dataProviderLegacy.getOne<Batch>(resource, { id });
-        if (exists) throw new Error(`${id} batch already exists`);
+        console.log(id);
+        const { batches } = (
+            await firebaseCollection(MAPPING.DATA).doc(MAPPING.BATCHES).get()
+        ).data() as BatchList;
+        if (!!batches[id]) throw new Error(`${id} batch already exists`);
 
         const fieldPath = new FieldPath('batches', id);
         await firebaseCollection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
