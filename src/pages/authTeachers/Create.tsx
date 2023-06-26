@@ -24,7 +24,7 @@ const AuthorizedTeacherCreate = () => {
     const redirect = useRedirect();
     const dataProvider = useDataProvider();
     const onSubmit = (data: any) => {
-        let isUpdate;
+        let isUpdate = true;
         data = { ...data, id: data.email, created: false };
         dataProvider.getList(url, defaultParams).then((e) => {
             if (e.data.includes(data)) isUpdate = false;

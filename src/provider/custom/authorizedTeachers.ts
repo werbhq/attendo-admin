@@ -5,6 +5,7 @@ import { DataProviderCustom } from 'types/DataProvider';
 import { AuthorizedTeacher } from 'types/models/teacher';
 import { paginateSingleDoc } from '../helpers/pagination';
 import { getFunctions } from 'firebase/functions';
+import { ReactAdminFirebaseAuthProvider } from 'react-admin-firebase/dist/providers/AuthProvider';
 
 /**
  * Don't call this directly
@@ -99,10 +100,10 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
 };
 
 export const AuthTeachersProviderExtended = {
-    createEmails: async (selectedIds: string[]) => {
+    createEmails: async (selectedIds: string[],permission: { [key: string]: string }) => {
         const cloudFunctions = getFunctions();
         const createAccountApi = httpsCallable(cloudFunctions, 'createAccounts');
-        const response = await (await createAccountApi(selectedIds)).data;
+        const response = await (await createAccountApi(selectedIds,permission)).data;
         return response as { message: string; success: boolean };
     },
 };

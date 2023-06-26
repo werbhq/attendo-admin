@@ -7,54 +7,50 @@ import {
     useNotify,
     useRefresh,
     WithRecord,
-    useShowController,
-    FunctionField,
-    ReferenceField,
-    ChipField,
-    useDataProvider,
 } from 'react-admin';
 import { AuthTeachersProviderExtended } from 'provider/custom/authorizedTeachers';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { useState, useEffect } from 'react';
-import { AuthorizedTeacher, Teacher, TeacherClassroom } from 'types/models/teacher';
-import { MAPPING } from 'provider/mapping';
-import { Chip } from '@mui/material';
+import { useState } from 'react';
+import { AuthorizedTeacher } from 'types/models/teacher';
 import SK from 'pages/source-keys';
-import { Subject } from 'types/models/subject';
+import { authProviderLegacy } from 'provider/firebase';
 
 const AuthorizedTeacherShow = () => {
     const notify = useNotify();
     const refresh = useRefresh();
-    const { record } = useShowController();
-    const authorizedTeacher = record as AuthorizedTeacher;
+    // const { record } = useShowController();
+    // const authorizedTeacher = record as AuthorizedTeacher;
     const [loading, setLoading] = useState(false);
-    const [classroomData, setClassroomData] = useState<TeacherClassroom[]>([]);
-    const [subjectData, setSubjectData] = useState<Subject[]>([]);
-    const dataProvider = useDataProvider();
+    // const [classroomData, setClassroomData] = useState<TeacherClassroom[]>([]);
+    // const [subjectData, setSubjectData] = useState<Subject[]>([]);
+    // const dataProvider = useDataProvider();
 
-    const fetchData = () => {
-        if (authorizedTeacher) {
-            dataProvider
-                .getOne<Teacher>(MAPPING.TEACHERS, { id: authorizedTeacher?.id })
-                .then((e) => {
-                    setClassroomData(Object.values(e.data.classrooms));
-                    setSubjectData(Object.values(e.data.classrooms).map((f) => f.subject));
-                });
-        }
-    };
+    // const fetchData = () => {
+    //     if (authorizedTeacher) {
+    //         dataProvider
+    //             .getOne<Teacher>(MAPPING.TEACHERS, { id: authorizedTeacher?.id })
+    //             .then((e) => {
+    //                 setClassroomData(Object.values(e.data.classrooms));
+    //                 setSubjectData(Object.values(e.data.classrooms).map((f) => f.subject));
+    //             }).catch(()=>{
+    //                 console.error("Data not found in teachers");
+                    
+    //             });
+    //     }
+    // };
 
-    useEffect(() => {
-        setLoading(true);
-        fetchData();
-        setLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // useEffect(() => {
+    //     setLoading(true);
+    //     fetchData();
+    //     setLoading(false);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
     const handleCreation = async (record: AuthorizedTeacher) => {
         setLoading(true);
         try {
+            const permission= await authProviderLegacy.getPermissions({});
             const { message, success } = await AuthTeachersProviderExtended.createEmails([
-                record.id,
-            ]);
+                record.id,],permission);
             notify(message, { type: success ? 'success' : 'error' });
         } catch (e: any) {
             notify(e.message, { type: 'error' });
@@ -75,7 +71,7 @@ const AuthorizedTeacherShow = () => {
                     <BooleanField source={SK.AUTH_TEACHERS('created')} looseValue />
                     <TextField source={SK.AUTH_TEACHERS('branch')} />
 
-                    <FunctionField
+                    {/* <FunctionField
                         label="Classroom"
                         emptyText="-"
                         render={() => (
@@ -130,7 +126,7 @@ const AuthorizedTeacherShow = () => {
                                 )}
                             </ul>
                         )}
-                    />
+                    /> */}
                     <WithRecord
                         render={(record: AuthorizedTeacher) =>
                             !record?.created ? (

@@ -26,6 +26,7 @@ import jsonExport from 'jsonexport/dist';
 import { MAPPING } from 'provider/mapping';
 import { AuthorizedTeacher } from 'types/models/teacher';
 import SK from 'pages/source-keys';
+import { authProviderLegacy } from 'provider/firebase';
 
 const filters = [
     <SearchInput source="id" alwaysOn resettable />,
@@ -43,13 +44,14 @@ const AuthorizedTeacherList = () => {
                 <Button
                     label="Create Account"
                     startIcon={<AddIcon />}
-                    onClick={() =>
+                    onClick={async () =>{
+                        const permission= await authProviderLegacy.getPermissions({});
                         AuthTeachersProviderExtended.createEmails(
-                            data.selectedIds as string[]
+                            data.selectedIds as string[],permission
                         ).then((e) => {
                             notify(e.message, { type: e.success ? 'success' : 'error' });
                             refresh();
-                        })
+                        })}
                     }
                 />
                 <BulkUpdateButton />
