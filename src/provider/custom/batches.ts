@@ -80,8 +80,8 @@ const BatchesProvider: DataProviderCustom<Batch> = {
 
     deleteMany: async (resource, params, providers) => {
         const { ids } = params;
-        const { dataProviderLegacy } = providers;
-        for (const id of ids) await dataProviderLegacy.delete(resource, { id });
+        const { dataProviderCustom } = providers;
+        for (const id of ids) await dataProviderCustom.delete(resource, { id });
         return { data: ids, status: 200 };
     },
 };
