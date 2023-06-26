@@ -34,7 +34,7 @@ const AuthorizedTeacherShow = () => {
     //                 setSubjectData(Object.values(e.data.classrooms).map((f) => f.subject));
     //             }).catch(()=>{
     //                 console.error("Data not found in teachers");
-                    
+
     //             });
     //     }
     // };
@@ -48,9 +48,11 @@ const AuthorizedTeacherShow = () => {
     const handleCreation = async (record: AuthorizedTeacher) => {
         setLoading(true);
         try {
-            const permission= await authProviderLegacy.getPermissions({});
-            const { message, success } = await AuthTeachersProviderExtended.createEmails([
-                record.id,],permission);
+            const permission = await authProviderLegacy.getPermissions({});
+            const { message, success } = await AuthTeachersProviderExtended.createEmails(
+                [record.id],
+                permission
+            );
             notify(message, { type: success ? 'success' : 'error' });
         } catch (e: any) {
             notify(e.message, { type: 'error' });

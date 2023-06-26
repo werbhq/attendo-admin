@@ -100,10 +100,12 @@ const AuthTeachersProvider: DataProviderCustom<AuthorizedTeacher> = {
 };
 
 export const AuthTeachersProviderExtended = {
-    createEmails: async (selectedIds: string[],permission: { [key: string]: string }) => {
+    createEmails: async (selectedIds: string[], permission: { [key: string]: string }) => {
         const cloudFunctions = getFunctions();
         const createAccountApi = httpsCallable(cloudFunctions, 'createAccounts');
-        const response = await (await createAccountApi(selectedIds,permission)).data;
+        const response = await (
+            await createAccountApi({ teacherEmailIds: selectedIds, permission: permission })
+        ).data;
         return response as { message: string; success: boolean };
     },
 };
