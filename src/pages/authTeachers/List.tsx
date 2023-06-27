@@ -44,18 +44,19 @@ const AuthorizedTeacherList = () => {
                 <Button
                     label="Create Account"
                     startIcon={<AddIcon />}
-                    onClick={async () =>{
-                        const permission= await authProviderLegacy.getPermissions({});
+                    onClick={async () => {
+                        const permission = await authProviderLegacy.getPermissions({});
+                        console.log(data.selectedIds);
                         AuthTeachersProviderExtended.createEmails(
-                            data.selectedIds as string[],permission
+                            data.selectedIds as string[],
+                            permission
                         ).then((e) => {
                             notify(e.message, { type: e.success ? 'success' : 'error' });
                             refresh();
-                        })}
-                    }
+                        });
+                    }}
                 />
-                <BulkUpdateButton />
-                <BulkDeleteWithConfirmButton mutationMode='optimistic'/>
+                <BulkDeleteWithConfirmButton mutationMode="optimistic" />
             </>
         );
     };
