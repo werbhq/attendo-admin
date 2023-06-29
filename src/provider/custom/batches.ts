@@ -44,7 +44,6 @@ const BatchesProvider: DataProviderCustom<Batch> = {
         const { meta, data } = params;
         const { firebaseCollection } = providers;
         const { id } = meta;
-        console.log(id);
         const { batches } = (
             await firebaseCollection(MAPPING.DATA).doc(MAPPING.BATCHES).get()
         ).data() as BatchList;
