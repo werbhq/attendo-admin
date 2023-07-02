@@ -1,6 +1,6 @@
 import { DataProviderCustom } from 'types/DataProvider';
-import { Batch } from 'types/models/batch';
-import { dataProvider, dataProviderLegacy, db, FieldValue, FieldPath } from '../firebase';
+import { Batch, BatchList } from 'types/models/batch';
+import { FieldValue, FieldPath } from '../firebase';
 import { paginateSingleDoc } from '../helpers/pagination';
 import { MAPPING } from '../mapping';
 
@@ -11,7 +11,8 @@ import { MAPPING } from '../mapping';
 const BatchesProvider: DataProviderCustom<Batch> = {
     resource: MAPPING.BATCHES,
 
-    getList: async (resource, params) => {
+    getList: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.BATCHES,
         });
@@ -19,15 +20,17 @@ const BatchesProvider: DataProviderCustom<Batch> = {
         return { data: paginateSingleDoc(params, values), total: values.length };
     },
 
-    getOne: async (resource, params) => {
+    getOne: async (resource, params, providers) => {
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.BATCHES,
         });
         return { data: data.batches[params.id], status: 200 };
     },
 
-    getMany: async (resource, params) => {
+    getMany: async (resource, params, providers) => {
         const { ids } = params;
+        const { dataProviderLegacy } = providers;
         const { data } = await dataProviderLegacy.getOne(MAPPING.DATA, {
             id: MAPPING.BATCHES,
         });
@@ -37,43 +40,47 @@ const BatchesProvider: DataProviderCustom<Batch> = {
         return { data: dataResult, status: 200 };
     },
 
-    create: async (resource, params) => {
+    create: async (resource, params, providers) => {
         const { meta, data } = params;
+        const { firebaseCollection } = providers;
         const { id } = meta;
-
-        const { data: exists } = await dataProvider.getOne<Batch>(resource, { id });
-        if (exists) throw new Error(`${id} batch already exists`);
+        const { batches } = (
+            await firebaseCollection(MAPPING.DATA).doc(MAPPING.BATCHES).get()
+        ).data() as BatchList;
+        if (!!batches[id]) throw new Error(`${id} batch already exists`);
 
         const fieldPath = new FieldPath('batches', id);
-        await db.collection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
+        await firebaseCollection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
 
         return { data: { ...data, id: meta.id }, status: 200 };
     },
 
-    update: async (resource, params) => {
+    update: async (resource, params, providers) => {
         const { id, data } = params;
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('batches', id as string);
-        await db.collection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
+        await firebaseCollection(MAPPING.DATA).doc(MAPPING.BATCHES).update(fieldPath, data);
 
         return { data, status: 200 };
     },
 
-    delete: async (resource, params) => {
+    delete: async (resource, params, providers) => {
         const { id } = params;
+        const { firebaseCollection } = providers;
 
         const fieldPath = new FieldPath('batches', id);
-        await db
-            .collection(MAPPING.DATA)
+        await firebaseCollection(MAPPING.DATA)
             .doc(MAPPING.BATCHES)
             .update(fieldPath, FieldValue.delete());
 
         return { data: { id }, status: 200 };
     },
 
-    deleteMany: async (resource, params) => {
+    deleteMany: async (resource, params, providers) => {
         const { ids } = params;
-        for (const id of ids) await dataProvider.delete(resource, { id });
+        const { dataProviderCustom } = providers;
+        for (const id of ids) await dataProviderCustom.delete(resource, { id });
         return { data: ids, status: 200 };
     },
 };

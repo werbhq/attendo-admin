@@ -6,6 +6,7 @@ import {
     SelectInput,
     SimpleFormIterator,
     TextInput,
+    required,
     useDataProvider,
 } from 'react-admin';
 import { Classroom, ClassroomVirtual } from 'types/models/classroom';
@@ -102,8 +103,8 @@ const GroupLink = ({
             label="Please assign groups to classrooms"
         >
             <SimpleFormIterator inline disableAdd disableRemove disableReordering>
-                <TextInput source="id" disabled={true} sx={{ width: '100%' }} />
-                <SelectInput source="group" choices={Schemes.groupNames} />
+                <TextInput source="id" disabled={true} sx={{ width: '100%' }}  validate={required()} />
+                <SelectInput source="group" choices={Schemes.groupNames}  validate={required()} />
             </SimpleFormIterator>
         </ArrayInput>
     );

@@ -23,6 +23,7 @@ import { useState, useEffect } from 'react';
 import { Course } from 'types/models/courses';
 import { defaultParams } from 'provider/firebase';
 import { convertSingleValueListToSelectList } from 'Utils/helpers';
+import SK from 'pages/source-keys';
 
 const url = MAPPING.SUBJECT;
 
@@ -77,16 +78,16 @@ const SubjectEdit = () => {
     return (
         <Edit>
             <SimpleForm onSubmit={handleSubmit} toolbar={false}>
-                <TextInput disabled label="Id" source="id" />
-                <TextInput source="organization" required />
+                <TextInput disabled label="Id" source={SK.SYLLABUS("id")} />
+                <TextInput source={SK.SYLLABUS("organization")}required />
                 <SelectInput
-                    source="course"
+                    source={SK.SYLLABUS("course")}
                     choices={courseChoices}
                     validate={[required()]}
                     label="course"
                 />
-                <TextInput source="year" required />
-                <ArrayInput source="semesters" fullWidth={false} label="Semesters">
+                <TextInput source={SK.SYLLABUS("year")} required />
+                <ArrayInput source={SK.SYLLABUS("semesters")} fullWidth={false} label="Semesters">
                     <SimpleFormIterator
                         disableReordering
                         addButton={CustomAdd({ name: 'Add Semester' })}

@@ -5,7 +5,7 @@ import { Batch } from 'types/models/batch';
 import { Classroom } from 'types/models/classroom';
 import { Course } from 'types/models/courses';
 import { Student } from 'types/models/student';
-import { Subject } from 'types/models/subject';
+import { Subject, SubjectDoc } from 'types/models/subject';
 import { AuthorizedTeacher } from 'types/models/teacher';
 
 const SK = {
@@ -16,6 +16,7 @@ const SK = {
     SUBJECT: sourceKey<SourceKeys<Subject>>,
     COURSE: sourceKey<SourceKeys<Course>>,
     STUDENT: sourceKey<SourceKeys<Student>>,
+    SYLLABUS: sourceKey<SourceKeys<SubjectDoc>>,
 };
 
 export default SK;

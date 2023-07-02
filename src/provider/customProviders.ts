@@ -17,7 +17,7 @@ const CustomProviders: DataProviderCustom<any>[] = [
     AuthTeachersProvider,
     ReportsProvider,
     BatchesProvider,
-    AttendanceProvider
+    AttendanceProvider,
 ];
 
 export default CustomProviders;

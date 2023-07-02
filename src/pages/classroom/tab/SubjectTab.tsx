@@ -93,11 +93,13 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
     const tableData = useList({ data: sem_record });
 
     const handleClose = () => setDialog({ ...dialog, open: false });
+
     const handleEditClose = () => setSubjectDialogue({ ...subjectDialogue, open: false });
 
     const handleEdit = async (e: any) => {
         const oldData = record;
-        const subjects = record.subjects === undefined ? [] : Object.values(record.subjects);
+        const currentRecord=record;
+        const subjects = currentRecord.subjects === undefined ? [] : Object.values(currentRecord.subjects);
         const currentSubjIndex = subjects.findIndex((f) => f.id === e.id);
         const teachers = e.teachers.map((o: { id: string }) => {
             const teacher = teachersData.find((_e) => _e.id === o.id);
@@ -117,11 +119,11 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
 
         const subjectsMap = {} as { [id: string]: ClassroomSubject };
         subjects.forEach((obj) => (subjectsMap[obj.id] = obj));
-        record.subjects = subjectsMap;
+        currentRecord.subjects = subjectsMap;
 
         await dataProvider.update(MAPPING.CLASSROOMS, {
             id: record.id,
-            data: record,
+            data: currentRecord,
             previousData: oldData,
         });
         refresh();
@@ -131,6 +133,7 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
 
     const handleCreate = async (e: any) => {
         const oldData = record;
+        const currentRecord=record;
         const { SubjectId, TeacherIds } = e as {
             SubjectId: string;
             TeacherIds: { id: string }[];
@@ -145,11 +148,11 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
                 name: teacher?.name,
             };
         }) as TeacherShort[];
-        const subjects = record.subjects === undefined ? [] : Object.values(record.subjects);
+        const subjects = currentRecord.subjects === undefined ? [] : Object.values(currentRecord.subjects);
         const subjectIndex = subjects.findIndex((e) => e.subject.id === SubjectId);
         if (subjectIndex === -1) {
             subjects.push({
-                id: `${subject.id}-${record.id}-${semester}`,
+                id: `${subject.id}-${currentRecord.id}-${semester}`,
                 subject,
                 teachers,
                 semester,
@@ -170,11 +173,11 @@ const SubjectTab = ({ label, path, ...props }: { label: string; path: string; pr
 
         const subjectsMap = {} as { [id: string]: ClassroomSubject };
         subjects.forEach((e) => (subjectsMap[e.id] = e));
-        record.subjects = subjectsMap;
+        currentRecord.subjects = subjectsMap;
 
         await dataProvider.update<Classroom>(MAPPING.CLASSROOMS, {
             id: record.id,
-            data: record,
+            data: currentRecord,
             previousData: oldData,
         });
 

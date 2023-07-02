@@ -10,7 +10,7 @@ import { defaultParams } from 'provider/firebase';
 const resource = MAPPING.AUTH_TEACHERS;
 
 export const ImportButton = ({ csvExportHeaders, ...rest }: { csvExportHeaders: string[] }) => {
-    const importRef = useRef<HTMLInputElement>(null);
+    const importRef = useRef<HTMLInputElement | null>(null);
     const notify = useNotify();
     const refresh = useRefresh();
     const dataProvider = useDataProvider();
@@ -27,15 +27,25 @@ export const ImportButton = ({ csvExportHeaders, ...rest }: { csvExportHeaders: 
             const message = `Headers are invalid. Proper headers are ${csvExportHeaders.join(',')}`;
             return notify(message, { type: 'error' });
         } else {
-            filteredData = data.filter(
-                (e) => !record.some((value: { id: string }) => value.id === e.id)
-            );
+            filteredData = data.filter((e) => {
+                const matchingRecord = record.find(({ id }) => id === e.id);
+                const { id, userName } = e;
+                const message = matchingRecord
+                  ? `Updated data of ${userName} teacher`
+                  : `Updated ${data.length} Teachers`;
+              
+                const shouldInclude = matchingRecord ? e : !record.some(({ id: recordId }) => recordId === id);
+                
+                refresh();
+                notify(message, {
+                  type: 'success',
+                });
+                
+                return shouldInclude;
+              });              
+            
         }
         filteredData.forEach((e) => update(resource, { id: e.id, data: e }));
-        refresh();
-        notify(`Updated ${data.length} Teachers`, {
-            type: 'success',
-        });
     };
 
     return (
@@ -55,7 +65,9 @@ export const ImportButton = ({ csvExportHeaders, ...rest }: { csvExportHeaders: 
                     dynamicTyping: true,
                     skipEmptyLines: true,
                 }}
-                inputRef={importRef}
+                inputRef={(ref: HTMLInputElement) => {
+                    importRef.current = ref;
+                  }}
                 inputStyle={{ display: 'none' }}
                 onFileLoaded={fileLoadHandler}
                 onError={() => notify(`Error Importing CSV`, { type: 'error' })}

@@ -4,7 +4,7 @@ import {
     ClassroomNonVirtualShort,
     ClassroomToClassroomShort,
 } from 'types/models/classroom';
-import { dataProvider, db } from '../firebase';
+import { FieldValue } from '../firebase';
 import { MAPPING } from '../mapping';
 
 /**
@@ -14,15 +14,16 @@ import { MAPPING } from '../mapping';
 const ClassroomProvider: DataProviderCustom<Classroom> = {
     resource: MAPPING.CLASSROOMS,
 
-    update: async (resource, params) => {
+    update: async (resource, params, providers) => {
         const { id, data } = params;
+        const { dataProviderCustom, firebaseCollection } = providers;
 
         if (data.isDerived) {
             const parentClasses: { [classId: string]: ClassroomNonVirtualShort } = {};
             await Promise.all(
                 Array.isArray(data.parentClasses)
                     ? data.parentClasses.map(async (e) => {
-                          const { data } = await dataProvider.getOne<Classroom>(resource, {
+                          const { data } = await dataProviderCustom.getOne<Classroom>(resource, {
                               id: e,
                           });
                           parentClasses[data.id] = ClassroomToClassroomShort(
@@ -43,8 +44,10 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             delete data.subjectId;
         }
 
-        const ref = db.collection(MAPPING.CLASSROOMS);
-        const promises = [ref.doc(data.id).update({ ...data })];
+        const ref = firebaseCollection(MAPPING.CLASSROOMS);
+        const promises = [
+            ref.doc(data.id).update({ ...data, 'meta.lastUpdated': FieldValue.serverTimestamp() }),
+        ];
 
         if (data.groupLinks) {
             data.groupLinks.forEach(({ id: cId, group }) => {
@@ -68,11 +71,11 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
         return { data: { ...data, id }, status: 200 };
     },
 
-    create: async (resource, params) => {
+    create: async (resource, params, providers) => {
         const { data } = params;
+        const { dataProviderCustom, firebaseCollection } = providers;
 
-        const { exists: documentExists } = await db
-            .collection(MAPPING.CLASSROOMS)
+        const { exists: documentExists } = await firebaseCollection(MAPPING.CLASSROOMS)
             .doc(data.id)
             .get();
 
@@ -84,7 +87,7 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             if (Array.isArray(data.parentClasses)) {
                 await Promise.all(
                     data.parentClasses.map(async (e) => {
-                        const { data } = await dataProvider.getOne<Classroom>(resource, {
+                        const { data } = await dataProviderCustom.getOne<Classroom>(resource, {
                             id: e,
                         });
 
@@ -105,9 +108,18 @@ const ClassroomProvider: DataProviderCustom<Classroom> = {
             delete data.groupLinks;
             delete data.subjectId;
         }
-
-        const ref = db.collection(MAPPING.CLASSROOMS);
-        const promises = [ref.doc(data.id).set(data)];
+        const ref = firebaseCollection(MAPPING.CLASSROOMS);
+        const promises = [
+            ref.doc(data.id).set({
+                ...data,
+                meta: {
+                    createdAt: FieldValue.serverTimestamp(),
+                    lastUpdated: FieldValue.serverTimestamp(),
+                    deleted: false,
+                    version: 2,
+                },
+            }),
+        ];
 
         if (data.groupLinks) {
             data.groupLinks.forEach(({ id: cId, group }) => {
