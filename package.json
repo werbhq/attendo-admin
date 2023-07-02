@@ -35,7 +35,7 @@
   "engines": {
     "npm": "please-use-yarn",
     "yarn": ">= 1.22.0",
-    "node": "18"
+    "node": ">=16"
   },
   "eslintConfig": {
     "extends": [
